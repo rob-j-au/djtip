@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Users</h1>
+  <%= link_to "New User", new_user_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <% if @users.any? %>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Event</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @users.each do |user| %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.phone %></td>
+                <td>
+                  <% if user.event %>
+                    <%= link_to user.event.title, user.event, class: "text-decoration-none" %>
+                  <% else %>
+                    <span class="text-muted">No event</span>
+                  <% end %>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <%= link_to "View", user, class: "btn btn-outline-primary btn-sm" %>
+                    <%= link_to "Edit", edit_user_path(user), class: "btn btn-outline-secondary btn-sm" %>
+                    <%= link_to "Delete", user_path(user), method: :delete,
+                                class: "btn btn-outline-danger btn-sm",
+                                confirm: "Are you sure?",
+                                data: { turbo_method: :delete } %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="text-center py-5">
+        <h3 class="text-muted">No users yet</h3>
+        <p class="text-muted">Add your first user to get started!</p>
+        <%= link_to "Add User", new_user_path, class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

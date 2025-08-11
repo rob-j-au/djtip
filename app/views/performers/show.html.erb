@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="mb-0"><%= @performer.name %></h1>
+        <span class="badge bg-secondary"><%= @performer.genre %></span>
+      </div>
+      <div class="card-body">
+        <% if @performer.bio.present? %>
+          <div class="row mb-3">
+            <div class="col-sm-3"><strong>Bio:</strong></div>
+            <div class="col-sm-9"><%= simple_format(@performer.bio) %></div>
+          </div>
+        <% end %>
+        
+        <% if @performer.contact.present? %>
+          <div class="row mb-3">
+            <div class="col-sm-3"><strong>Contact:</strong></div>
+            <div class="col-sm-9"><%= @performer.contact %></div>
+          </div>
+        <% end %>
+        
+        <div class="row mb-3">
+          <div class="col-sm-3"><strong>Event:</strong></div>
+          <div class="col-sm-9">
+            <% if @performer.event %>
+              <%= link_to @performer.event.title, @performer.event, class: "text-decoration-none" %>
+            <% else %>
+              <span class="text-muted">No event assigned</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4 text-center">
+  <%= link_to "Edit", edit_performer_path(@performer), class: "btn btn-primary" %>
+  <%= link_to "Back to Performers", performers_path, class: "btn btn-secondary" %>
+  <%= link_to "Delete", performer_path(@performer), method: :delete,
+              class: "btn btn-danger",
+              confirm: "Are you sure?",
+              data: { turbo_method: :delete } %>
+</div>
