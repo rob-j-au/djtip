@@ -1,0 +1,51 @@
+<%= form_with(model: [@event, tip], local: true, class: "row g-3") do |form| %>
+  <% if tip.errors.any? %>
+    <div class="col-12">
+      <div class="alert alert-danger">
+        <h4><%= pluralize(tip.errors.count, "error") %> prohibited this tip from being saved:</h4>
+        <ul class="mb-0">
+          <% tip.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="col-md-6">
+    <%= form.label :user_id, "Tipper (User)", class: "form-label" %>
+    <%= form.collection_select :user_id, User.all, :id, :name, 
+        { prompt: 'Select a user' }, 
+        { class: "form-select" } %>
+  </div>
+
+  <div class="col-md-3">
+    <%= form.label :amount, class: "form-label" %>
+    <%= form.number_field :amount, step: 0.01, min: 0.01, class: "form-control" %>
+  </div>
+
+  <div class="col-md-3">
+    <%= form.label :currency, class: "form-label" %>
+    <%= form.select :currency, 
+        options_for_select([
+          ['USD', 'USD'],
+          ['EUR', 'EUR'],
+          ['GBP', 'GBP'],
+          ['AUD', 'AUD'],
+          ['CAD', 'CAD']
+        ], tip.currency), 
+        {}, 
+        { class: "form-select" } %>
+  </div>
+
+  <div class="col-12">
+    <%= form.label :message, class: "form-label" %>
+    <%= form.text_area :message, rows: 3, class: "form-control", 
+        placeholder: "Optional message from the tipper..." %>
+  </div>
+
+  <div class="col-12">
+    <%= form.submit class: "btn btn-primary me-2" %>
+    <%= link_to 'Cancel', event_tips_path(@event), class: "btn btn-secondary" %>
+  </div>
+<% end %>

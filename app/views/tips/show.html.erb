@@ -1,0 +1,78 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Tip Details</h5>
+          <div>
+            <%= link_to 'Edit', [:edit, @event, @tip], class: 'btn btn-outline-primary btn-sm me-2' %>
+            <%= link_to 'Delete', [@event, @tip], method: :delete, 
+                confirm: 'Are you sure you want to delete this tip?', 
+                class: 'btn btn-outline-danger btn-sm' %>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Event</h5>
+              <% if @tip.event %>
+                <p><%= link_to @tip.event.title, @tip.event, class: 'text-decoration-none' %></p>
+              <% else %>
+                <p class="text-muted">No event assigned</p>
+              <% end %>
+            </div>
+            <div class="col-md-6">
+              <h5>Amount</h5>
+              <p class="fs-4 text-success"><%= @tip.formatted_amount %></p>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <h5>Tipper (User)</h5>
+              <% if @tip.user %>
+                <p><%= link_to @tip.user.name, @tip.user, class: 'text-decoration-none' %></p>
+              <% else %>
+                <p class="text-muted">No user assigned</p>
+              <% end %>
+            </div>
+            <div class="col-md-6">
+              <h5>User Email</h5>
+              <% if @tip.user&.email.present? %>
+                <p><%= mail_to @tip.user.email %></p>
+              <% else %>
+                <p class="text-muted">Not available</p>
+              <% end %>
+            </div>
+          </div>
+          
+          <% if @tip.message.present? %>
+            <div class="row mt-3">
+              <div class="col-12">
+                <h5>Message</h5>
+                <div class="alert alert-light">
+                  <%= simple_format(@tip.message) %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <h5>Date Received</h5>
+              <p><%= @tip.created_at.strftime('%B %d, %Y at %I:%M %p') %></p>
+            </div>
+            <div class="col-md-6">
+              <h5>Last Updated</h5>
+              <p><%= @tip.updated_at.strftime('%B %d, %Y at %I:%M %p') %></p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <%= link_to 'All Tips', event_tips_path(@event), class: 'btn btn-secondary' %>
+          <%= link_to 'View Event', @event, class: 'btn btn-outline-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

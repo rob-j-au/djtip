@@ -1,0 +1,61 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Tips for <%= @event.title %></h1>
+    <%= link_to 'New Tip', new_event_tip_path(@event), class: 'btn btn-primary' %>
+  </div>
+  
+  <div class="mb-3">
+    <%= link_to 'Back to Event', @event, class: 'btn btn-outline-secondary' %>
+  </div>
+
+  <% if @tips.any? %>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Amount</th>
+            <th>User</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @tips.each do |tip| %>
+            <tr>
+              <td><%= tip.formatted_amount %></td>
+              <td>
+                <% if tip.user %>
+                  <%= link_to tip.user.name, tip.user, class: 'text-decoration-none' %>
+                  <br><small class="text-muted"><%= tip.user.email %></small>
+                <% else %>
+                  <span class="text-muted">No user</span>
+                <% end %>
+              </td>
+              <td>
+                <% if tip.message.present? %>
+                  <%= truncate(tip.message, length: 50) %>
+                <% else %>
+                  <span class="text-muted">No message</span>
+                <% end %>
+              </td>
+              <td><%= tip.created_at.strftime('%B %d, %Y') %></td>
+              <td>
+                <%= link_to 'Show', [@event, tip], class: 'btn btn-sm btn-outline-primary' %>
+                <%= link_to 'Edit', [:edit, @event, tip], class: 'btn btn-sm btn-outline-secondary' %>
+                <%= link_to 'Delete', [@event, tip], method: :delete, 
+                    confirm: 'Are you sure?', 
+                    class: 'btn btn-sm btn-outline-danger' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      <h4>No tips yet</h4>
+      <p>Start by <%= link_to 'creating a new tip', new_event_tip_path(@event), class: 'alert-link' %>.</p>
+    </div>
+  <% end %>
+</div>

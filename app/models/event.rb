@@ -10,6 +10,7 @@ class Event
   # Relationships
   has_many :users, dependent: :destroy
   has_many :performers, dependent: :destroy
+  has_many :tips, dependent: :destroy
 
   # Validations
   validates :title, presence: true

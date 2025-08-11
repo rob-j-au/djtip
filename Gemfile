@@ -23,6 +23,9 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# JSON API serializer for consistent API responses
+gem "jsonapi-serializer"
+
 # Add ostruct explicitly as it will not be part of the default gems starting from Ruby 3.5.0
 gem "ostruct"
 
