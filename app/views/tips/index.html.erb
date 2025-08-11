@@ -1,61 +1,77 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Tips for <%= @event.title %></h1>
-    <%= link_to 'New Tip', new_event_tip_path(@event), class: 'btn btn-primary' %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Tips for <%= @event.title %></h1>
+    <%= link_to 'New Tip', new_event_tip_path(@event), class: 'bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200' %>
   </div>
   
-  <div class="mb-3">
-    <%= link_to 'Back to Event', @event, class: 'btn btn-outline-secondary' %>
+  <div class="mb-6">
+    <%= link_to 'Back to Event', @event, class: 'bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200' %>
   </div>
 
   <% if @tips.any? %>
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Amount</th>
-            <th>User</th>
-            <th>Message</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @tips.each do |tip| %>
+    <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
             <tr>
-              <td><%= tip.formatted_amount %></td>
-              <td>
-                <% if tip.user %>
-                  <%= link_to tip.user.name, tip.user, class: 'text-decoration-none' %>
-                  <br><small class="text-muted"><%= tip.user.email %></small>
-                <% else %>
-                  <span class="text-muted">No user</span>
-                <% end %>
-              </td>
-              <td>
-                <% if tip.message.present? %>
-                  <%= truncate(tip.message, length: 50) %>
-                <% else %>
-                  <span class="text-muted">No message</span>
-                <% end %>
-              </td>
-              <td><%= tip.created_at.strftime('%B %d, %Y') %></td>
-              <td>
-                <%= link_to 'Show', [@event, tip], class: 'btn btn-sm btn-outline-primary' %>
-                <%= link_to 'Edit', [:edit, @event, tip], class: 'btn btn-sm btn-outline-secondary' %>
-                <%= link_to 'Delete', [@event, tip], method: :delete, 
-                    confirm: 'Are you sure?', 
-                    class: 'btn btn-sm btn-outline-danger' %>
-              </td>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @tips.each do |tip| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <%= tip.formatted_amount %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <% if tip.user %>
+                    <%= link_to tip.user.name, tip.user, class: 'text-blue-600 hover:text-blue-800 font-medium' %>
+                    <div class="text-xs text-gray-500"><%= tip.user.email %></div>
+                  <% else %>
+                    <span class="text-gray-400">No user</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-900">
+                  <% if tip.message.present? %>
+                    <div class="max-w-xs truncate" title="<%= tip.message %>">
+                      <%= truncate(tip.message, length: 50) %>
+                    </div>
+                  <% else %>
+                    <span class="text-gray-400">No message</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= tip.created_at.strftime('%B %d, %Y') %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <%= link_to 'Show', [@event, tip], class: 'text-blue-600 hover:text-blue-800' %>
+                    <%= link_to 'Edit', [:edit, @event, tip], class: 'text-gray-600 hover:text-gray-800' %>
+                    <%= link_to 'Delete', [@event, tip], method: :delete, 
+                        confirm: 'Are you sure?', 
+                        class: 'text-red-600 hover:text-red-800' %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   <% else %>
-    <div class="alert alert-info">
-      <h4>No tips yet</h4>
-      <p>Start by <%= link_to 'creating a new tip', new_event_tip_path(@event), class: 'alert-link' %>.</p>
+    <div class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No tips yet</h3>
+      <p class="mt-1 text-sm text-gray-500">Start by creating the first tip for this event.</p>
+      <div class="mt-6">
+        <%= link_to 'Create New Tip', new_event_tip_path(@event), class: 'bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200' %>
+      </div>
     </div>
   <% end %>
 </div>
