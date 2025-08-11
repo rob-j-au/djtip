@@ -23,6 +23,9 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# Add ostruct explicitly as it will not be part of the default gems starting from Ruby 3.5.0
+gem "ostruct"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
@@ -53,6 +56,12 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/Shopify/ruby-lsp]
   gem "rubocop-rails-omakase", require: false
+  
+  # Testing gems
+  gem "rspec-rails", "~> 6.0"
+  gem "factory_bot_rails", "~> 6.2"
+  gem "faker", "~> 3.2"
+  gem "database_cleaner-mongoid", "~> 2.0"
 end
 
 group :development do

@@ -1,7 +1,22 @@
 Rails.application.routes.draw do
   resources :performers
-  resources :events
+  resources :events do
+    resources :users, shallow: true
+    resources :performers, shallow: true
+  end
   resources :users
+  
+  # API routes
+  namespace :api do
+    namespace :v1 do
+      resources :events, defaults: { format: :json } do
+        resources :users, shallow: true
+        resources :performers, shallow: true
+      end
+      resources :users, defaults: { format: :json }
+      resources :performers, defaults: { format: :json }
+    end
+  end
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
