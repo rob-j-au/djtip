@@ -1,41 +1,55 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1>Events</h1>
-  <%= link_to "New Event", new_event_path, class: "btn btn-primary" %>
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-3xl font-bold text-gray-900">Events</h1>
+  <%= link_to "New Event", new_event_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
 </div>
 
-<div class="row">
-  <% @events.each do |event| %>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title"><%= event.title %></h5>
-          <p class="card-text"><%= truncate(event.description, length: 100) %></p>
-          <p class="text-muted">
-            <i class="fas fa-calendar"></i> <%= event.date&.strftime("%B %d, %Y at %I:%M %p") %>
-          </p>
-          <p class="text-muted">
-            <i class="fas fa-map-marker-alt"></i> <%= event.location %>
-          </p>
+<% if @events.any? %>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @events.each do |event| %>
+      <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2"><%= event.title %></h3>
+          <p class="text-gray-600 mb-4"><%= truncate(event.description, length: 100) %></p>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex items-center text-sm text-gray-500">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <%= event.date&.strftime("%B %d, %Y at %I:%M %p") %>
+            </div>
+            <div class="flex items-center text-sm text-gray-500">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <%= event.location %>
+            </div>
+          </div>
         </div>
-        <div class="card-footer bg-transparent">
-          <div class="btn-group w-100" role="group">
-            <%= link_to "View", event, class: "btn btn-outline-primary btn-sm" %>
-            <%= link_to "Edit", edit_event_path(event), class: "btn btn-outline-secondary btn-sm" %>
-            <%= form_with model: event, method: :delete, local: true, class: "d-inline" do |form| %>
-              <%= form.submit "Delete", class: "btn btn-outline-danger btn-sm",
+        
+        <div class="bg-gray-50 px-6 py-3">
+          <div class="flex space-x-2">
+            <%= link_to "View", event, class: "flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200" %>
+            <%= link_to "Edit", edit_event_path(event), class: "flex-1 text-center bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200" %>
+            <%= form_with model: event, method: :delete, local: true, class: "flex-1" do |form| %>
+              <%= form.submit "Delete", class: "w-full bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200 cursor-pointer",
                               onclick: "return confirm('Are you sure you want to delete this event?')" %>
             <% end %>
           </div>
         </div>
       </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="text-center py-12">
+    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No events</h3>
+    <p class="mt-1 text-sm text-gray-500">Get started by creating a new event.</p>
+    <div class="mt-6">
+      <%= link_to "New Event", new_event_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
     </div>
-  <% end %>
-</div>
-
-<% if @events.empty? %>
-  <div class="text-center py-5">
-    <h3 class="text-muted">No events yet</h3>
-    <p class="text-muted">Create your first event to get started!</p>
-    <%= link_to "Create Event", new_event_path, class: "btn btn-primary" %>
   </div>
 <% end %>
