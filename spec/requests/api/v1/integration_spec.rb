@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe "API Integration Tests", type: :request do
+  def json_response
+    JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def find_included_resource(type, id)
+    json_response[:included]&.find { |resource| resource[:type] == type.to_s && resource[:id] == id.to_s }
+  end
+
   describe "Event with Users and Performers workflow" do
     let!(:event) { create(:event, title: "DJ Night") }
     let!(:user1) { create(:user, name: "John Doe", event: event) }
@@ -12,21 +20,27 @@ RSpec.describe "API Integration Tests", type: :request do
       get "/api/v1/events/#{event.id}"
       
       expect(response).to have_http_status(:ok)
-      json_response = JSON.parse(response.body)
       
       # Verify event data
-      expect(json_response["title"]).to eq("DJ Night")
+      event_data = json_response[:data]
+      expect(event_data[:type]).to eq('event')
+      expect(event_data[:attributes][:title]).to eq("DJ Night")
       
-      # Verify users are included
-      expect(json_response["users"]).to be_present
-      expect(json_response["users"].length).to eq(2)
-      user_names = json_response["users"].map { |u| u["name"] }
+      # Verify relationships
+      expect(event_data[:relationships][:users][:data].length).to eq(2)
+      expect(event_data[:relationships][:performers][:data].length).to eq(2)
+      
+      # Verify included resources
+      expect(json_response[:included]).to be_present
+      user_resources = json_response[:included].select { |resource| resource[:type] == 'user' }
+      performer_resources = json_response[:included].select { |resource| resource[:type] == 'performer' }
+      
+      expect(user_resources.length).to eq(2)
+      user_names = user_resources.map { |u| u[:attributes][:name] }
       expect(user_names).to include("John Doe", "Jane Smith")
       
-      # Verify performers are included
-      expect(json_response["performers"]).to be_present
-      expect(json_response["performers"].length).to eq(2)
-      performer_names = json_response["performers"].map { |p| p["name"] }
+      expect(performer_resources.length).to eq(2)
+      performer_names = performer_resources.map { |p| p[:attributes][:name] }
       expect(performer_names).to include("DJ Alpha", "DJ Beta")
     end
 
@@ -43,14 +57,15 @@ RSpec.describe "API Integration Tests", type: :request do
       }.to change(User, :count).by(1)
 
       expect(response).to have_http_status(:created)
-      json_response = JSON.parse(response.body)
-      expect(json_response["name"]).to eq("New User")
-      expect(json_response["event"]["id"]).to eq(event.id.to_s)
+      
+      user_data = json_response[:data]
+      expect(user_data[:type]).to eq('user')
+      expect(user_data[:attributes][:name]).to eq("New User")
+      expect(user_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
 
       # Verify the user is now associated with the event
       get "/api/v1/events/#{event.id}"
-      event_response = JSON.parse(response.body)
-      expect(event_response["users"].length).to eq(3)
+      expect(json_response[:data][:relationships][:users][:data].length).to eq(3)
     end
 
     it "allows creating a new performer for an existing event via API" do
@@ -67,14 +82,15 @@ RSpec.describe "API Integration Tests", type: :request do
       }.to change(Performer, :count).by(1)
 
       expect(response).to have_http_status(:created)
-      json_response = JSON.parse(response.body)
-      expect(json_response["name"]).to eq("DJ Gamma")
-      expect(json_response["event"]["id"]).to eq(event.id.to_s)
+      
+      performer_data = json_response[:data]
+      expect(performer_data[:type]).to eq('performer')
+      expect(performer_data[:attributes][:name]).to eq("DJ Gamma")
+      expect(performer_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
 
       # Verify the performer is now associated with the event
       get "/api/v1/events/#{event.id}"
-      event_response = JSON.parse(response.body)
-      expect(event_response["performers"].length).to eq(3)
+      expect(json_response[:data][:relationships][:performers][:data].length).to eq(3)
     end
 
     it "handles cascading deletes when event is deleted" do
@@ -99,20 +115,18 @@ RSpec.describe "API Integration Tests", type: :request do
       post "/api/v1/events", params: { event: { title: "" } }
       
       expect(response).to have_http_status(:unprocessable_entity)
-      json_response = JSON.parse(response.body)
       
-      expect(json_response).to have_key("error")
-      expect(json_response).to have_key("details")
-      expect(json_response["error"]).to eq("Failed to create event")
-      expect(json_response["details"]).to be_an(Array)
+      expect(json_response).to have_key(:error)
+      expect(json_response).to have_key(:details)
+      expect(json_response[:error]).to eq("Failed to create event")
+      expect(json_response[:details]).to be_an(Array)
     end
 
     it "returns 404 for non-existent resources" do
       get "/api/v1/events/nonexistent"
       
       expect(response).to have_http_status(:not_found)
-      json_response = JSON.parse(response.body)
-      expect(json_response["error"]).to eq("Resource not found")
+      expect(json_response[:error]).to eq("Resource not found")
     end
   end
 
@@ -137,8 +151,10 @@ RSpec.describe "API Integration Tests", type: :request do
            headers: { 'Content-Type' => 'application/json' }
 
       expect(response).to have_http_status(:created)
-      json_response = JSON.parse(response.body)
-      expect(json_response["title"]).to eq("JSON Event")
+      
+      event_data = json_response[:data]
+      expect(event_data[:type]).to eq('event')
+      expect(event_data[:attributes][:title]).to eq("JSON Event")
     end
   end
 end
