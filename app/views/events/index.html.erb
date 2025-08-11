@@ -1,12 +1,14 @@
-<div class="flex justify-between items-center mb-6">
-  <h1 class="text-3xl font-bold text-gray-900">Events</h1>
-  <%= link_to "New Event", new_event_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
+<div class="bg-white rounded-lg shadow-sm border p-6 mb-8">
+  <div class="flex justify-between items-center">
+    <h1 class="text-4xl font-bold text-gray-900">Events</h1>
+    <%= link_to "New Event", new_event_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200" %>
+  </div>
 </div>
 
 <% if @events.any? %>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @events.each do |event| %>
-      <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+      <div class="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow duration-200">
         <div class="p-6">
           <h3 class="text-xl font-semibold text-gray-900 mb-2"><%= event.title %></h3>
           <p class="text-gray-600 mb-4"><%= truncate(event.description, length: 100) %></p>
@@ -28,12 +30,12 @@
           </div>
         </div>
         
-        <div class="bg-gray-50 px-6 py-3">
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
           <div class="flex space-x-2">
-            <%= link_to "View", event, class: "flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200" %>
-            <%= link_to "Edit", edit_event_path(event), class: "flex-1 text-center bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200" %>
+            <%= link_to "View", event, class: "flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded-md transition duration-200" %>
+            <%= link_to "Edit", edit_event_path(event), class: "flex-1 text-center bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-3 rounded-md transition duration-200" %>
             <%= form_with model: event, method: :delete, local: true, class: "flex-1" do |form| %>
-              <%= form.submit "Delete", class: "w-full bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200 cursor-pointer",
+              <%= form.submit "Delete", class: "w-full bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-3 rounded-md cursor-pointer transition duration-200",
                               onclick: "return confirm('Are you sure you want to delete this event?')" %>
             <% end %>
           </div>
@@ -42,14 +44,14 @@
     <% end %>
   </div>
 <% else %>
-  <div class="text-center py-12">
+  <div class="bg-white rounded-lg shadow-sm border text-center py-12">
     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
     </svg>
     <h3 class="mt-2 text-sm font-medium text-gray-900">No events</h3>
     <p class="mt-1 text-sm text-gray-500">Get started by creating a new event.</p>
     <div class="mt-6">
-      <%= link_to "New Event", new_event_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
+      <%= link_to "New Event", new_event_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200" %>
     </div>
   </div>
 <% end %>
