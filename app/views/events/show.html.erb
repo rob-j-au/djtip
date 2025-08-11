@@ -28,7 +28,7 @@
     <div class="card mt-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Registered Users</h5>
-        <%= link_to "Add User", new_user_path(event_id: @event.id), class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+        <%= link_to "Add User", new_event_user_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
       </div>
       <div class="card-body">
         <% if @event.users.any? %>
@@ -53,7 +53,7 @@
     <div class="card mt-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Performers</h5>
-        <%= link_to "Add Performer", new_performer_path(event_id: @event.id), class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+        <%= link_to "Add Performer", new_event_performer_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
       </div>
       <div class="card-body">
         <% if @event.performers.any? %>
@@ -78,7 +78,7 @@
     <div class="card mt-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Tips Received</h5>
-        <%= link_to "Add Tip", new_tip_path(event_id: @event.id), class: "bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+        <%= link_to "Add Tip", new_event_tip_path(@event), class: "bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
       </div>
       <div class="card-body">
         <% if @event.tips.any? %>
