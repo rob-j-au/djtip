@@ -10,3 +10,6 @@
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
+
+# Add additional CSS files to asset precompilation
+Rails.application.config.assets.precompile += %w( application.css )
