@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
   resources :performers
+  resources :users
   resources :events do
-    resources :users, shallow: true
-    resources :performers, shallow: true
+    resources :users, shallow: true, only: [:new, :create]
+    resources :performers, shallow: true, only: [:new, :create]
     resources :tips
   end
-  resources :users
   
   # API routes
   namespace :api do
