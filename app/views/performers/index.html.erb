@@ -1,0 +1,43 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Performers</h1>
+  <%= link_to "New Performer", new_performer_path, class: "btn btn-primary" %>
+</div>
+
+<div class="row">
+  <% @performers.each do |performer| %>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title"><%= performer.name %></h5>
+          <p class="card-text">
+            <span class="badge bg-secondary"><%= performer.genre %></span>
+          </p>
+          <p class="card-text"><%= truncate(performer.bio, length: 100) if performer.bio.present? %></p>
+          <% if performer.event %>
+            <p class="text-muted">
+              <small>Event: <%= link_to performer.event.title, performer.event, class: "text-decoration-none" %></small>
+            </p>
+          <% end %>
+        </div>
+        <div class="card-footer bg-transparent">
+          <div class="btn-group w-100" role="group">
+            <%= link_to "View", performer, class: "btn btn-outline-primary btn-sm" %>
+            <%= link_to "Edit", edit_performer_path(performer), class: "btn btn-outline-secondary btn-sm" %>
+            <%= link_to "Delete", performer_path(performer), method: :delete,
+                        class: "btn btn-outline-danger btn-sm",
+                        confirm: "Are you sure?",
+                        data: { turbo_method: :delete } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @performers.empty? %>
+  <div class="text-center py-5">
+    <h3 class="text-muted">No performers yet</h3>
+    <p class="text-muted">Add your first performer to get started!</p>
+    <%= link_to "Add Performer", new_performer_path, class: "btn btn-primary" %>
+  </div>
+<% end %>

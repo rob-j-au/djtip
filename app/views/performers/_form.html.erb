@@ -1,0 +1,47 @@
+<%= form_with(model: performer, local: true, class: "row g-3") do |form| %>
+  <% if performer.errors.any? %>
+    <div class="col-12">
+      <div class="alert alert-danger">
+        <h6><%= pluralize(performer.errors.count, "error") %> prohibited this performer from being saved:</h6>
+        <ul class="mb-0">
+          <% performer.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="col-md-6">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="col-md-6">
+    <%= form.label :genre, class: "form-label" %>
+    <%= form.text_field :genre, class: "form-control" %>
+  </div>
+
+  <div class="col-12">
+    <%= form.label :bio, class: "form-label" %>
+    <%= form.text_area :bio, rows: 4, class: "form-control" %>
+  </div>
+
+  <div class="col-md-6">
+    <%= form.label :contact, class: "form-label" %>
+    <%= form.text_field :contact, class: "form-control" %>
+  </div>
+
+  <div class="col-md-6">
+    <%= form.label :event_id, "Event", class: "form-label" %>
+    <%= form.select :event_id, 
+                    options_from_collection_for_select(@events, :id, :title, performer.event_id),
+                    { prompt: "Select an event (optional)" },
+                    { class: "form-select" } %>
+  </div>
+
+  <div class="col-12">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "Cancel", performers_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
