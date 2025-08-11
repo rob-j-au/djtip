@@ -1,43 +1,50 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1>Performers</h1>
-  <%= link_to "New Performer", new_performer_path, class: "btn btn-primary" %>
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-3xl font-bold text-gray-900">Performers</h1>
+  <%= link_to "New Performer", new_performer_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
 </div>
 
-<div class="row">
-  <% @performers.each do |performer| %>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title"><%= performer.name %></h5>
-          <p class="card-text">
-            <span class="badge bg-secondary"><%= performer.genre %></span>
-          </p>
-          <p class="card-text"><%= truncate(performer.bio, length: 100) if performer.bio.present? %></p>
+<% if @performers.any? %>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @performers.each do |performer| %>
+      <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2"><%= performer.name %></h3>
+          <div class="mb-3">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+              <%= performer.genre %>
+            </span>
+          </div>
+          <% if performer.bio.present? %>
+            <p class="text-gray-600 mb-4"><%= truncate(performer.bio, length: 100) %></p>
+          <% end %>
           <% if performer.event %>
-            <p class="text-muted">
-              <small>Event: <%= link_to performer.event.title, performer.event, class: "text-decoration-none" %></small>
+            <p class="text-sm text-gray-500">
+              Event: <%= link_to performer.event.title, performer.event, class: "text-blue-600 hover:text-blue-800 font-medium" %>
             </p>
           <% end %>
         </div>
-        <div class="card-footer bg-transparent">
-          <div class="btn-group w-100" role="group">
-            <%= link_to "View", performer, class: "btn btn-outline-primary btn-sm" %>
-            <%= link_to "Edit", edit_performer_path(performer), class: "btn btn-outline-secondary btn-sm" %>
-            <%= form_with model: performer, method: :delete, local: true, class: "d-inline" do |form| %>
-              <%= form.submit "Delete", class: "btn btn-outline-danger btn-sm",
+        <div class="bg-gray-50 px-6 py-3">
+          <div class="flex space-x-2">
+            <%= link_to "View", performer, class: "flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200" %>
+            <%= link_to "Edit", edit_performer_path(performer), class: "flex-1 text-center bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200" %>
+            <%= form_with model: performer, method: :delete, local: true, class: "flex-1" do |form| %>
+              <%= form.submit "Delete", class: "w-full bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-3 rounded transition duration-200 cursor-pointer",
                               onclick: "return confirm('Are you sure you want to delete this performer?')" %>
             <% end %>
           </div>
         </div>
       </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="text-center py-12">
+    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No performers yet</h3>
+    <p class="mt-1 text-sm text-gray-500">Add your first performer to get started!</p>
+    <div class="mt-6">
+      <%= link_to "Add Performer", new_performer_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
     </div>
-  <% end %>
-</div>
-
-<% if @performers.empty? %>
-  <div class="text-center py-5">
-    <h3 class="text-muted">No performers yet</h3>
-    <p class="text-muted">Add your first performer to get started!</p>
-    <%= link_to "Add Performer", new_performer_path, class: "btn btn-primary" %>
   </div>
 <% end %>
