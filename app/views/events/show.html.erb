@@ -1,138 +1,232 @@
-<div class="max-w-4xl mx-auto">
-  <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg overflow-hidden mb-8">
+    <div class="px-8 py-12 text-white">
+      <h1 class="text-4xl font-bold mb-4"><%= @event.title %></h1>
+      <div class="flex flex-wrap gap-6 text-blue-100">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+          </svg>
+          <%= @event.date&.strftime("%B %d, %Y at %I:%M %p") %>
+        </div>
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+          </svg>
+          <%= @event.location %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Details Card -->
+  <% if @event.description.present? %>
+  <div class="bg-white shadow-lg rounded-xl overflow-hidden mb-8">
     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-      <h1 class="text-2xl font-bold text-gray-900"><%= @event.title %></h1>
+      <h2 class="text-xl font-semibold text-gray-900">Event Description</h2>
     </div>
     <div class="px-6 py-6">
-      <dl class="space-y-4">
-        <div>
-          <dt class="text-sm font-medium text-gray-500">Date</dt>
-          <dd class="mt-1 text-sm text-gray-900"><%= @event.date&.strftime("%B %d, %Y at %I:%M %p") %></dd>
+      <div class="prose prose-gray max-w-none">
+        <%= simple_format(@event.description) %>
+      </div>
+    </div>
+  </div>
+  <% end %>
+
+  <!-- Stats Overview -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
         </div>
-        
-        <div>
-          <dt class="text-sm font-medium text-gray-500">Location</dt>
-          <dd class="mt-1 text-sm text-gray-900"><%= @event.location %></dd>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Registered Users</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @event.users.count %></p>
         </div>
-        
-        <% if @event.description.present? %>
-          <div>
-            <dt class="text-sm font-medium text-gray-500">Description</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= simple_format(@event.description) %></dd>
-          </div>
-        <% end %>
-      </dl>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Performers</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @event.performers.count %></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-green-100 text-green-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Total Tips</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @event.tips.sum(:amount) %> <%= @event.tips.first&.currency || 'USD' %></p>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Users Section -->
-  <div class="bg-white shadow-sm rounded-lg overflow-hidden mt-6">
-    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-      <h2 class="text-lg font-semibold text-gray-900">Registered Users</h2>
-        <%= link_to "Add User", new_event_user_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+  <div class="bg-white shadow-lg rounded-xl overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Registered Users
+      </h2>
+      <%= link_to "Add User", new_event_user_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 shadow-md hover:shadow-lg" %>
     </div>
-    <div class="px-6 py-4">
+    <div class="px-6 py-6">
       <% if @event.users.any? %>
-        <div class="space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <% @event.users.each do |user| %>
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-              <div>
-                <div class="font-medium text-gray-900"><%= user.name %></div>
-                <div class="text-sm text-gray-500"><%= user.email %></div>
+            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:shadow-md transition duration-200">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <%= user.name.first.upcase %>
+                </div>
+                <div class="ml-3">
+                  <div class="font-medium text-gray-900"><%= user.name %></div>
+                  <div class="text-sm text-gray-500"><%= user.email %></div>
+                </div>
               </div>
-                <%= link_to "View", user, class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+              <%= link_to "View", user, class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded-lg transition duration-200 shadow-sm" %>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="text-gray-500">No users registered yet.</p>
+        <div class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+          </svg>
+          <p class="mt-2 text-gray-500">No users registered yet.</p>
+        </div>
       <% end %>
     </div>
   </div>
 
   <!-- Performers Section -->
-  <div class="bg-white shadow-sm rounded-lg overflow-hidden mt-6">
-    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-      <h2 class="text-lg font-semibold text-gray-900">Performers</h2>
-        <%= link_to "Add Performer", new_event_performer_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
-      </div>
-      <div class="card-body">
+  <div class="bg-white shadow-lg rounded-xl overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path>
+        </svg>
+        Performers
+      </h2>
+      <%= link_to "Add Performer", new_event_performer_path(@event), class: "bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 shadow-md hover:shadow-lg" %>
+    </div>
+    <div class="px-6 py-6">
       <% if @event.performers.any? %>
-        <div class="space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <% @event.performers.each do |performer| %>
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-              <div>
-                <div class="font-medium text-gray-900"><%= performer.name %></div>
-                <div class="text-sm text-gray-500"><%= performer.genre %></div>
+            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-purple-50 rounded-lg border border-gray-200 hover:shadow-md transition duration-200">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path>
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <div class="font-medium text-gray-900"><%= performer.name %></div>
+                  <div class="text-sm text-gray-500"><%= performer.genre %></div>
+                </div>
               </div>
-                <%= link_to "View", performer, class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+              <%= link_to "View", performer, class: "bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-3 rounded-lg transition duration-200 shadow-sm" %>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="text-gray-500">No performers added yet.</p>
+        <div class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+          </svg>
+          <p class="mt-2 text-gray-500">No performers added yet.</p>
+        </div>
       <% end %>
     </div>
   </div>
 
   <!-- Tips Section -->
-  <div class="bg-white shadow-sm rounded-lg overflow-hidden mt-6">
-    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-      <h2 class="text-lg font-semibold text-gray-900">Tips Received</h2>
-        <%= link_to "Add Tip", new_event_tip_path(@event), class: "bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+  <div class="bg-white shadow-lg rounded-xl overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"></path>
+        </svg>
+        Tips Received
+      </h2>
+      <%= link_to "Add Tip", new_event_tip_path(@event), class: "bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 shadow-md hover:shadow-lg" %>
     </div>
-    <div class="px-6 py-4">
+    <div class="px-6 py-6">
       <% if @event.tips.any? %>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div class="bg-green-50 p-4 rounded-lg">
-            <div class="text-sm font-medium text-green-800">Total Tips</div>
-            <div class="text-lg font-bold text-green-900"><%= @event.tips.sum(:amount) %> <%= @event.tips.first&.currency || 'USD' %></div>
-          </div>
-          <div class="bg-blue-50 p-4 rounded-lg">
-            <div class="text-sm font-medium text-blue-800">Number of Tips</div>
-            <div class="text-lg font-bold text-blue-900"><%= @event.tips.count %></div>
-          </div>
-        </div>
-        <div class="space-y-3">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Tips</h3>
+        <div class="space-y-4">
           <% @event.tips.recent.limit(5).each do |tip| %>
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-              <div>
-                <div class="font-medium text-gray-900">
-                  <% if tip.user %>
-                    <%= tip.user.name %>
-                  <% else %>
-                    Unknown User
-                  <% end %>
-                  - <%= tip.formatted_amount %>
+            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-green-50 rounded-lg border border-gray-200 hover:shadow-md transition duration-200">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  $
                 </div>
-                <div class="text-sm text-gray-500">
-                  <%= tip.created_at.strftime('%B %d, %Y') %>
-                  <% if tip.message.present? %>
-                    - "<%= truncate(tip.message, length: 50) %>"
-                  <% end %>
+                <div class="ml-3">
+                  <div class="font-medium text-gray-900">
+                    <% if tip.user %>
+                      <%= tip.user.name %>
+                    <% else %>
+                      Anonymous
+                    <% end %>
+                    <span class="text-green-600 font-bold">- <%= tip.formatted_amount %></span>
+                  </div>
+                  <div class="text-sm text-gray-500">
+                    <%= tip.created_at.strftime('%B %d, %Y') %>
+                    <% if tip.message.present? %>
+                      <br><span class="italic">"<%= truncate(tip.message, length: 50) %>"</span>
+                    <% end %>
+                  </div>
                 </div>
               </div>
-                <%= link_to "View", [@event, tip], class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
-              </div>
-            <% end %>
-          </div>
+              <%= link_to "View", [@event, tip], class: "bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-3 rounded-lg transition duration-200 shadow-sm" %>
+            </div>
+          <% end %>
+        </div>
         <% if @event.tips.count > 5 %>
-          <div class="mt-4">
-            <%= link_to "View All Tips", event_tips_path(@event), class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+          <div class="mt-6 text-center">
+            <%= link_to "View All Tips", event_tips_path(@event), class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 shadow-md" %>
           </div>
         <% end %>
       <% else %>
-        <p class="text-gray-500">No tips received yet.</p>
+        <div class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <p class="mt-2 text-gray-500">No tips received yet.</p>
+        </div>
       <% end %>
     </div>
   </div>
 </div>
 
-<div class="mt-4">
-  <%= link_to "Edit", edit_event_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-200" %>
-  <%= link_to "Back to Events", events_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded transition duration-200" %>
-  <%= form_with model: @event, method: :delete, local: true, class: "inline" do |form| %>
-    <%= form.submit "Delete", class: "bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition duration-200 cursor-pointer",
-                    onclick: "return confirm('Are you sure you want to delete this event?')" %>
-  <% end %>
+  <!-- Action Buttons -->
+  <div class="bg-white shadow-lg rounded-xl p-6 flex flex-wrap gap-4 justify-center">
+    <%= link_to "Edit Event", edit_event_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg flex items-center" %>
+    <%= link_to "Back to Events", events_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg flex items-center" %>
+    <%= form_with model: @event, method: :delete, local: true, class: "inline" do |form| %>
+      <%= form.submit "Delete Event", class: "bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg cursor-pointer",
+                      onclick: "return confirm('Are you sure you want to delete this event? This action cannot be undone.')" %>
+    <% end %>
+  </div>
 </div>
