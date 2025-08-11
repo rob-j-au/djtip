@@ -23,10 +23,12 @@
           <div class="btn-group w-100" role="group">
             <%= link_to "View", performer, class: "btn btn-outline-primary btn-sm" %>
             <%= link_to "Edit", edit_performer_path(performer), class: "btn btn-outline-secondary btn-sm" %>
-            <%= link_to "Delete", performer_path(performer), method: :delete,
+            <%= link_to "Delete", performer_path(performer),
                         class: "btn btn-outline-danger btn-sm",
-                        confirm: "Are you sure?",
-                        data: { turbo_method: :delete } %>
+                        data: { 
+                          turbo_method: :delete,
+                          turbo_confirm: "Are you sure you want to delete this performer?"
+                        } %>
           </div>
         </div>
       </div>
