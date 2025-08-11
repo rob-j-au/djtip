@@ -73,6 +73,32 @@ A Ruby on Rails 8 application using Mongoid (MongoDB) instead of ActiveRecord, w
 
 ## Development
 
+### Running Tests
+
+The project includes RSpec tests for models, controllers, and API endpoints.
+
+1. **Make sure MongoDB test instance is running**
+
+2. **Run the entire test suite:**
+   ```bash
+   bundle exec rspec
+   ```
+
+3. **Run specific test files:**
+   ```bash
+   bundle exec rspec spec/requests/api/v1/
+   ```
+
+4. **Run tests with specific format:**
+   ```bash
+   bundle exec rspec --format documentation
+   ```
+
+5. **Run tests and generate coverage report:**
+   ```bash
+   COVERAGE=true bundle exec rspec
+   ```
+
 ### Database Configuration
 
 The app uses MongoDB with the following databases:
