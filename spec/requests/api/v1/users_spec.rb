@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Users", type: :request do
+  def json_response
+    JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def find_included_resource(type, id)
+    json_response[:included]&.find { |resource| resource[:type] == type.to_s && resource[:id] == id.to_s }
+  end
+
   describe "GET /api/v1/users" do
     let!(:event) { create(:event) }
     let!(:users) { create_list(:user, 3, event: event) }
@@ -9,11 +17,18 @@ RSpec.describe "Api::V1::Users", type: :request do
       get "/api/v1/users"
       
       expect(response).to have_http_status(:ok)
-      json_response = JSON.parse(response.body)
       
-      expect(json_response.length).to eq(3)
-      expect(json_response.first).to have_key("event")
-      expect(json_response.first["event"]["title"]).to eq(event.title)
+      expect(json_response[:data]).to be_an(Array)
+      expect(json_response[:data].length).to eq(3)
+      
+      first_user = json_response[:data].first
+      expect(first_user[:type]).to eq('user')
+      expect(first_user[:relationships][:event][:data][:id]).to eq(event.id.to_s)
+      
+      # Check included resources
+      expect(json_response[:included]).to be_present
+      event_resource = find_included_resource(:event, event.id)
+      expect(event_resource[:attributes][:title]).to eq(event.title)
     end
   end
 
@@ -25,18 +40,25 @@ RSpec.describe "Api::V1::Users", type: :request do
       get "/api/v1/users/#{user.id}"
       
       expect(response).to have_http_status(:ok)
-      json_response = JSON.parse(response.body)
       
-      expect(json_response["name"]).to eq(user.name)
-      expect(json_response["event"]["title"]).to eq(event.title)
+      user_data = json_response[:data]
+      expect(user_data[:type]).to eq('user')
+      expect(user_data[:id]).to eq(user.id.to_s)
+      expect(user_data[:attributes][:name]).to eq(user.name)
+      
+      # Check relationships
+      expect(user_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
+      
+      # Check included resources
+      event_resource = find_included_resource(:event, event.id)
+      expect(event_resource[:attributes][:title]).to eq(event.title)
     end
 
     it "returns 404 for non-existent user" do
       get "/api/v1/users/nonexistent"
       
       expect(response).to have_http_status(:not_found)
-      json_response = JSON.parse(response.body)
-      expect(json_response["error"]).to eq("Resource not found")
+      expect(json_response[:error]).to eq("Resource not found")
     end
   end
 
@@ -64,18 +86,23 @@ RSpec.describe "Api::V1::Users", type: :request do
       }.to change(User, :count).by(1)
       
       expect(response).to have_http_status(:created)
-      json_response = JSON.parse(response.body)
-      expect(json_response["name"]).to eq("John Doe")
-      expect(json_response["event"]["id"]).to eq(event.id.to_s)
+      
+      user_data = json_response[:data]
+      expect(user_data[:type]).to eq('user')
+      expect(user_data[:attributes][:name]).to eq("John Doe")
+      expect(user_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
+      
+      # Check included resources
+      event_resource = find_included_resource(:event, event.id)
+      expect(event_resource[:attributes][:title]).to eq(event.title)
     end
 
     it "returns errors with invalid attributes" do
       post "/api/v1/users", params: { user: invalid_attributes }
       
       expect(response).to have_http_status(:unprocessable_entity)
-      json_response = JSON.parse(response.body)
-      expect(json_response["error"]).to eq("Failed to create user")
-      expect(json_response["details"]).to be_present
+      expect(json_response[:error]).to eq("Failed to create user")
+      expect(json_response[:details]).to be_present
     end
   end
 
@@ -88,16 +115,17 @@ RSpec.describe "Api::V1::Users", type: :request do
       put "/api/v1/users/#{user.id}", params: { user: valid_attributes }
       
       expect(response).to have_http_status(:ok)
-      json_response = JSON.parse(response.body)
-      expect(json_response["name"]).to eq("Updated Name")
+      
+      user_data = json_response[:data]
+      expect(user_data[:type]).to eq('user')
+      expect(user_data[:attributes][:name]).to eq("Updated Name")
     end
 
     it "returns errors with invalid attributes" do
       put "/api/v1/users/#{user.id}", params: { user: invalid_attributes }
       
       expect(response).to have_http_status(:unprocessable_entity)
-      json_response = JSON.parse(response.body)
-      expect(json_response["error"]).to eq("Failed to update user")
+      expect(json_response[:error]).to eq("Failed to update user")
     end
   end
 

@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Events", type: :request do
+  def json_response
+    JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def find_included_resource(type, id)
+    json_response[:included]&.find { |resource| resource[:type] == type.to_s && resource[:id] == id.to_s }
+  end
+
   describe "GET /api/v1/events" do
     let!(:events) { create_list(:event, 3) }
     let!(:users) { create_list(:user, 2, event: events.first) }
@@ -10,13 +18,21 @@ RSpec.describe "Api::V1::Events", type: :request do
       get "/api/v1/events"
       
       expect(response).to have_http_status(:ok)
-      json_response = JSON.parse(response.body)
       
-      expect(json_response.length).to eq(3)
-      expect(json_response.first).to have_key("users")
-      expect(json_response.first).to have_key("performers")
-      expect(json_response.first["users"].length).to eq(2)
-      expect(json_response.first["performers"].length).to eq(2)
+      expect(json_response[:data]).to be_an(Array)
+      expect(json_response[:data].length).to eq(3)
+      
+      first_event = json_response[:data].first
+      expect(first_event[:type]).to eq('event')
+      expect(first_event[:relationships][:users][:data].length).to eq(2)
+      expect(first_event[:relationships][:performers][:data].length).to eq(2)
+      
+      # Check included resources
+      expect(json_response[:included]).to be_present
+      user_resources = json_response[:included].select { |resource| resource[:type] == 'user' }
+      performer_resources = json_response[:included].select { |resource| resource[:type] == 'performer' }
+      expect(user_resources.length).to eq(2)
+      expect(performer_resources.length).to eq(2)
     end
   end
 
@@ -29,19 +45,29 @@ RSpec.describe "Api::V1::Events", type: :request do
       get "/api/v1/events/#{event.id}"
       
       expect(response).to have_http_status(:ok)
-      json_response = JSON.parse(response.body)
       
-      expect(json_response["title"]).to eq(event.title)
-      expect(json_response["users"].length).to eq(2)
-      expect(json_response["performers"].length).to eq(2)
+      event_data = json_response[:data]
+      expect(event_data[:type]).to eq('event')
+      expect(event_data[:id]).to eq(event.id.to_s)
+      expect(event_data[:attributes][:title]).to eq(event.title)
+      
+      # Check relationships
+      expect(event_data[:relationships][:users][:data].length).to eq(2)
+      expect(event_data[:relationships][:performers][:data].length).to eq(2)
+      
+      # Check included resources
+      expect(json_response[:included]).to be_present
+      user_resources = json_response[:included].select { |resource| resource[:type] == 'user' }
+      performer_resources = json_response[:included].select { |resource| resource[:type] == 'performer' }
+      expect(user_resources.length).to eq(2)
+      expect(performer_resources.length).to eq(2)
     end
 
     it "returns 404 for non-existent event" do
       get "/api/v1/events/nonexistent"
       
       expect(response).to have_http_status(:not_found)
-      json_response = JSON.parse(response.body)
-      expect(json_response["error"]).to eq("Resource not found")
+      expect(json_response[:error]).to eq("Resource not found")
     end
   end
 
@@ -68,17 +94,18 @@ RSpec.describe "Api::V1::Events", type: :request do
       }.to change(Event, :count).by(1)
       
       expect(response).to have_http_status(:created)
-      json_response = JSON.parse(response.body)
-      expect(json_response["title"]).to eq("Test Event")
+      
+      event_data = json_response[:data]
+      expect(event_data[:type]).to eq('event')
+      expect(event_data[:attributes][:title]).to eq("Test Event")
     end
 
     it "returns errors with invalid attributes" do
       post "/api/v1/events", params: { event: invalid_attributes }
       
       expect(response).to have_http_status(:unprocessable_entity)
-      json_response = JSON.parse(response.body)
-      expect(json_response["error"]).to eq("Failed to create event")
-      expect(json_response["details"]).to be_present
+      expect(json_response[:error]).to eq("Failed to create event")
+      expect(json_response[:details]).to be_present
     end
   end
 
@@ -91,16 +118,17 @@ RSpec.describe "Api::V1::Events", type: :request do
       put "/api/v1/events/#{event.id}", params: { event: valid_attributes }
       
       expect(response).to have_http_status(:ok)
-      json_response = JSON.parse(response.body)
-      expect(json_response["title"]).to eq("Updated Event")
+      
+      event_data = json_response[:data]
+      expect(event_data[:type]).to eq('event')
+      expect(event_data[:attributes][:title]).to eq("Updated Event")
     end
 
     it "returns errors with invalid attributes" do
       put "/api/v1/events/#{event.id}", params: { event: invalid_attributes }
       
       expect(response).to have_http_status(:unprocessable_entity)
-      json_response = JSON.parse(response.body)
-      expect(json_response["error"]).to eq("Failed to update event")
+      expect(json_response[:error]).to eq("Failed to update event")
     end
   end
 

@@ -3,13 +3,13 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   # GET /api/v1/users
   def index
-    @users = User.all
-    render json: @users.as_json(include: :event)
+    @users = User.includes(:event).all
+    render json: UserSerializer.new(@users, include: [:event]).serializable_hash
   end
 
   # GET /api/v1/users/:id
   def show
-    render json: @user.as_json(include: :event)
+    render json: UserSerializer.new(@user, include: [:event]).serializable_hash
   end
 
   # POST /api/v1/users
@@ -17,8 +17,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     @user = User.new(user_params)
     
     if @user.save
-      # Explicitly include event with its id to ensure it's in the response
-      render json: @user.as_json(include: {event: {methods: :id}}), status: :created
+      render json: UserSerializer.new(@user, include: [:event]).serializable_hash, status: :created
     else
       render json: { error: 'Failed to create user', details: @user.errors.full_messages }, 
              status: :unprocessable_content
@@ -28,7 +27,7 @@ class Api::V1::UsersController < Api::V1::BaseController
   # PATCH/PUT /api/v1/users/:id
   def update
     if @user.update(user_params)
-      render json: @user.as_json(include: :event)
+      render json: UserSerializer.new(@user, include: [:event]).serializable_hash
     else
       render json: { error: 'Failed to update user', details: @user.errors.full_messages }, 
              status: :unprocessable_content

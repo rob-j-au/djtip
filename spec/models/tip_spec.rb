@@ -55,13 +55,13 @@ RSpec.describe Tip, type: :model do
 
     describe '.recent' do
       it 'orders tips by created_at descending' do
-        expect(Tip.recent.to_a).to eq([large_tip, small_tip, new_tip, old_tip])
+        expect(Tip.recent.pluck(:id)).to eq([small_tip.id, large_tip.id, new_tip.id, old_tip.id])
       end
     end
 
     describe '.by_amount' do
       it 'orders tips by amount descending' do
-        expect(Tip.by_amount.to_a).to eq([large_tip, new_tip, old_tip, small_tip])
+        expect(Tip.by_amount.pluck(:id)).to eq([large_tip.id, old_tip.id, new_tip.id, small_tip.id])
       end
     end
   end
