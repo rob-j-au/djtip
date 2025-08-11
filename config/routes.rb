@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :events do
     resources :users, shallow: true
     resources :performers, shallow: true
+    resources :tips
   end
   resources :users
   
@@ -10,8 +11,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :events, defaults: { format: :json } do
-        resources :users, shallow: true
         resources :performers, shallow: true
+        resources :tips
       end
       resources :users, defaults: { format: :json }
       resources :performers, defaults: { format: :json }

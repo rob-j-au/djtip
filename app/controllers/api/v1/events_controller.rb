@@ -3,13 +3,13 @@ class Api::V1::EventsController < Api::V1::BaseController
 
   # GET /api/v1/events
   def index
-    @events = Event.all
-    render json: @events.as_json(include: [:users, :performers])
+    @events = Event.includes(:tips).all
+    render json: EventSerializer.new(@events, include: [:tips, 'tips.user']).serializable_hash
   end
 
   # GET /api/v1/events/:id
   def show
-    render json: @event.as_json(include: [:users, :performers])
+    render json: EventSerializer.new(@event, include: [:tips, 'tips.user']).serializable_hash
   end
 
   # POST /api/v1/events

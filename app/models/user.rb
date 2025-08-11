@@ -8,6 +8,7 @@ class User
 
   # Relationships
   belongs_to :event, optional: true
+  has_many :tips, dependent: :destroy
 
   # Validations
   validates :name, presence: true
