@@ -69,7 +69,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:title, :description, :date, :time, :hour, :minute, :ampm, :location)
+      params.require(:event).permit(:title, :description, :date, :time, :location)
     end
 
     # Combine separate date and time fields into a single datetime
