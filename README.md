@@ -1,6 +1,6 @@
 # DJ Tip App
 
-A Ruby on Rails 8 application using Mongoid (MongoDB) instead of ActiveRecord, with Bootstrap styling for managing events, users, and performers.
+A Ruby on Rails 8 application using Mongoid (MongoDB) instead of ActiveRecord, with Tailwind CSS styling for managing events, users, and performers.
 
 ## Features
 
@@ -8,7 +8,7 @@ A Ruby on Rails 8 application using Mongoid (MongoDB) instead of ActiveRecord, w
 - **Users Management**: Register users for events with contact information
 - **Performers Management**: Add performers to events with bio and genre information
 - **Relationships**: Events can have multiple users and performers
-- **Bootstrap UI**: Modern, responsive design with Bootstrap 5.3
+- **Tailwind CSS UI**: Modern, responsive design with Tailwind CSS
 - **MongoDB**: Uses Mongoid ODM instead of ActiveRecord
 
 ## Models
@@ -110,7 +110,7 @@ The app uses MongoDB with the following databases:
 
 - **Rails 8.0**: Latest Rails framework
 - **Mongoid 8.1**: MongoDB ODM
-- **Bootstrap 5.3**: CSS framework
+- **Tailwind CSS**: Utility-first CSS framework
 - **Stimulus**: JavaScript framework
 - **Turbo**: SPA-like page acceleration
 
@@ -120,7 +120,7 @@ The app uses MongoDB with the following databases:
 app/
 ├── controllers/          # Application controllers
 ├── models/              # Mongoid models
-├── views/               # ERB templates with Bootstrap styling
+├── views/               # ERB templates with Tailwind CSS styling
 └── assets/              # Stylesheets and JavaScript
 
 config/
