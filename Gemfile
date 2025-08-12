@@ -24,7 +24,6 @@ gem "stimulus-rails"
 gem "sprockets-rails"
 
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-rails"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
@@ -75,4 +74,5 @@ group :development do
   gem "web-console"
 end
 
-gem "shadcn-ui", "~> 0.0.15"
+
+gem "tailwindcss-rails", "~> 4.3"

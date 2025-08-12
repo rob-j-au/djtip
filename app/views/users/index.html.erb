@@ -1,44 +1,49 @@
-<div class="flex justify-between items-center mb-6">
-  <h1 class="text-3xl font-bold text-gray-900">Users</h1>
-  <%= link_to "New User", new_user_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
+<div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-8">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Users</h1>
+      <p class="text-gray-600 mt-2">Manage event attendees and tip contributors</p>
+    </div>
+    <%= link_to "New User", new_user_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-200" %>
+  </div>
 </div>
 
 <% if @users.any? %>
-  <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+  <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-gray-200 bg-gray-50">
+            <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 text-sm">Name</th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 text-sm">Email</th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 text-sm">Phone</th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 text-sm">Actions</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% @users.each do |user| %>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= user.name %></div>
+        <tbody>
+          <% @users.each_with_index do |user, index| %>
+            <tr class="border-b border-gray-200 transition-colors hover:bg-gray-50 <%= 'bg-gray-25' if index.even? %>">
+              <td class="p-4 align-middle">
+                <div class="flex items-center space-x-3">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-medium text-sm">
+                    <%= user.name&.first&.upcase || 'U' %>
+                  </div>
+                  <div class="font-medium text-gray-900"><%= user.name %></div>
+                </div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= user.email %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= user.phone %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                <% if user.event %>
-                  <%= link_to user.event.title, user.event, class: "text-blue-600 hover:text-blue-800 font-medium" %>
-                <% else %>
-                  <span class="text-gray-400">No event</span>
-                <% end %>
+              <td class="p-4 align-middle">
+                <div class="text-sm text-gray-600"><%= user.email %></div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="flex space-x-2">
-                  <%= link_to "View", user, class: "text-blue-600 hover:text-blue-800" %>
-                  <%= link_to "Edit", edit_user_path(user), class: "text-gray-600 hover:text-gray-800" %>
-                  <%= form_with model: user, method: :delete, local: true, class: "inline" do |form| %>
-                    <%= form.submit "Delete", class: "text-red-600 hover:text-red-800 cursor-pointer",
-                                    onclick: "return confirm('Are you sure you want to delete this user?')" %>
-                  <% end %>
+              <td class="p-4 align-middle">
+                <div class="text-sm text-gray-600"><%= user.phone %></div>
+              </td>
+              <td class="p-4 align-middle">
+                <div class="flex items-center space-x-2">
+                  <%= link_to "View", user, class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+                  <%= link_to "Edit", edit_user_path(user), class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+                  <%= link_to "Delete", user, method: :delete, 
+                              confirm: "Are you sure?", 
+                              class: "bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
                 </div>
               </td>
             </tr>
@@ -48,14 +53,16 @@
     </div>
   </div>
 <% else %>
-  <div class="text-center py-12">
-    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-2.239" />
-    </svg>
-    <h3 class="mt-2 text-sm font-medium text-gray-900">No users yet</h3>
-    <p class="mt-1 text-sm text-gray-500">Create your first user to get started!</p>
-    <div class="mt-6">
-      <%= link_to "Add User", new_user_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
+  <div class="bg-white rounded-lg border border-gray-200 shadow-sm text-center py-16">
+    <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+      <svg class="w-8 h-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+      </svg>
+    </div>
+    <h3 class="text-lg font-semibold text-gray-900 mb-2">No users yet</h3>
+    <p class="text-gray-600 mb-6 max-w-sm mx-auto">Add users to track event attendees and manage tip contributions effectively.</p>
+    <div class="space-y-4">
+      <%= link_to "Add Your First User", new_user_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition duration-200" %>
     </div>
   </div>
 <% end %>

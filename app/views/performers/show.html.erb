@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-header">
         <h1 class="mb-0"><%= @performer.name %></h1>
-        <span class="badge bg-secondary"><%= @performer.genre %></span>
+        <span class="inline-block bg-gray-200 text-gray-800 text-sm px-2 py-1 rounded"><%= @performer.genre %></span>
       </div>
       <div class="card-body">
         <% if @performer.bio.present? %>
