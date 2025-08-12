@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "application.tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-white min-h-screen">
-    <nav class="border-b bg-white shadow-sm sticky top-0 z-50">
+  <body class="bg-white text-gray-900 min-h-screen">
+    <nav class="border-b border-gray-200 bg-white shadow-sm sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center">
@@ -36,7 +40,7 @@
         </div>
         
         <!-- Mobile menu -->
-        <div class="md:hidden hidden bg-white border-t" data-mobile-menu-target="menu">
+        <div class="md:hidden hidden bg-white border-t border-gray-200" data-mobile-menu-target="menu">
           <div class="px-4 pt-4 pb-4 space-y-1">
             <%= link_to "Events", events_path, class: "text-gray-900 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium" %>
             <%= link_to "Users", users_path, class: "text-gray-900 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium" %>
@@ -51,7 +55,7 @@
         <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md mb-4" role="alert">
           <span class="block sm:inline"><%= notice %></span>
           <span class="absolute top-0 bottom-0 right-0 px-4 py-3" data-controller="alert" data-action="click->alert#dismiss">
-            <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <svg class="fill-current h-6 w-6 text-green-800" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
               <title>Close</title>
               <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
             </svg>
@@ -63,7 +67,7 @@
         <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md mb-4" role="alert">
           <span class="block sm:inline"><%= alert %></span>
           <span class="absolute top-0 bottom-0 right-0 px-4 py-3" data-controller="alert" data-action="click->alert#dismiss">
-            <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <svg class="fill-current h-6 w-6 text-red-800" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
               <title>Close</title>
               <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
             </svg>
