@@ -45,60 +45,15 @@
     <div class="form-control w-full">
       <%= form.label :date, class: "label" do %>
         <span class="label-text">Event Date & Time</span>
-        <span class="label-text-alt">MM/DD/YYYY HH:MM AM/PM</span>
+        <span class="label-text-alt">Select date and time using the native picker</span>
       <% end %>
       <div class="relative">
-        <%= form.text_field :date, 
-            value: (@event.date ? @event.date.strftime("%m/%d/%Y %I:%M %p") : ""),
+        <%= form.datetime_local_field :date, 
+            value: (@event.date ? @event.date.strftime("%Y-%m-%dT%H:%M") : ""),
             id: "datepicker-#{form.object_name}",
             datepicker: true,
-            datepicker_format: "mm/dd/yyyy",
-            datepicker_buttons: true,
-            datepicker_autoselect_today: true,
-            class: "input input-bordered w-full pl-10",
+            class: "input input-bordered w-full",
             placeholder: "Select date and time" %>
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-          </svg>
-        </div>
-      </div>
-      <div class="mt-3">
-        <label class="label">
-          <span class="label-text">Event Time</span>
-        </label>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="form-control">
-            <label class="label py-0">
-              <span class="label-text text-xs">Hour</span>
-            </label>
-            <%= form.select :hour, 
-                options_for_select((1..12).map { |h| [h.to_s.rjust(2, '0'), h] }, 
-                (@event.date ? @event.date.strftime("%I").to_i : 12)),
-                { prompt: "--" },
-                { class: "select select-bordered select-sm w-full" } %>
-          </div>
-          <div class="form-control">
-            <label class="label py-0">
-              <span class="label-text text-xs">Minute</span>
-            </label>
-            <%= form.select :minute, 
-                options_for_select((0..59).step(15).map { |m| [m.to_s.rjust(2, '0'), m] }, 
-                (@event.date ? (@event.date.min / 15) * 15 : 0)),
-                { prompt: "--" },
-                { class: "select select-bordered select-sm w-full" } %>
-          </div>
-          <div class="form-control">
-            <label class="label py-0">
-              <span class="label-text text-xs">AM/PM</span>
-            </label>
-            <%= form.select :ampm, 
-                options_for_select([['AM', 'AM'], ['PM', 'PM']], 
-                (@event.date ? @event.date.strftime("%p") : 'PM')),
-                { prompt: "--" },
-                { class: "select select-bordered select-sm w-full" } %>
-          </div>
-        </div>
       </div>
     </div>
   </fieldset>

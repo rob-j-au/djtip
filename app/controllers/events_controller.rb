@@ -72,75 +72,23 @@ class EventsController < ApplicationController
       params.require(:event).permit(:title, :description, :date, :time, :location)
     end
 
-    # Combine separate date and time fields into a single datetime
+    # Handle datetime-local input format
     def combine_date_and_time(event)
       if params[:event][:date].present?
         begin
           date_str = params[:event][:date]
           
-          # Parse the date from the datepicker format (mm/dd/yyyy)
-          date_part = Date.strptime(date_str, "%m/%d/%Y") rescue Date.parse(date_str)
-          
-          # Handle dropdown time fields (hour, minute, ampm)
-          if params[:event][:hour].present? && params[:event][:minute].present? && params[:event][:ampm].present?
-            hour = params[:event][:hour].to_i
-            minute = params[:event][:minute].to_i
-            ampm = params[:event][:ampm]
-            
-            # Convert 12-hour format to 24-hour format
-            if ampm == 'AM' && hour == 12
-              hour = 0
-            elsif ampm == 'PM' && hour != 12
-              hour += 12
-            end
-            
-            # Combine date and time
-            combined_datetime = DateTime.new(
-              date_part.year,
-              date_part.month,
-              date_part.day,
-              hour,
-              minute,
-              0
-            )
-            
-            event.date = combined_datetime
-          elsif params[:event][:time].present?
-            # Fallback to single time field if present
-            time_str = params[:event][:time]
-            time_part = Time.parse(time_str)
-            
-            combined_datetime = DateTime.new(
-              date_part.year,
-              date_part.month,
-              date_part.day,
-              time_part.hour,
-              time_part.min,
-              time_part.sec
-            )
-            
-            event.date = combined_datetime
+          # Handle datetime-local format (YYYY-MM-DDTHH:MM)
+          if date_str.include?('T')
+            event.date = DateTime.parse(date_str)
           else
-            # If only date is provided, set time to noon
-            combined_datetime = DateTime.new(
-              date_part.year,
-              date_part.month,
-              date_part.day,
-              12,
-              0,
-              0
-            )
-            
-            event.date = combined_datetime
+            # Fallback for other date formats
+            event.date = DateTime.parse(date_str)
           end
         rescue => e
-          Rails.logger.error "Error combining date and time: #{e.message}"
-          # If parsing fails, try to use the original date field
-          begin
-            event.date = DateTime.parse(params[:event][:date])
-          rescue => parse_error
-            Rails.logger.error "Error parsing date: #{parse_error.message}"
-          end
+          Rails.logger.error "Error parsing date: #{e.message}"
+          # If parsing fails, set to nil to trigger validation error
+          event.date = nil
         end
       end
     end
