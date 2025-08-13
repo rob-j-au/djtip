@@ -1,8 +1,6 @@
-require "tailwind_merge"
-
 module ComponentsHelper
   def tw(*classes)
-    TailwindMerge::Merger.new.merge(classes.join(" "))
+    classes.flatten.compact.join(" ")
   end
 
   PRIMARY_CLASSES = " bg-primary text-primary-foreground hover:bg-primary/80 "
