@@ -56,9 +56,9 @@
                     <%= link_to @user.event.title, @user.event, class: "link link-primary" %>
                   </p>
                   <p class="text-sm opacity-70 mt-1">
-                    <%= @user.event.start_time.strftime('%B %d, %Y') %>
-                    <% if @user.event.venue.present? %>
-                      <br>at <%= @user.event.venue %>
+                    <%= @user.event.date.strftime('%B %d, %Y at %I:%M %p') %>
+                    <% if @user.event.location.present? %>
+                      <br>at <%= @user.event.location %>
                     <% end %>
                   </p>
                 <% else %>
