@@ -103,7 +103,7 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "returns errors with invalid attributes" do
       post "/api/v1/events", params: { event: invalid_attributes }
       
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:error]).to eq("Failed to create event")
       expect(json_response[:details]).to be_present
     end
@@ -127,7 +127,7 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "returns errors with invalid attributes" do
       put "/api/v1/events/#{event.id}", params: { event: invalid_attributes }
       
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:error]).to eq("Failed to update event")
     end
   end

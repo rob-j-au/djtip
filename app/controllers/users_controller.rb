@@ -31,8 +31,8 @@ class UsersController < ApplicationController
         format.json { render :show, status: :created, location: @user }
       else
         @events = Event.all
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @user.errors, status: :unprocessable_content }
       end
     end
   end
@@ -45,8 +45,8 @@ class UsersController < ApplicationController
         format.json { render :show, status: :ok, location: @user }
       else
         @events = Event.all
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @user.errors, status: :unprocessable_content }
       end
     end
   end

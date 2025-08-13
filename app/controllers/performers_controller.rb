@@ -31,8 +31,8 @@ class PerformersController < ApplicationController
         format.json { render :show, status: :created, location: @performer }
       else
         @events = Event.all
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @performer.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @performer.errors, status: :unprocessable_content }
       end
     end
   end
@@ -45,8 +45,8 @@ class PerformersController < ApplicationController
         format.json { render :show, status: :ok, location: @performer }
       else
         @events = Event.all
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @performer.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @performer.errors, status: :unprocessable_content }
       end
     end
   end
