@@ -40,6 +40,10 @@ gem "redis", ">= 4.0.1"
 # Use Sidekiq for background job processing
 gem "sidekiq"
 
+# Admin interface for Rails applications
+gem "rails_admin"
+gem "kaminari-mongoid"
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
