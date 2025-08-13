@@ -65,7 +65,7 @@
         </svg>
       </div>
       <div class="stat-title">Average Tip</div>
-      <div class="stat-value text-accent">$<%= @event.tips.average(:amount) ? '%.2f' % @event.tips.average(:amount) : '0.00' %></div>
+      <div class="stat-value text-accent">$<%= @event.tips.any? ? '%.2f' % (@event.tips.sum(:amount).to_f / @event.tips.count) : '0.00' %></div>
     </div>
   </div>
 
