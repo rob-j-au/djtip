@@ -2,6 +2,12 @@
 
 A Ruby on Rails 8 application using Mongoid (MongoDB) instead of ActiveRecord, with Tailwind CSS styling for managing events, users, and performers.
 
+## Admin User
+
+Email: admin@example.com
+Password: password123
+
+
 ## Features
 
 - **Events Management**: Create and manage events with title, description, date, and location
