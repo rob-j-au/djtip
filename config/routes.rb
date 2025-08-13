@@ -7,6 +7,9 @@ Rails.application.routes.draw do
     resources :tips
   end
   
+  # Chrome DevTools / RailsPanel support
+  get "/.well-known/appspecific/com.chrome.devtools.json", to: proc { [200, {}, ['']] }
+  
   # API routes
   namespace :api do
     namespace :v1 do

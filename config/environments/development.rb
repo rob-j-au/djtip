@@ -67,4 +67,19 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Configure meta_request for RailsPanel Chrome extension
+  config.middleware.use Rack::Cors do
+    allow do
+      origins '*'
+      resource '*', headers: :any, methods: [:get, :post, :options]
+    end
+  end if defined?(Rack::Cors)
+
+  # Ensure meta_request is properly loaded
+  config.after_initialize do
+    if defined?(MetaRequest)
+      MetaRequest.enabled = true
+    end
+  end
 end
