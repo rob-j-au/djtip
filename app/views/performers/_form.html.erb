@@ -1,47 +1,62 @@
-<%= form_with(model: performer, local: true, class: "row g-3") do |form| %>
+<%= form_with(model: performer, local: true, class: "space-y-6") do |form| %>
   <% if performer.errors.any? %>
-    <div class="col-12">
-      <div class="alert alert-danger">
-        <h6><%= pluralize(performer.errors.count, "error") %> prohibited this performer from being saved:</h6>
-        <ul class="mb-0">
-          <% performer.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">
+            <%= pluralize(performer.errors.count, "error") %> prohibited this performer from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul class="list-disc list-inside space-y-1">
+              <% performer.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   <% end %>
 
-  <div class="col-md-6">
-    <%= form.label :name, class: "form-label" %>
-    <%= form.text_field :name, class: "form-control" %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.text_field :name, class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
+
+    <div>
+      <%= form.label :genre, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.text_field :genre, class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
   </div>
 
-  <div class="col-md-6">
-    <%= form.label :genre, class: "form-label" %>
-    <%= form.text_field :genre, class: "form-control" %>
+  <div>
+    <%= form.label :bio, class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.text_area :bio, rows: 4, class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" %>
   </div>
 
-  <div class="col-12">
-    <%= form.label :bio, class: "form-label" %>
-    <%= form.text_area :bio, rows: 4, class: "form-control" %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :contact, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.text_field :contact, class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
+
+    <div>
+      <%= form.label :event_id, "Event", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.select :event_id, 
+                      options_from_collection_for_select(@events, :id, :title, performer.event_id),
+                      { prompt: "Select an event (optional)" },
+                      { class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" } %>
+    </div>
   </div>
 
-  <div class="col-md-6">
-    <%= form.label :contact, class: "form-label" %>
-    <%= form.text_field :contact, class: "form-control" %>
-  </div>
-
-  <div class="col-md-6">
-    <%= form.label :event_id, "Event", class: "form-label" %>
-    <%= form.select :event_id, 
-                    options_from_collection_for_select(@events, :id, :title, performer.event_id),
-                    { prompt: "Select an event (optional)" },
-                    { class: "form-select" } %>
-  </div>
-
-  <div class="col-12">
-    <%= form.submit class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-200" %>
-    <%= link_to "Cancel", performers_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded transition duration-200" %>
+  <div class="flex space-x-4">
+    <%= form.submit class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200 cursor-pointer" %>
+    <%= link_to "Cancel", performers_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200" %>
   </div>
 <% end %>
