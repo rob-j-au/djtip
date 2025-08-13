@@ -61,33 +61,6 @@
             </svg>
           </label>
         </div>
-        
-        <!-- Desktop user menu -->
-        <div class="hidden md:flex items-center gap-2">
-          <% if user_signed_in? %>
-            <div class="dropdown dropdown-end">
-              <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                <div class="w-10 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
-                  <%= current_user.email[0].upcase %>
-                </div>
-              </label>
-              <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                <li><span class="text-sm opacity-70">Signed in as</span></li>
-                <li><span class="text-sm font-semibold"><%= current_user.email %></span></li>
-                <li class="menu-title">
-                  <span>Account</span>
-                </li>
-                <li><%= link_to "Your Profile", edit_user_registration_path %></li>
-                <li><%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "w-full text-left" %></li>
-              </ul>
-            </div>
-          <% else %>
-            <div class="flex items-center gap-2">
-              <%= link_to "Log in", new_user_session_path, class: "btn btn-ghost" %>
-              <%= link_to "Sign up", new_user_registration_path, class: "btn btn-primary" %>
-            </div>
-          <% end %>
-        </div>
       </div>
     </div>
     
@@ -98,35 +71,8 @@
         <h3 class="font-bold text-lg mb-4">Menu</h3>
         <ul class="menu p-0">
           <li><%= link_to "Events", events_path, class: "text-lg" %></li>
-          <li><%= link_to "Users", users_path, class: "text-lg" %></li>
           <li><%= link_to "Performers", performers_path, class: "text-lg" %></li>
         </ul>
-        
-        <% if user_signed_in? %>
-          <div class="divider">Account</div>
-          <div class="flex items-center gap-3 p-4 bg-base-200 rounded-lg">
-            <div class="avatar">
-              <div class="w-12 rounded-full bg-primary text-primary-content flex items-center justify-center text-xl font-bold">
-                <%= current_user.email[0].upcase %>
-              </div>
-            </div>
-            <div>
-              <p class="font-semibold"><%= current_user.email %></p>
-              <div class="flex gap-2 mt-1">
-                <%= link_to "Profile", edit_user_registration_path, class: "text-sm link link-primary" %>
-                <span class="text-base-content/50">•</span>
-                <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-sm link link-primary" %>
-              </div>
-            </div>
-          </div>
-        <% else %>
-          <div class="divider">Account</div>
-          <div class="flex flex-col gap-2">
-            <%= link_to "Log in", new_user_session_path, class: "btn btn-primary btn-block" %>
-            <%= link_to "Sign up", new_user_registration_path, class: "btn btn-outline btn-block" %>
-          </div>
-        <% end %>
-        
         <div class="modal-action">
           <label for="mobile-menu-toggle" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
         </div>
