@@ -88,7 +88,7 @@
         </svg>
         Registered Users
       </h2>
-      <%= link_to "Add User", new_event_user_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
+      <%= link_to "Add User", new_event_user_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
     </div>
     <div class="px-6 py-6">
       <% if @event.users.any? %>
@@ -105,7 +105,7 @@
                     <div class="text-sm text-gray-600"><%= user.email %></div>
                   </div>
                 </div>
-                <%= link_to "View", user, class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded-md transition duration-200" %>
+                <%= link_to "View", user, class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded-lg transition duration-200" %>
               </div>
             </div>
           <% end %>
@@ -130,7 +130,7 @@
         </svg>
         Performers
       </h2>
-      <%= link_to "Add Performer", new_event_performer_path(@event), class: "bg-accent hover:bg-accent/90 text-accent-foreground font-medium py-2 px-4 rounded-md transition duration-200" %>
+      <%= link_to "Add Performer", new_event_performer_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
     </div>
     <div class="px-6 py-6">
       <% if @event.performers.any? %>
@@ -173,7 +173,7 @@
         </svg>
         Tips Received
       </h2>
-      <%= link_to "Add Tip", new_event_tip_path(@event), class: "bg-accent hover:bg-accent/90 text-accent-foreground font-medium py-2 px-4 rounded-md transition duration-200" %>
+      <%= link_to "Add Tip", new_event_tip_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
     </div>
     <div class="px-6 py-6">
       <% if @event.tips.any? %>
@@ -203,13 +203,13 @@
                     </div>
                   </div>
                 </div>
-                <%= link_to "View", [@event, tip], class: "bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-medium py-2 px-3 rounded-md transition duration-200" %>
+                <%= link_to "View", [@event, tip], class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded-lg transition duration-200" %>
             </div>
           <% end %>
         </div>
         <% if @event.tips.count > 5 %>
           <div class="mt-6 text-center">
-            <%= link_to "View All Tips", event_tips_path(@event), class: "bg-accent hover:bg-accent/90 text-accent-foreground font-medium py-3 px-6 rounded-lg transition duration-200" %>
+            <%= link_to "View All Tips", event_tips_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200" %>
           </div>
         <% end %>
       <% else %>
@@ -226,7 +226,7 @@
 
   <!-- Action Buttons -->
   <div class="bg-white rounded-lg shadow-sm border p-6 flex flex-wrap gap-4 justify-center">
-    <%= link_to "Edit Event", edit_event_path(@event), class: "bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium py-3 px-6 rounded-lg transition duration-200 flex items-center" %>
+    <%= link_to "Edit Event", edit_event_path(@event), class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 flex items-center" %>
     <%= link_to "Back to Events", events_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 flex items-center" %>
     <%= form_with model: @event, method: :delete, local: true, class: "inline" do |form| %>
       <%= form.submit "Delete Event", class: "bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg cursor-pointer transition duration-200",

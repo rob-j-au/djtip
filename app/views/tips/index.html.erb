@@ -5,12 +5,12 @@
         <h1 class="text-3xl font-bold text-gray-900">Tips for <%= @event.title %></h1>
         <p class="text-gray-600 mt-2">Track and manage all tip contributions for <%= @event.title %></p>
       </div>
-      <%= link_to "New Tip", new_event_tip_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-200" %>
+      <%= link_to "New Tip", new_event_tip_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
     </div>
   </div>
   
   <div class="mb-6">
-    <%= link_to 'Back to Event', @event, class: 'bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded transition duration-200' %>
+    <%= link_to 'Back to Event', @event, class: 'bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200' %>
   </div>
 
   <% if @tips.any? %>
@@ -63,8 +63,8 @@
                 </td>
                 <td class="p-4 align-middle">
                   <div class="flex items-center space-x-2">
-                    <%= link_to "View", [@event, tip], class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
-                    <%= link_to "Edit", [:edit, @event, tip], class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+                    <%= link_to "View", [@event, tip], class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200" %>
+                    <%= link_to "Edit", [:edit, @event, tip], class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200" %>
                     <%= link_to "Delete", [@event, tip], method: :delete, 
                                 confirm: "Are you sure?", 
                                 class: "bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
@@ -86,7 +86,7 @@
       <h3 class="text-lg font-semibold text-gray-900 mb-2">No tips yet</h3>
       <p class="text-gray-600 mb-6 max-w-sm mx-auto">Start collecting tips for <%= @event.title %>. Track contributions and show appreciation to your audience.</p>
       <div class="space-y-4">
-        <%= link_to "Record First Tip", new_event_tip_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition duration-200" %>
+        <%= link_to "Record First Tip", new_event_tip_path(@event), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200" %>
         <div class="text-xs text-gray-500">
           <span>or</span>
           <a href="#" class="text-blue-600 hover:underline ml-1">learn about tip tracking</a>
