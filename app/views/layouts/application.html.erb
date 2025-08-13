@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="cupcake">
+<html data-theme="light">
   <head>
     <title>DJ Tip App</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -15,8 +15,7 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     
-    <!-- Flowbite for datepicker -->
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <!-- Flowbite CSS removed - conflicts with daisyUI button styling -->
     
     <!-- JavaScript -->
     <%= javascript_importmap_tags %>
@@ -29,15 +28,15 @@
         const themeController = document.querySelector('.theme-controller');
         const html = document.documentElement;
         
-        // Load saved theme or default to cupcake
-        const savedTheme = localStorage.getItem('theme') || 'cupcake';
+        // Load saved theme or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
         html.setAttribute('data-theme', savedTheme);
         
         if (themeController) {
           themeController.checked = savedTheme === 'dark';
           
           themeController.addEventListener('change', function() {
-            const newTheme = this.checked ? 'dark' : 'cupcake';
+            const newTheme = this.checked ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
           });
