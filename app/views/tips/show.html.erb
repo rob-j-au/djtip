@@ -4,9 +4,12 @@
       <h1 class="text-2xl font-bold text-gray-900">Tip Details</h1>
           <div>
             <%= link_to 'Edit', [:edit, @event, @tip], class: 'bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200 mr-2' %>
-            <%= link_to 'Delete', [@event, @tip], method: :delete, 
-                confirm: 'Are you sure you want to delete this tip?', 
-                class: 'bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200' %>
+            <%= button_to 'Delete', [@event, @tip], method: :delete,
+                          class: 'bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200 cursor-pointer',
+                          data: { 
+                            confirm: 'Are you sure you want to delete this tip?',
+                            turbo_method: :delete 
+                          } %>
           </div>
     </div>
     <div class="px-6 py-6">

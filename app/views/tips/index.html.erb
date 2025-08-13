@@ -65,9 +65,12 @@
                   <div class="flex items-center space-x-2">
                     <%= link_to "View", [@event, tip], class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200" %>
                     <%= link_to "Edit", [:edit, @event, tip], class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200" %>
-                    <%= link_to "Delete", [@event, tip], method: :delete, 
-                                confirm: "Are you sure?", 
-                                class: "bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-1 px-3 rounded transition duration-200" %>
+                    <%= button_to "Delete", [@event, tip], method: :delete,
+                                  class: "bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200 cursor-pointer",
+                                  data: { 
+                                    confirm: "Are you sure?",
+                                    turbo_method: :delete 
+                                  } %>
                   </div>
                 </td>
               </tr>
