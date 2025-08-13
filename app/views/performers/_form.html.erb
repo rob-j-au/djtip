@@ -19,57 +19,69 @@
     </div>
   <% end %>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="form-control w-full">
-      <%= form.label :name, class: "label" do %>
-        <span class="label-text">Performer Name</span>
-        <span class="label-text-alt">Required</span>
-      <% end %>
-      <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Enter performer name" %>
-    </div>
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Basic Information</legend>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <%= form.label :name, class: "label" do %>
+          <span class="label-text">Performer Name</span>
+          <span class="label-text-alt">Required</span>
+        <% end %>
+        <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Enter performer name" %>
+      </div>
 
-    <div class="form-control w-full">
-      <%= form.label :genre, class: "label" do %>
-        <span class="label-text">Genre</span>
-        <span class="label-text-alt">Optional</span>
-      <% end %>
-      <%= form.text_field :genre, class: "input input-bordered w-full", placeholder: "e.g., Rock, Jazz, Hip-Hop" %>
+      <div class="form-control w-full">
+        <%= form.label :genre, class: "label" do %>
+          <span class="label-text">Genre</span>
+          <span class="label-text-alt">Optional</span>
+        <% end %>
+        <%= form.text_field :genre, class: "input input-bordered w-full", placeholder: "e.g., Rock, Jazz, Hip-Hop" %>
+      </div>
     </div>
-  </div>
+  </fieldset>
 
-  <div class="form-control w-full">
-    <%= form.label :bio, class: "label" do %>
-      <span class="label-text">Biography</span>
-      <span class="label-text-alt">Tell us about the performer</span>
-    <% end %>
-    <%= form.text_area :bio, 
-        rows: 4, 
-        class: "textarea textarea-bordered h-32", 
-        placeholder: "Enter performer's biography, background, or other relevant information" %>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Biography</legend>
+    
     <div class="form-control w-full">
-      <%= form.label :contact, class: "label" do %>
-        <span class="label-text">Contact Information</span>
-        <span class="label-text-alt">Email, phone, or manager</span>
+      <%= form.label :bio, class: "label" do %>
+        <span class="label-text">Biography</span>
+        <span class="label-text-alt">Tell us about the performer</span>
       <% end %>
-      <%= form.text_field :contact, 
-          class: "input input-bordered w-full", 
-          placeholder: "Email, phone, or manager details" %>
+      <%= form.text_area :bio, 
+          rows: 4, 
+          class: "textarea textarea-bordered h-32", 
+          placeholder: "Enter performer's biography, background, or other relevant information" %>
     </div>
+  </fieldset>
 
-    <div class="form-control w-full">
-      <%= form.label :event_id, class: "label" do %>
-        <span class="label-text">Associated Event</span>
-        <span class="label-text-alt">Optional</span>
-      <% end %>
-      <%= form.select :event_id, 
-                    options_from_collection_for_select(@events, :id, :title, performer.event_id),
-                    { include_blank: "Select an event" },
-                    { class: "select select-bordered w-full" } %>
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Contact & Event</legend>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <%= form.label :contact, class: "label" do %>
+          <span class="label-text">Contact Information</span>
+          <span class="label-text-alt">Email, phone, or manager</span>
+        <% end %>
+        <%= form.text_field :contact, 
+            class: "input input-bordered w-full", 
+            placeholder: "Email, phone, or manager details" %>
+      </div>
+
+      <div class="form-control w-full">
+        <%= form.label :event_id, class: "label" do %>
+          <span class="label-text">Associated Event</span>
+          <span class="label-text-alt">Optional</span>
+        <% end %>
+        <%= form.select :event_id, 
+                      options_from_collection_for_select(@events, :id, :title, performer.event_id),
+                      { include_blank: "Select an event" },
+                      { class: "select select-bordered w-full" } %>
+      </div>
     </div>
-  </div>
+  </fieldset>
 
   <div class="flex justify-end mt-8 space-x-3">
     <%= link_to "Cancel", performers_path, class: "btn btn-ghost" %>

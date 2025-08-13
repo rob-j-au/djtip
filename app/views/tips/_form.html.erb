@@ -19,63 +19,75 @@
     </div>
   <% end %>
 
-  <div class="form-control w-full">
-    <%= form.label :user_id, class: "label" do %>
-      <span class="label-text">Tipper (User)</span>
-      <span class="label-text-alt">Who left the tip?</span>
-    <% end %>
-    <%= form.collection_select :user_id, 
-                            User.all, 
-                            :id, 
-                            :name, 
-                            { prompt: 'Select a user' }, 
-                            { class: "select select-bordered w-full" } %>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Tipper Information</legend>
+    
     <div class="form-control w-full">
-      <%= form.label :amount, class: "label" do %>
-        <span class="label-text">Amount</span>
-        <span class="label-text-alt">Required</span>
+      <%= form.label :user_id, class: "label" do %>
+        <span class="label-text">Tipper (User)</span>
+        <span class="label-text-alt">Who left the tip?</span>
       <% end %>
-      <label class="input-group">
-        <span class="bg-base-200 px-4">$</span>
-        <%= form.number_field :amount, 
-            step: 0.01, 
-            min: 0.01, 
-            class: "input input-bordered w-full", 
-            placeholder: "0.00" %>
-      </label>
+      <%= form.collection_select :user_id, 
+                              User.all, 
+                              :id, 
+                              :name, 
+                              { prompt: 'Select a user' }, 
+                              { class: "select select-bordered w-full" } %>
     </div>
+  </fieldset>
 
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Tip Amount</legend>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <%= form.label :amount, class: "label" do %>
+          <span class="label-text">Amount</span>
+          <span class="label-text-alt">Required</span>
+        <% end %>
+        <label class="input-group">
+          <span class="bg-base-200 px-4">$</span>
+          <%= form.number_field :amount, 
+              step: 0.01, 
+              min: 0.01, 
+              class: "input input-bordered w-full", 
+              placeholder: "0.00" %>
+        </label>
+      </div>
+
+      <div class="form-control w-full">
+        <%= form.label :currency, class: "label" do %>
+          <span class="label-text">Currency</span>
+          <span class="label-text-alt">Select one</span>
+        <% end %>
+        <%= form.select :currency, 
+            options_for_select([
+              ['USD - US Dollar', 'USD'],
+              ['EUR - Euro', 'EUR'],
+              ['GBP - British Pound', 'GBP'],
+              ['AUD - Australian Dollar', 'AUD'],
+              ['CAD - Canadian Dollar', 'CAD']
+            ], tip.currency), 
+            { prompt: 'Select currency' }, 
+            { class: "select select-bordered w-full" } %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Message</legend>
+    
     <div class="form-control w-full">
-      <%= form.label :currency, class: "label" do %>
-        <span class="label-text">Currency</span>
-        <span class="label-text-alt">Select one</span>
+      <%= form.label :message, class: "label" do %>
+        <span class="label-text">Message</span>
+        <span class="label-text-alt">Optional</span>
       <% end %>
-      <%= form.select :currency, 
-          options_for_select([
-            ['USD - US Dollar', 'USD'],
-            ['EUR - Euro', 'EUR'],
-            ['GBP - British Pound', 'GBP'],
-            ['AUD - Australian Dollar', 'AUD'],
-            ['CAD - Canadian Dollar', 'CAD']
-          ], tip.currency), 
-          { prompt: 'Select currency' }, 
-          { class: "select select-bordered w-full" } %>
+      <%= form.text_area :message, 
+          rows: 3, 
+          class: "textarea textarea-bordered h-24", 
+          placeholder: "Optional message from the tipper..." %>
     </div>
-  </div>
-
-  <div class="form-control w-full">
-    <%= form.label :message, class: "label" do %>
-      <span class="label-text">Message</span>
-      <span class="label-text-alt">Optional</span>
-    <% end %>
-    <%= form.text_area :message, 
-        rows: 3, 
-        class: "textarea textarea-bordered h-24", 
-        placeholder: "Optional message from the tipper..." %>
-  </div>
+  </fieldset>
 
   <div class="flex justify-end mt-8 space-x-3">
     <%= link_to 'Cancel', event_tips_path(@event), class: "btn btn-ghost" %>

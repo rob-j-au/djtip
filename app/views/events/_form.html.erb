@@ -19,15 +19,29 @@
     </div>
   <% end %>
 
-  <div class="form-control w-full">
-    <%= form.label :title, class: "label" do %>
-      <span class="label-text">Event Title</span>
-      <span class="label-text-alt">Required</span>
-    <% end %>
-    <%= form.text_field :title, class: "input input-bordered w-full", placeholder: "Enter event title" %>
-  </div>
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Basic Information</legend>
+    
+    <div class="form-control w-full">
+      <%= form.label :title, class: "label" do %>
+        <span class="label-text">Event Title</span>
+        <span class="label-text-alt">Required</span>
+      <% end %>
+      <%= form.text_field :title, class: "input input-bordered w-full", placeholder: "Enter event title" %>
+    </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="form-control w-full mt-4">
+      <%= form.label :location, class: "label" do %>
+        <span class="label-text">Location</span>
+        <span class="label-text-alt">Optional</span>
+      <% end %>
+      <%= form.text_field :location, class: "input input-bordered w-full", placeholder: "Enter event location" %>
+    </div>
+  </fieldset>
+
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Date & Time</legend>
+    
     <div class="form-control w-full">
       <%= form.label :date, class: "label" do %>
         <span class="label-text">Event Date & Time</span>
@@ -87,26 +101,22 @@
         </div>
       </div>
     </div>
+  </fieldset>
 
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Event Details</legend>
+    
     <div class="form-control w-full">
-      <%= form.label :location, class: "label" do %>
-        <span class="label-text">Location</span>
-        <span class="label-text-alt">Optional</span>
+      <%= form.label :description, class: "label" do %>
+        <span class="label-text">Event Description</span>
+        <span class="label-text-alt">Tell us about the event</span>
       <% end %>
-      <%= form.text_field :location, class: "input input-bordered w-full", placeholder: "Enter event location" %>
+      <%= form.text_area :description, 
+          rows: 4, 
+          class: "textarea textarea-bordered h-24", 
+          placeholder: "Enter event details, special instructions, or other relevant information" %>
     </div>
-  </div>
-
-  <div class="form-control w-full">
-    <%= form.label :description, class: "label" do %>
-      <span class="label-text">Event Description</span>
-      <span class="label-text-alt">Tell us about the event</span>
-    <% end %>
-    <%= form.text_area :description, 
-        rows: 4, 
-        class: "textarea textarea-bordered h-24", 
-        placeholder: "Enter event details, special instructions, or other relevant information" %>
-  </div>
+  </fieldset>
 
   <div class="flex justify-end mt-8 space-x-3">
     <%= link_to "Cancel", events_path, class: "btn btn-ghost" %>
