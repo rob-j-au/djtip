@@ -1,4 +1,9 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  # Sidekiq Web UI
+  mount Sidekiq::Web => '/sidekiq'
+  
   resources :performers
   resources :users
   resources :events do

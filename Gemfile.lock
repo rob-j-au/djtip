@@ -245,6 +245,10 @@ GEM
     rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
+    redis (5.4.1)
+      redis-client (>= 0.22.0)
+    redis-client (0.25.2)
+      connection_pool
     regexp_parser (2.11.1)
     reline (0.6.2)
       io-console (~> 0.5)
@@ -297,6 +301,12 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
+    sidekiq (8.0.7)
+      connection_pool (>= 2.5.0)
+      json (>= 2.9.0)
+      logger (>= 1.6.2)
+      rack (>= 3.1.0)
+      redis-client (>= 0.23.2)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
       logger
@@ -369,8 +379,10 @@ DEPENDENCIES
   puma (>= 5.0)
   rack-cors
   rails (~> 8.0.2)
+  redis (>= 4.0.1)
   rspec-rails (~> 6.0)
   rubocop-rails-omakase
+  sidekiq
   sprockets-rails
   stimulus-rails
   tailwindcss-rails (~> 4.3)
