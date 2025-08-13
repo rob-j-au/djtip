@@ -19,44 +19,52 @@
     </div>
   <% end %>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="form-control w-full">
-      <%= form.label :name, class: "label" do %>
-        <span class="label-text">Full Name</span>
-        <span class="label-text-alt">Required</span>
-      <% end %>
-      <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Enter full name" %>
-    </div>
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Personal Information</legend>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <%= form.label :name, class: "label" do %>
+          <span class="label-text">Full Name</span>
+          <span class="label-text-alt">Required</span>
+        <% end %>
+        <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Enter full name" %>
+      </div>
 
-    <div class="form-control w-full">
-      <%= form.label :email, class: "label" do %>
-        <span class="label-text">Email Address</span>
-        <span class="label-text-alt">Required</span>
-      <% end %>
-      <%= form.email_field :email, class: "input input-bordered w-full", placeholder: "user@example.com" %>
+      <div class="form-control w-full">
+        <%= form.label :email, class: "label" do %>
+          <span class="label-text">Email Address</span>
+          <span class="label-text-alt">Required</span>
+        <% end %>
+        <%= form.email_field :email, class: "input input-bordered w-full", placeholder: "user@example.com" %>
+      </div>
     </div>
-  </div>
+  </fieldset>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="form-control w-full">
-      <%= form.label :phone, class: "label" do %>
-        <span class="label-text">Phone Number</span>
-        <span class="label-text-alt">Optional</span>
-      <% end %>
-      <%= form.text_field :phone, class: "input input-bordered w-full", placeholder: "(123) 456-7890" %>
-    </div>
+  <fieldset class="border border-base-300 rounded-lg p-6 mb-6">
+    <legend class="text-lg font-semibold px-2">Contact & Event</legend>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <%= form.label :phone, class: "label" do %>
+          <span class="label-text">Phone Number</span>
+          <span class="label-text-alt">Optional</span>
+        <% end %>
+        <%= form.text_field :phone, class: "input input-bordered w-full", placeholder: "(123) 456-7890" %>
+      </div>
 
-    <div class="form-control w-full">
-      <%= form.label :event_id, class: "label" do %>
-        <span class="label-text">Associated Event</span>
-        <span class="label-text-alt">Optional</span>
-      <% end %>
-      <%= form.select :event_id, 
-                    options_from_collection_for_select(@events, :id, :title, user.event_id),
-                    { include_blank: "Select an event" },
-                    { class: "select select-bordered w-full" } %>
+      <div class="form-control w-full">
+        <%= form.label :event_id, class: "label" do %>
+          <span class="label-text">Associated Event</span>
+          <span class="label-text-alt">Optional</span>
+        <% end %>
+        <%= form.select :event_id, 
+                      options_from_collection_for_select(@events, :id, :title, user.event_id),
+                      { include_blank: "Select an event" },
+                      { class: "select select-bordered w-full" } %>
+      </div>
     </div>
-  </div>
+  </fieldset>
 
   <div class="flex justify-end mt-8 space-x-3">
     <%= link_to "Cancel", users_path, class: "btn btn-ghost" %>
