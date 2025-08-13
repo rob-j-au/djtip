@@ -1,5 +1,11 @@
 RailsAdmin.config do |config|
   config.asset_source = :importmap
+  
+  # Set custom app name for admin interface
+  config.main_app_name = ["DJ Tip App", "Admin"]
+  
+  # Use custom isolated layout for RailsAdmin
+  config.parent_controller = 'ApplicationController'
 
   ### Popular gems integration
 
