@@ -1,6 +1,9 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  # Devise routes for authentication
+  devise_for :users
+  
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   # Sidekiq Web UI
   mount Sidekiq::Web => '/sidekiq'
@@ -29,6 +32,9 @@ Rails.application.routes.draw do
   end
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  
+  # Root route
+  root 'events#index'
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by uptime monitors and load balancers.
