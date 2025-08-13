@@ -72,6 +72,12 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "meta_request", "~> 0.8.5"
+  gem "rack-cors"
+  
+  # Alternative debugging tools if RailsPanel doesn't work
+  gem "better_errors"
+  gem "binding_of_caller"
 end
 
 
