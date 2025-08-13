@@ -100,7 +100,7 @@ RSpec.describe "Api::V1::Users", type: :request do
     it "returns errors with invalid attributes" do
       post "/api/v1/users", params: { user: invalid_attributes }
       
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:error]).to eq("Failed to create user")
       expect(json_response[:details]).to be_present
     end
@@ -124,7 +124,7 @@ RSpec.describe "Api::V1::Users", type: :request do
     it "returns errors with invalid attributes" do
       put "/api/v1/users/#{user.id}", params: { user: invalid_attributes }
       
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:error]).to eq("Failed to update user")
     end
   end

@@ -101,7 +101,7 @@ RSpec.describe "Api::V1::Performers", type: :request do
     it "returns errors with invalid attributes" do
       post "/api/v1/performers", params: { performer: invalid_attributes }
       
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:error]).to eq("Failed to create performer")
       expect(json_response[:details]).to be_present
     end
@@ -125,7 +125,7 @@ RSpec.describe "Api::V1::Performers", type: :request do
     it "returns errors with invalid attributes" do
       put "/api/v1/performers/#{performer.id}", params: { performer: invalid_attributes }
       
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:error]).to eq("Failed to update performer")
     end
   end
