@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   
   # Devise parameter sanitization
-  before_action :authenticate_user!, except: [:index, :show]
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
