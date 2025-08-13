@@ -1,54 +1,60 @@
-<div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-8">
-  <div class="flex justify-between items-center">
-    <div>
-      <h1 class="text-3xl font-bold text-gray-900">Users</h1>
-      <p class="text-gray-600 mt-2">Manage event attendees and tip contributors</p>
+<div class="card bg-base-100 shadow-xl mb-8">
+  <div class="card-body">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 class="card-title text-4xl">Users</h1>
+        <p class="text-base-content/70 mt-1">Manage event attendees and tip contributors</p>
+      </div>
+      <%= link_to "New User", new_user_path, class: "btn btn-primary" %>
     </div>
-    <%= link_to "New User", new_user_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
   </div>
 </div>
 
 <% if @users.any? %>
-  <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+  <div class="card bg-base-100 shadow-xl">
     <div class="overflow-x-auto">
-      <table class="w-full">
+      <table class="table">
         <thead>
-          <tr class="border-b border-gray-200 bg-gray-50">
-            <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 text-sm">Name</th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 text-sm">Email</th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 text-sm">Phone</th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 text-sm">Actions</th>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% @users.each_with_index do |user, index| %>
-            <tr class="border-b border-gray-200 transition-colors hover:bg-gray-50 <%= 'bg-gray-25' if index.even? %>">
-              <td class="p-4 align-middle">
-                <div class="flex items-center space-x-3">
-                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-medium text-sm">
-                    <%= user.name&.first&.upcase || 'U' %>
+          <% @users.each do |user| %>
+            <tr class="hover">
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar placeholder">
+                    <div class="bg-neutral text-neutral-content rounded-full w-10">
+                      <span class="text-sm"><%= user.name&.first&.upcase || 'U' %></span>
+                    </div>
                   </div>
-                  <div class="font-medium text-gray-900"><%= user.name %></div>
+                  <div>
+                    <div class="font-bold"><%= user.name %></div>
+                  </div>
                 </div>
               </td>
-              <td class="p-4 align-middle">
-                <div class="text-sm text-gray-600"><%= user.email %></div>
+              <td>
+                <div class="text-sm opacity-70"><%= user.email %></div>
               </td>
-              <td class="p-4 align-middle">
-                <div class="text-sm text-gray-600"><%= user.phone %></div>
+              <td>
+                <div class="text-sm opacity-70"><%= user.phone %></div>
               </td>
-              <td class="p-4 align-middle">
-                <div class="flex items-center space-x-2">
-                  <%= link_to "View", user, class: "bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200" %>
-                  <%= link_to "Edit", edit_user_path(user), class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200" %>
+              <th>
+                <div class="flex gap-2">
+                  <%= link_to "View", user, class: "btn btn-ghost btn-xs" %>
+                  <%= link_to "Edit", edit_user_path(user), class: "btn btn-ghost btn-xs" %>
                   <%= button_to "Delete", user, method: :delete,
-                                class: "bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-1 px-3 rounded-lg transition duration-200 cursor-pointer",
+                                class: "btn btn-ghost btn-xs text-error",
                                 data: { 
                                   confirm: "Are you sure?",
                                   turbo_method: :delete 
                                 } %>
                 </div>
-              </td>
+              </th>
             </tr>
           <% end %>
         </tbody>
@@ -56,16 +62,14 @@
     </div>
   </div>
 <% else %>
-  <div class="bg-white rounded-lg border border-gray-200 shadow-sm text-center py-16">
-    <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-      <svg class="w-8 h-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body items-center text-center py-16">
+      <svg class="w-16 h-16 text-base-content/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
       </svg>
-    </div>
-    <h3 class="text-lg font-semibold text-gray-900 mb-2">No users yet</h3>
-    <p class="text-gray-600 mb-6 max-w-sm mx-auto">Add users to track event attendees and manage tip contributions effectively.</p>
-    <div class="space-y-4">
-      <%= link_to "Add Your First User", new_user_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200" %>
+      <h3 class="card-title mt-4">No users yet</h3>
+      <p class="text-base-content/70 mb-6">Get started by creating a new user</p>
+      <%= link_to "New User", new_user_path, class: "btn btn-primary" %>
     </div>
   </div>
 <% end %>

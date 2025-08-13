@@ -1,50 +1,97 @@
-<div class="row justify-content-center">
-  <div class="col-lg-8">
-    <div class="card">
-      <div class="card-header">
-        <h1 class="mb-0"><%= @performer.name %></h1>
-        <span class="inline-block bg-gray-200 text-gray-800 text-sm px-2 py-1 rounded"><%= @performer.genre %></span>
+<div class="container mx-auto p-4 md:p-8">
+  <div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <h1 class="card-title text-3xl md:text-4xl"><%= @performer.name %></h1>
+        <div class="badge badge-secondary badge-lg text-lg p-4"><%= @performer.genre %></div>
       </div>
-      <div class="card-body">
+      
+      <div class="divider"></div>
+      
+      <div class="space-y-6">
         <% if @performer.bio.present? %>
-          <div class="row mb-3">
-            <div class="col-sm-3"><strong>Bio:</strong></div>
-            <div class="col-sm-9"><%= simple_format(@performer.bio) %></div>
+          <div class="space-y-2">
+            <h2 class="text-xl font-semibold">Biography</h2>
+            <div class="prose max-w-none">
+              <%= simple_format(@performer.bio, class: "leading-relaxed") %>
+            </div>
           </div>
         <% end %>
         
-        <% if @performer.contact.present? %>
-          <div class="row mb-3">
-            <div class="col-sm-3"><strong>Contact:</strong></div>
-            <div class="col-sm-9"><%= @performer.contact %></div>
-          </div>
-        <% end %>
-        
-        <div class="row mb-3">
-          <div class="col-sm-3"><strong>Event:</strong></div>
-          <div class="col-sm-9">
-            <% if @performer.event %>
-              <%= link_to @performer.event.title, @performer.event, class: "text-decoration-none" %>
-            <% else %>
-              <span class="text-muted">No event assigned</span>
-            <% end %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <% if @performer.contact.present? %>
+            <div class="card bg-base-200">
+              <div class="card-body p-4">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Contact Information
+                </h3>
+                <p class="mt-2"><%= @performer.contact %></p>
+              </div>
+            </div>
+          <% end %>
+          
+          <div class="card bg-base-200">
+            <div class="card-body p-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Event Details
+              </h3>
+              <div class="mt-2">
+                <% if @performer.event %>
+                  <p>Performing at: <%= link_to @performer.event.title, @performer.event, class: "link link-primary" %></p>
+                  <p class="text-sm opacity-70 mt-1">
+                    <%= @performer.event.start_time.strftime('%B %d, %Y') %>
+                    <% if @performer.event.venue.present? %>
+                      <br>at <%= @performer.event.venue %>
+                    <% end %>
+                  </p>
+                <% else %>
+                  <p class="opacity-70">No event currently assigned</p>
+                <% end %>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      
+      <div class="divider"></div>
+      
+      <div class="flex flex-wrap justify-center gap-4 mt-6">
+        <%= link_to edit_performer_path(@performer), class: "btn btn-neutral" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Edit Performer
+        <% end %>
+        
+        <%= link_to performers_path, class: "btn" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Performers
+        <% end %>
+        
+        <%= button_to @performer, 
+            method: :delete,
+            class: "btn btn-error btn-outline",
+            form: { 
+              class: "inline-block m-0",
+              data: { 
+                turbo_confirm: "Are you sure you want to delete this performer?",
+                turbo_method: :delete 
+              } 
+            } do %>
+          <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          Delete Performer
+        <% end %>
+      </div>
     </div>
-  </div>
-</div>
-
-<div class="mt-4 text-center">
-  <div class="flex flex-wrap justify-center gap-3">
-    <%= link_to "Edit", edit_performer_path(@performer), class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
-    <%= link_to "Back to Performers", performers_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200" %>
-    <%= button_to "Delete", @performer, method: :delete,
-                  class: "bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 cursor-pointer",
-                  form_class: "inline",
-                  data: { 
-                    confirm: "Are you sure you want to delete this performer?",
-                    turbo_method: :delete 
-                  } %>
   </div>
 </div>
