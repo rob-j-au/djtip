@@ -45,9 +45,9 @@
                 <% if @performer.event %>
                   <p>Performing at: <%= link_to @performer.event.title, @performer.event, class: "link link-primary" %></p>
                   <p class="text-sm opacity-70 mt-1">
-                    <%= @performer.event.start_time.strftime('%B %d, %Y') %>
-                    <% if @performer.event.venue.present? %>
-                      <br>at <%= @performer.event.venue %>
+                    <%= @performer.event.date.strftime('%B %d, %Y at %I:%M %p') %>
+                    <% if @performer.event.location.present? %>
+                      <br>at <%= @performer.event.location %>
                     <% end %>
                   </p>
                 <% else %>
