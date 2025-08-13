@@ -1,15 +1,24 @@
 require 'rails_helper'
 
-# Specs in this file have access to a helper object that includes
-# the TipsHelper. For example:
-#
-# describe TipsHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 RSpec.describe TipsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "helper module" do
+    it "is included in the view context" do
+      expect(helper.class.included_modules).to include(TipsHelper)
+    end
+    
+    it "provides access to Rails helpers" do
+      expect(helper).to respond_to(:link_to)
+      expect(helper).to respond_to(:number_to_currency)
+    end
+  end
+  
+  describe "currency formatting" do
+    it "can format currency amounts using Rails helpers" do
+      expect(helper.number_to_currency(25.50)).to eq("$25.50")
+    end
+    
+    it "can format different currencies" do
+      expect(helper.number_to_currency(20.00, unit: "€")).to eq("€20.00")
+    end
+  end
 end
