@@ -3,258 +3,217 @@
  */
 
 /*
- * RailsAdmin CSS - Custom styles for admin interface
- * This file provides the necessary CSS for RailsAdmin to function properly
+ * RailsAdmin CSS - Isolated admin styles
+ * This file provides complete CSS for RailsAdmin without interfering with the main application
+ * All external imports are scoped to RailsAdmin context only
  */
 
-/* Import Bootstrap CSS for RailsAdmin styling */
-@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css');
+/* Import Bootstrap CSS only for RailsAdmin pages */
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css') layer(rails-admin);
 
-/* Import jQuery UI CSS for date pickers and other UI components */
-@import url('https://cdn.jsdelivr.net/npm/jquery-ui@1.13.3/dist/themes/ui-lightness/jquery-ui.css');
+/* Import jQuery UI CSS only for RailsAdmin */
+@import url('https://cdn.jsdelivr.net/npm/jquery-ui@1.13.3/dist/themes/ui-lightness/jquery-ui.css') layer(rails-admin);
 
-/* Import Flatpickr CSS for date/time pickers */
-@import url('https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css');
+/* Import Font Awesome for RailsAdmin icons */
+@import url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css') layer(rails-admin);
 
-/* Import Font Awesome for icons */
-@import url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css');
+/* Import Flatpickr for RailsAdmin date pickers */
+@import url('https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css') layer(rails-admin);
 
-/* Custom RailsAdmin overrides */
-body.rails_admin {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: #f8f9fa;
-}
-
-/* Ensure proper spacing and layout */
-.rails_admin .content {
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin: 20px;
-}
-
-/* Style for form elements */
-.rails_admin .form-control {
-  margin-bottom: 15px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  padding: 8px 12px;
-}
-
-.rails_admin .form-group {
-  margin-bottom: 20px;
-}
-
-.rails_admin label {
-  font-weight: 600;
-  color: #495057;
-  margin-bottom: 5px;
-  display: block;
-}
-
-/* Navigation styling */
-.rails_admin .navbar {
-  background-color: #343a40 !important;
-  border-bottom: 3px solid #007bff;
-}
-
-.rails_admin .navbar-brand {
-  color: #fff !important;
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-
-.rails_admin .navbar-nav .nav-link {
-  color: #fff !important;
-}
-
-.rails_admin .navbar-nav .nav-link:hover {
-  color: #007bff !important;
-}
-
-/* Table styling improvements */
-.rails_admin table {
-  margin-top: 20px;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.rails_admin .table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-  color: #495057;
-  border-bottom: 2px solid #dee2e6;
-  padding: 12px;
-}
-
-.rails_admin .table td {
-  padding: 12px;
-  vertical-align: middle;
-}
-
-.rails_admin .table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(0,0,0,.02);
-}
-
-/* Button styling */
-.rails_admin .btn {
-  margin-right: 8px;
-  margin-bottom: 8px;
-  border-radius: 4px;
-  font-weight: 500;
-  padding: 8px 16px;
-}
-
-.rails_admin .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.rails_admin .btn-success {
-  background-color: #28a745;
-  border-color: #28a745;
-}
-
-.rails_admin .btn-danger {
-  background-color: #dc3545;
-  border-color: #dc3545;
-}
-
-.rails_admin .btn-warning {
-  background-color: #ffc107;
-  border-color: #ffc107;
-  color: #212529;
-}
-
-/* Dashboard styling */
-.rails_admin .dashboard {
-  padding: 20px 0;
-}
-
-.rails_admin .dashboard .card {
-  margin-bottom: 20px;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-radius: 8px;
-}
-
-.rails_admin .dashboard .card-header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-  font-weight: 600;
-  color: #495057;
-}
-
-/* Sidebar styling */
-.rails_admin .sidebar {
-  background-color: #f8f9fa;
-  border-right: 1px solid #dee2e6;
-  min-height: calc(100vh - 56px);
-}
-
-.rails_admin .sidebar .nav-link {
-  color: #495057;
-  padding: 10px 15px;
-  border-radius: 4px;
-  margin: 2px 10px;
-}
-
-.rails_admin .sidebar .nav-link:hover {
-  background-color: #e9ecef;
-  color: #007bff;
-}
-
-.rails_admin .sidebar .nav-link.active {
-  background-color: #007bff;
-  color: white;
-}
-
-/* Breadcrumb styling */
-.rails_admin .breadcrumb {
-  background-color: transparent;
-  padding: 0;
-  margin-bottom: 20px;
-}
-
-.rails_admin .breadcrumb-item {
-  color: #6c757d;
-}
-
-.rails_admin .breadcrumb-item.active {
-  color: #495057;
-  font-weight: 500;
-}
-
-/* Alert styling */
-.rails_admin .alert {
-  border-radius: 4px;
-  margin-bottom: 20px;
-}
-
-/* Pagination styling */
-.rails_admin .pagination {
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.rails_admin .page-link {
-  color: #007bff;
-  border-color: #dee2e6;
-}
-
-.rails_admin .page-link:hover {
-  color: #0056b3;
-  background-color: #e9ecef;
-  border-color: #dee2e6;
-}
-
-.rails_admin .page-item.active .page-link {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-/* Search form styling */
-.rails_admin .search-form {
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .rails_admin .content {
-    padding: 15px;
-    margin: 10px;
+/* RailsAdmin-specific overrides and customizations */
+@layer rails-admin {
+  /* Scope all RailsAdmin styles to prevent conflicts */
+  body.rails_admin,
+  .rails_admin {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8f9fa;
   }
-  
-  .rails_admin .table-responsive {
-    font-size: 14px;
+
+  /* Navigation styling */
+  body.rails_admin .navbar {
+    background-color: #343a40 !important;
+    border-bottom: 3px solid #007bff;
   }
-  
-  .rails_admin .btn {
-    margin-right: 5px;
+
+  body.rails_admin .navbar-brand {
+    color: #fff !important;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  body.rails_admin .navbar-nav .nav-link {
+    color: #fff !important;
+  }
+
+  body.rails_admin .navbar-nav .nav-link:hover {
+    color: #007bff !important;
+  }
+
+  /* Content area styling */
+  body.rails_admin .content {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px;
+  }
+
+  /* Table improvements */
+  body.rails_admin table {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  body.rails_admin .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  body.rails_admin .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.02);
+  }
+
+  /* Button styling */
+  body.rails_admin .btn {
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  body.rails_admin .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  body.rails_admin .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+
+  body.rails_admin .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  /* Form styling */
+  body.rails_admin .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 8px 12px;
+  }
+
+  body.rails_admin .form-group {
+    margin-bottom: 20px;
+  }
+
+  body.rails_admin label {
+    font-weight: 600;
+    color: #495057;
     margin-bottom: 5px;
-    padding: 6px 12px;
-    font-size: 14px;
   }
-  
-  .rails_admin .sidebar {
-    min-height: auto;
-  }
-}
 
-@media (max-width: 576px) {
-  .rails_admin .navbar-brand {
-    font-size: 1.2rem;
+  /* Dashboard cards */
+  body.rails_admin .card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin-bottom: 20px;
   }
-  
-  .rails_admin .table th,
-  .rails_admin .table td {
-    padding: 8px;
-    font-size: 13px;
+
+  body.rails_admin .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+  }
+
+  /* Sidebar styling */
+  body.rails_admin .sidebar {
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+  }
+
+  body.rails_admin .sidebar .nav-link {
+    color: #495057;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin: 2px 10px;
+  }
+
+  body.rails_admin .sidebar .nav-link:hover {
+    background-color: #e9ecef;
+    color: #007bff;
+  }
+
+  body.rails_admin .sidebar .nav-link.active {
+    background-color: #007bff;
+    color: white;
+  }
+
+  /* Breadcrumb styling */
+  body.rails_admin .breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+
+  /* Alert styling */
+  body.rails_admin .alert {
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  /* Pagination styling */
+  body.rails_admin .pagination {
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  body.rails_admin .page-link {
+    color: #007bff;
+    border-color: #dee2e6;
+  }
+
+  body.rails_admin .page-link:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+  }
+
+  body.rails_admin .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    body.rails_admin .content {
+      padding: 15px;
+      margin: 10px;
+    }
+    
+    body.rails_admin .btn {
+      margin-right: 5px;
+      margin-bottom: 5px;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    body.rails_admin .navbar-brand {
+      font-size: 1.2rem;
+    }
+    
+    body.rails_admin .table th,
+    body.rails_admin .table td {
+      padding: 8px;
+      font-size: 13px;
+    }
   }
 }
