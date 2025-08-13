@@ -1,0 +1,21 @@
+# Sidekiq configuration file
+:concurrency: 5
+:timeout: 25
+:verbose: false
+:queues:
+  - default
+  - mailers
+  - notifications
+
+# Environment specific settings
+:production:
+  :concurrency: 10
+  :timeout: 30
+
+:development:
+  :concurrency: 2
+  :timeout: 10
+
+:test:
+  :concurrency: 1
+  :timeout: 5
