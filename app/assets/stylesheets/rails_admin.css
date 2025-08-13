@@ -3,28 +3,9 @@
  */
 
 /*
- * RailsAdmin CSS - Isolated admin styles
- * This file provides complete CSS for RailsAdmin without interfering with the main application
- * All external imports are scoped to RailsAdmin context only
+ * RailsAdmin CSS - Let RailsAdmin use its built-in styling
+ * This file is kept minimal to avoid conflicts with main application
  */
-
-/* Scope all RailsAdmin styles to prevent interference with main app */
-@layer rails-admin {
-  /* Only load RailsAdmin styles when body has rails_admin class */
-  body.rails_admin {
-    /* Bootstrap CSS for RailsAdmin only */
-    @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css');
-    
-    /* jQuery UI CSS for RailsAdmin only */
-    @import url('https://cdn.jsdelivr.net/npm/jquery-ui@1.13.3/dist/themes/ui-lightness/jquery-ui.css');
-    
-    /* Font Awesome for RailsAdmin icons only */
-    @import url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css');
-  }
-}
-
-/* Import Flatpickr for RailsAdmin date pickers */
-@import url('https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css') layer(rails-admin);
 
 /* RailsAdmin-specific overrides and customizations */
 @layer rails-admin {
