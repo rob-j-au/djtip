@@ -1,16 +1,34 @@
-<h2>Resend confirmation instructions</h2>
+<div class="min-h-screen flex items-center justify-center bg-base-200">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title text-2xl font-bold text-center mb-6">Resend Confirmation</h2>
+      <p class="text-center text-base-content/70 mb-6">Didn't receive confirmation instructions? We can send them again.</p>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+      <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }, local: true, class: "space-y-4") do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+        <fieldset class="form-control">
+          <legend class="label">
+            <span class="label-text font-semibold">Email Address</span>
+          </legend>
+          <%= f.email_field :email, 
+                autofocus: true, 
+                autocomplete: "email",
+                value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
+                class: "input input-bordered w-full",
+                placeholder: "Enter your email address" %>
+        </fieldset>
+
+        <div class="form-control mt-6">
+          <%= f.submit "Resend Confirmation Instructions", class: "btn btn-primary w-full" %>
+        </div>
+      <% end %>
+
+      <div class="divider">OR</div>
+      
+      <div class="text-center space-y-2">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
