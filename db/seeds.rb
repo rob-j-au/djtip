@@ -16,25 +16,25 @@ puts "Creating events..."
 
 events = [
   {
-    title: "Summer Vibes Festival",
+    title: "Bad Dog",
     description: "An outdoor electronic music festival featuring top DJs from around the world.",
     location: "Sydney Olympic Park",
     date: 3.weeks.from_now
   },
   {
-    title: "Underground Sessions",
+    title: "Kooky",
     description: "Intimate underground techno experience in a warehouse setting.",
     location: "Secret Warehouse Location",
     date: 2.weeks.from_now
   },
   {
-    title: "Rooftop Sunset",
+    title: "Loose Ends",
     description: "Chill house music with stunning city views.",
     location: "Sky Terrace Bar",
     date: 1.week.from_now
   },
   {
-    title: "Bass Drop Night",
+    title: "Park Beats",
     description: "Heavy bass and dubstep for the hardcore electronic fans.",
     location: "Metro Theatre",
     date: 4.days.from_now
