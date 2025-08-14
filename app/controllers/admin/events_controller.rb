@@ -23,14 +23,14 @@ class Admin::EventsController < Admin::BaseController
       end
     end
     
-    @events = @events.order(date: :desc)
+    @events = @events.order(date: -1)
   end
   
   def show
     set_page_title("Event: #{@event.title}")
     
-    @users = @event.users.order(:name)
-    @performers = @event.performers.order(:name)
+    @users = @event.users.order(name: 1)
+    @performers = @event.performers.order(name: 1)
     @tips = @event.tips.includes(:user).order(created_at: :desc).limit(20)
     @total_tips = @event.tips.sum(:amount)
   end
@@ -44,7 +44,7 @@ class Admin::EventsController < Admin::BaseController
     @event = Event.new(event_params)
     
     if @event.save
-      redirect_to new_admin_event_path(@event), notice: 'Event was successfully created.'
+      redirect_to admin_event_path(@event), notice: 'Event was successfully created.'
     else
       set_page_title("New Event")
       render :new, status: :unprocessable_entity
@@ -57,7 +57,7 @@ class Admin::EventsController < Admin::BaseController
   
   def update
     if @event.update(event_params)
-      redirect_to new_admin_event_path(@event), notice: 'Event was successfully updated.'
+      redirect_to admin_event_path(@event), notice: 'Event was successfully updated.'
     else
       set_page_title("Edit Event: #{@event.title}")
       render :edit, status: :unprocessable_entity
@@ -66,12 +66,12 @@ class Admin::EventsController < Admin::BaseController
   
   def destroy
     @event.destroy
-    redirect_to new_admin_events_path, notice: 'Event was successfully deleted.'
+    redirect_to admin_events_path, notice: 'Event was successfully deleted.'
   end
   
   def toggle_status
     # This could be used for activating/deactivating events if you add a status field
-    redirect_to new_admin_event_path(@event), notice: 'Event status updated.'
+    redirect_to admin_event_path(@event), notice: 'Event status updated.'
   end
   
   private

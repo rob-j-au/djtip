@@ -46,8 +46,8 @@ class Admin::TipsController < Admin::BaseController
     end
     
     @tips = @tips.order(created_at: :desc)
-    @events = Event.order(:title)
-    @users = User.order(:name)
+    @events = Event.order(title: 1)
+    @users = User.order(name: 1)
     @total_amount = @tips.sum(:amount)
   end
   
@@ -57,7 +57,7 @@ class Admin::TipsController < Admin::BaseController
   
   def destroy
     @tip.destroy
-    redirect_to new_admin_tips_path, notice: 'Tip was successfully deleted.'
+    redirect_to admin_tips_path, notice: 'Tip was successfully deleted.'
   end
   
   private

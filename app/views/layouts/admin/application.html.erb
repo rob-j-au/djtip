@@ -30,10 +30,10 @@
           </svg>
         </div>
         <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-          <%= render 'new_admin/shared/mobile_nav' %>
+          <%= render 'admin/shared/mobile_nav' %>
         </ul>
       </div>
-      <%= link_to new_admin_root_path, class: "btn btn-ghost text-xl" do %>
+      <%= link_to admin_root_path, class: "btn btn-ghost text-xl" do %>
         <i class="fas fa-tachometer-alt mr-2"></i>
         djtip Admin
       <% end %>
@@ -41,7 +41,7 @@
     
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <%= render 'new_admin/shared/desktop_nav' %>
+        <%= render 'admin/shared/desktop_nav' %>
       </ul>
     </div>
     
@@ -88,7 +88,7 @@
           <div class="flex justify-between items-center py-6">
             <div>
               <h1 class="text-2xl font-bold text-base-content"><%= @page_title || "Admin" %></h1>
-              <%= render 'new_admin/shared/breadcrumbs' if content_for?(:breadcrumbs) %>
+              <%= render 'admin/shared/breadcrumbs' if content_for?(:breadcrumbs) %>
             </div>
             <%= content_for :page_actions %>
           </div>
@@ -126,7 +126,7 @@
     <div class="drawer-side">
       <label for="drawer-toggle" aria-label="close sidebar" class="drawer-overlay"></label>
       <aside class="min-h-full w-64 bg-base-100 border-r border-base-300">
-        <%= render 'new_admin/shared/sidebar' %>
+        <%= render 'admin/shared/sidebar' %>
       </aside>
     </div>
   </div>

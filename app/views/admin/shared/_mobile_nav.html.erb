@@ -1,13 +1,13 @@
 <li>
-  <%= link_to new_admin_root_path, 
-      class: "flex items-center space-x-3 #{current_page?(new_admin_root_path) ? 'active' : ''}" do %>
+  <%= link_to admin_root_path, 
+      class: "flex items-center space-x-3 #{current_page?(admin_root_path) ? 'active' : ''}" do %>
     <i class="fas fa-home"></i>
     <span>Dashboard</span>
   <% end %>
 </li>
 
 <li>
-  <%= link_to new_admin_events_path, 
+  <%= link_to admin_events_path, 
       class: "flex items-center space-x-3 #{controller_name == 'events' ? 'active' : ''}" do %>
     <i class="fas fa-calendar-alt"></i>
     <span>Events</span>
@@ -15,7 +15,7 @@
 </li>
 
 <li>
-  <%= link_to new_admin_users_path, 
+  <%= link_to admin_users_path, 
       class: "flex items-center space-x-3 #{controller_name == 'users' ? 'active' : ''}" do %>
     <i class="fas fa-users"></i>
     <span>Users</span>
@@ -23,7 +23,7 @@
 </li>
 
 <li>
-  <%= link_to new_admin_performers_path, 
+  <%= link_to admin_performers_path, 
       class: "flex items-center space-x-3 #{controller_name == 'performers' ? 'active' : ''}" do %>
     <i class="fas fa-microphone"></i>
     <span>Performers</span>
@@ -31,7 +31,7 @@
 </li>
 
 <li>
-  <%= link_to new_admin_tips_path, 
+  <%= link_to admin_tips_path, 
       class: "flex items-center space-x-3 #{controller_name == 'tips' ? 'active' : ''}" do %>
     <i class="fas fa-dollar-sign"></i>
     <span>Tips</span>
@@ -41,14 +41,14 @@
 <li><div class="divider"></div></li>
 
 <li>
-  <%= link_to new_new_admin_event_path, class: "flex items-center space-x-3" do %>
+  <%= link_to new_admin_event_path, class: "flex items-center space-x-3" do %>
     <i class="fas fa-plus"></i>
     <span>New Event</span>
   <% end %>
 </li>
 
 <li>
-  <%= link_to new_new_admin_user_path, class: "flex items-center space-x-3" do %>
+  <%= link_to new_admin_user_path, class: "flex items-center space-x-3" do %>
     <i class="fas fa-user-plus"></i>
     <span>New User</span>
   <% end %>

@@ -1,0 +1,33 @@
+<% content_for :title, "New Performer" %>
+
+<div class="container mx-auto px-4 py-6">
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs text-sm mb-6">
+    <ul>
+      <li><%= link_to "Dashboard", admin_root_path, class: "text-primary hover:text-primary-focus" %></li>
+      <li><%= link_to "Performers", admin_performers_path, class: "text-primary hover:text-primary-focus" %></li>
+      <li class="text-base-content/70">New Performer</li>
+    </ul>
+  </div>
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-base-content">New Performer</h1>
+      <p class="text-base-content/70 mt-1">Add a new performer to your events</p>
+    </div>
+    <div class="mt-4 sm:mt-0">
+      <%= link_to admin_performers_path, class: "btn btn-ghost btn-sm" do %>
+        <i class="fas fa-arrow-left mr-2"></i>
+        Back to Performers
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card bg-base-100 shadow-lg">
+    <div class="card-body">
+      <%= render 'form', performer: @performer %>
+    </div>
+  </div>
+</div>

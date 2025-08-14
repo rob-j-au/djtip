@@ -1,0 +1,186 @@
+<% content_for :title, "Performers" %>
+
+<div class="container mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-base-content">Performers</h1>
+      <p class="text-base-content/70 mt-1">Manage performers and their profiles</p>
+    </div>
+    <div class="mt-4 sm:mt-0">
+      <%= link_to new_admin_performer_path, class: "btn btn-primary" do %>
+        <i class="fas fa-plus mr-2"></i>
+        New Performer
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="card bg-base-100 shadow-lg mb-6">
+    <div class="card-body">
+      <%= form_with url: admin_performers_path, method: :get, local: true, class: "flex flex-wrap gap-4 items-end" do |f| %>
+        <div class="form-control flex-1 min-w-64">
+          <%= f.label :search, "Search performers", class: "label" %>
+          <%= f.text_field :search, 
+              value: params[:search], 
+              placeholder: "Search by name, genre, or bio...",
+              class: "input input-bordered w-full" %>
+        </div>
+        
+        <div class="form-control">
+          <%= f.label :genre, "Genre", class: "label" %>
+          <%= f.select :genre, 
+              options_for_select([["All Genres", ""]] + @genres.map { |g| [g, g] }, params[:genre]),
+              {}, 
+              { class: "select select-bordered" } %>
+        </div>
+        
+        <div class="form-control">
+          <%= f.label :event_id, "Event", class: "label" %>
+          <%= f.select :event_id, 
+              options_for_select([["All Events", ""]] + @events.map { |e| [e.title, e.id] }, params[:event_id]),
+              {}, 
+              { class: "select select-bordered" } %>
+        </div>
+        
+        <div class="form-control">
+          <%= f.submit "Search", class: "btn btn-primary" %>
+          <%= link_to "Clear", admin_performers_path, class: "btn btn-ghost" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="stat bg-base-100 shadow rounded-lg">
+      <div class="stat-title">Total Performers</div>
+      <div class="stat-value text-primary"><%= @performers.count %></div>
+      <div class="stat-desc">Active performers</div>
+    </div>
+    
+    <div class="stat bg-base-100 shadow rounded-lg">
+      <div class="stat-title">Genres</div>
+      <div class="stat-value text-secondary"><%= @genres.count %></div>
+      <div class="stat-desc">Different genres</div>
+    </div>
+    
+    <div class="stat bg-base-100 shadow rounded-lg">
+      <div class="stat-title">With Events</div>
+      <div class="stat-value text-accent"><%= @performers.where(:event_id.ne => nil).count %></div>
+      <div class="stat-desc">Assigned to events</div>
+    </div>
+    
+    <div class="stat bg-base-100 shadow rounded-lg">
+      <div class="stat-title">Available</div>
+      <div class="stat-value text-info"><%= @performers.where(event_id: nil).count %></div>
+      <div class="stat-desc">Not assigned</div>
+    </div>
+  </div>
+
+  <!-- Performers Table -->
+  <div class="card bg-base-100 shadow-lg">
+    <div class="card-body">
+      <% if @performers.any? %>
+        <div class="overflow-x-auto">
+          <table class="table table-zebra">
+            <thead>
+              <tr>
+                <th>Performer</th>
+                <th>Genre</th>
+                <th>Event</th>
+                <th>Contact</th>
+                <th>Created</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @performers.each do |performer| %>
+                <tr class="hover">
+                  <td>
+                    <div class="flex items-center space-x-3">
+                      <div class="avatar placeholder">
+                        <div class="bg-primary text-primary-content rounded-full w-12 h-12">
+                          <span class="text-sm font-bold"><%= performer.name.first.upcase %></span>
+                        </div>
+                      </div>
+                      <div>
+                        <%= link_to performer.name, admin_performer_path(performer), 
+                            class: "font-medium hover:text-primary" %>
+                        <% if performer.bio.present? %>
+                          <div class="text-sm text-base-content/70">
+                            <%= truncate(performer.bio, length: 50) %>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <% if performer.genre.present? %>
+                      <span class="badge badge-outline"><%= performer.genre %></span>
+                    <% else %>
+                      <span class="text-base-content/50">No genre</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if performer.event %>
+                      <%= link_to performer.event.title, admin_event_path(performer.event), 
+                          class: "link link-primary" %>
+                    <% else %>
+                      <span class="text-base-content/50">No event</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if performer.contact.present? %>
+                      <span class="text-sm"><%= performer.contact %></span>
+                    <% else %>
+                      <span class="text-base-content/50">No contact</span>
+                    <% end %>
+                  </td>
+                  <td class="text-sm text-base-content/70">
+                    <%= performer.created_at.strftime("%b %d, %Y") %>
+                  </td>
+                  <td class="text-right">
+                    <div class="flex justify-end space-x-2">
+                      <%= link_to admin_performer_path(performer), class: "btn btn-ghost btn-sm" do %>
+                        <i class="fas fa-eye"></i>
+                      <% end %>
+                      <%= link_to edit_admin_performer_path(performer), class: "btn btn-ghost btn-sm" do %>
+                        <i class="fas fa-edit"></i>
+                      <% end %>
+                      <%= link_to admin_performer_path(performer), method: :delete, 
+                          class: "btn btn-ghost btn-sm text-error",
+                          data: { 
+                            confirm: "Are you sure you want to delete #{performer.name}?" 
+                          } do %>
+                        <i class="fas fa-trash"></i>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <i class="fas fa-microphone-alt text-6xl text-base-content/30 mb-4"></i>
+          <h3 class="text-xl font-medium text-base-content mb-2">No performers found</h3>
+          <% if params[:search].present? || params[:genre].present? || params[:event_id].present? %>
+            <p class="text-base-content/70 mb-4">No performers match your current filters.</p>
+            <div class="flex justify-center space-x-2">
+              <%= link_to "Clear filters", admin_performers_path, class: "btn btn-ghost mr-2" %>
+            </div>
+          <% else %>
+            <p class="text-base-content/70 mb-4">Get started by adding your first performer.</p>
+            <%= link_to new_admin_performer_path, class: "btn btn-primary" do %>
+              <i class="fas fa-plus mr-2"></i>
+              Add First Performer
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -19,7 +19,7 @@ class Admin::UsersController < Admin::BaseController
       @users = @users.where(admin: false)
     end
     
-    @users = @users.order(:name)
+    @users = @users.order(name: 1)
   end
   
   def show
@@ -40,7 +40,7 @@ class Admin::UsersController < Admin::BaseController
     @user.password = SecureRandom.hex(8) if @user.password.blank?
     
     if @user.save
-      redirect_to new_admin_user_path(@user), notice: 'User was successfully created.'
+      redirect_to admin_user_path(@user), notice: 'User was successfully created.'
     else
       set_page_title("New User")
       render :new, status: :unprocessable_entity
@@ -53,7 +53,7 @@ class Admin::UsersController < Admin::BaseController
   
   def update
     if @user.update(user_params)
-      redirect_to new_admin_user_path(@user), notice: 'User was successfully updated.'
+      redirect_to admin_user_path(@user), notice: 'User was successfully updated.'
     else
       set_page_title("Edit User: #{@user.name}")
       render :edit, status: :unprocessable_entity
@@ -62,23 +62,23 @@ class Admin::UsersController < Admin::BaseController
   
   def destroy
     if @user == current_user
-      redirect_to new_admin_users_path, alert: 'You cannot delete yourself.'
+      redirect_to admin_users_path, alert: 'You cannot delete yourself.'
       return
     end
     
     @user.destroy
-    redirect_to new_admin_users_path, notice: 'User was successfully deleted.'
+    redirect_to admin_users_path, notice: 'User was successfully deleted.'
   end
   
   def toggle_admin
     if @user == current_user
-      redirect_to new_admin_user_path(@user), alert: 'You cannot change your own admin status.'
+      redirect_to admin_user_path(@user), alert: 'You cannot change your own admin status.'
       return
     end
     
     @user.update!(admin: !@user.admin?)
     status = @user.admin? ? 'granted' : 'revoked'
-    redirect_to new_admin_user_path(@user), notice: "Admin privileges #{status}."
+    redirect_to admin_user_path(@user), notice: "Admin privileges #{status}."
   end
   
   private

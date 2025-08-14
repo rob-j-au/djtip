@@ -1,0 +1,174 @@
+<% content_for :title, "Edit User" %>
+
+<div class="container mx-auto px-4 py-6">
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs text-sm mb-6">
+    <ul>
+      <li><%= link_to "Dashboard", admin_root_path, class: "text-primary hover:text-primary-focus" %></li>
+      <li><%= link_to "Users", admin_users_path, class: "text-primary hover:text-primary-focus" %></li>
+      <li><%= link_to @user.name, admin_user_path(@user), class: "text-primary hover:text-primary-focus" %></li>
+      <li class="text-base-content/70">Edit</li>
+    </ul>
+  </div>
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-base-content">Edit User</h1>
+      <p class="text-base-content/70 mt-1">Update <%= @user.name %>'s information</p>
+    </div>
+    <div class="mt-4 sm:mt-0 flex gap-2">
+      <%= link_to admin_user_path(@user), class: "btn btn-ghost btn-sm" do %>
+        <i class="fas fa-eye mr-2"></i>
+        View User
+      <% end %>
+      <%= link_to admin_users_path, class: "btn btn-ghost btn-sm" do %>
+        <i class="fas fa-arrow-left mr-2"></i>
+        Back to Users
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card bg-base-100 shadow-lg">
+    <div class="card-body">
+      <%= form_with model: [:admin, @user], local: true, class: "space-y-6" do |form| %>
+        
+        <!-- Error Messages -->
+        <% if @user.errors.any? %>
+          <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <div>
+              <h3 class="font-bold">Please fix the following errors:</h3>
+              <ul class="list-disc list-inside mt-2">
+                <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Name Field -->
+        <div class="form-control">
+          <%= form.label :name, class: "label" do %>
+            <span class="label-text font-medium">Name <span class="text-error">*</span></span>
+          <% end %>
+          <%= form.text_field :name, 
+              class: "input input-bordered w-full #{'input-error' if @user.errors[:name].any?}",
+              placeholder: "Enter user's full name" %>
+          <% if @user.errors[:name].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                <%= @user.errors[:name].first %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-control">
+          <%= form.label :email, class: "label" do %>
+            <span class="label-text font-medium">Email <span class="text-error">*</span></span>
+          <% end %>
+          <%= form.email_field :email, 
+              class: "input input-bordered w-full #{'input-error' if @user.errors[:email].any?}",
+              placeholder: "Enter email address" %>
+          <% if @user.errors[:email].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                <%= @user.errors[:email].first %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Phone Field -->
+        <div class="form-control">
+          <%= form.label :phone, class: "label" do %>
+            <span class="label-text font-medium">Phone</span>
+          <% end %>
+          <%= form.telephone_field :phone, 
+              class: "input input-bordered w-full #{'input-error' if @user.errors[:phone].any?}",
+              placeholder: "Enter phone number (optional)" %>
+          <% if @user.errors[:phone].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                <%= @user.errors[:phone].first %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Password Fields (Optional for Edit) -->
+        <div class="divider">Password (leave blank to keep current password)</div>
+        
+        <div class="form-control">
+          <%= form.label :password, class: "label" do %>
+            <span class="label-text font-medium">New Password</span>
+          <% end %>
+          <%= form.password_field :password, 
+              class: "input input-bordered w-full #{'input-error' if @user.errors[:password].any?}",
+              placeholder: "Enter new password (optional)" %>
+          <% if @user.errors[:password].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                <%= @user.errors[:password].first %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="form-control">
+          <%= form.label :password_confirmation, class: "label" do %>
+            <span class="label-text font-medium">Confirm New Password</span>
+          <% end %>
+          <%= form.password_field :password_confirmation, 
+              class: "input input-bordered w-full #{'input-error' if @user.errors[:password_confirmation].any?}",
+              placeholder: "Confirm new password" %>
+          <% if @user.errors[:password_confirmation].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                <%= @user.errors[:password_confirmation].first %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Admin Checkbox -->
+        <% unless @user == current_user %>
+          <div class="form-control">
+            <label class="label cursor-pointer justify-start">
+              <%= form.check_box :admin, class: "checkbox checkbox-primary mr-3" %>
+              <span class="label-text font-medium">Admin User</span>
+            </label>
+            <div class="label">
+              <span class="label-text-alt text-base-content/70">
+                <i class="fas fa-info-circle mr-1"></i>
+                Admin users have full access to the admin interface
+              </span>
+            </div>
+          </div>
+        <% else %>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <span>You cannot change your own admin status</span>
+          </div>
+        <% end %>
+
+        <!-- Form Actions -->
+        <div class="card-actions justify-end pt-6 border-t border-base-200">
+          <%= link_to "Cancel", admin_user_path(@user), 
+              class: "btn btn-ghost" %>
+          <%= form.submit "Update User", 
+              class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,218 @@
+<% content_for :title, @performer.name %>
+
+<div class="container mx-auto px-4 py-6">
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs text-sm mb-6">
+    <ul>
+      <li><%= link_to "Dashboard", admin_root_path, class: "text-primary hover:text-primary-focus" %></li>
+      <li><%= link_to "Performers", admin_performers_path, class: "text-primary hover:text-primary-focus" %></li>
+      <li class="text-base-content/70"><%= @performer.name %></li>
+    </ul>
+  </div>
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div class="flex items-center space-x-4">
+      <div class="avatar placeholder">
+        <div class="bg-primary text-primary-content rounded-full w-16 h-16">
+          <span class="text-xl font-bold"><%= @performer.name.first.upcase %></span>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-3xl font-bold text-base-content"><%= @performer.name %></h1>
+        <div class="flex items-center space-x-2 mt-1">
+          <% if @performer.genre.present? %>
+            <span class="badge badge-primary badge-sm"><%= @performer.genre %></span>
+          <% end %>
+          <% if @performer.event %>
+            <span class="text-base-content/70">•</span>
+            <span class="text-base-content/70">Performing at <%= @performer.event.title %></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 sm:mt-0 flex gap-2">
+      <%= link_to edit_admin_performer_path(@performer), class: "btn btn-primary btn-sm" do %>
+        <i class="fas fa-edit mr-2"></i>
+        Edit Performer
+      <% end %>
+      <%= link_to admin_performers_path, class: "btn btn-ghost btn-sm" do %>
+        <i class="fas fa-arrow-left mr-2"></i>
+        Back to Performers
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Performer Information -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Basic Information Card -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-xl mb-4">
+            <i class="fas fa-user text-primary"></i>
+            Performer Information
+          </h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Name</label>
+              <p class="text-base-content font-medium"><%= @performer.name %></p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Genre</label>
+              <p class="text-base-content font-medium">
+                <% if @performer.genre.present? %>
+                  <span class="badge badge-outline"><%= @performer.genre %></span>
+                <% else %>
+                  <span class="text-base-content/50">Not specified</span>
+                <% end %>
+              </p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Contact</label>
+              <p class="text-base-content font-medium">
+                <% if @performer.contact.present? %>
+                  <%= @performer.contact %>
+                <% else %>
+                  <span class="text-base-content/50">Not provided</span>
+                <% end %>
+              </p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Event</label>
+              <p class="text-base-content font-medium">
+                <% if @performer.event %>
+                  <%= link_to @performer.event.title, admin_event_path(@performer.event), 
+                      class: "link link-primary" %>
+                <% else %>
+                  <span class="text-base-content/50">Not assigned</span>
+                <% end %>
+              </p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Added</label>
+              <p class="text-base-content font-medium">
+                <%= @performer.created_at.strftime("%B %d, %Y") %>
+              </p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Last Updated</label>
+              <p class="text-base-content font-medium">
+                <%= @performer.updated_at.strftime("%B %d, %Y") %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bio Card -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-xl mb-4">
+            <i class="fas fa-file-text text-primary"></i>
+            Biography
+          </h2>
+          
+          <% if @performer.bio.present? %>
+            <div class="prose max-w-none">
+              <p class="text-base-content leading-relaxed"><%= simple_format(@performer.bio) %></p>
+            </div>
+          <% else %>
+            <div class="text-center py-8">
+              <i class="fas fa-file-text text-4xl text-base-content/30 mb-4"></i>
+              <p class="text-base-content/70">No biography provided</p>
+              <%= link_to "Add Biography", edit_admin_performer_path(@performer), 
+                  class: "btn btn-primary btn-sm mt-2" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Sidebar -->
+    <div class="space-y-6">
+      <!-- Quick Actions -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-lg mb-4">
+            <i class="fas fa-bolt text-primary"></i>
+            Quick Actions
+          </h2>
+          
+          <div class="space-y-2">
+            <%= link_to edit_admin_performer_path(@performer), 
+                class: "btn btn-outline btn-primary btn-sm w-full justify-start" do %>
+              <i class="fas fa-edit mr-2"></i>
+              Edit Performer
+            <% end %>
+            
+            <% if @performer.event %>
+              <%= link_to admin_event_path(@performer.event), 
+                  class: "btn btn-outline btn-secondary btn-sm w-full justify-start" do %>
+                <i class="fas fa-calendar mr-2"></i>
+                View Event
+              <% end %>
+            <% else %>
+              <div class="alert alert-info alert-sm">
+                <i class="fas fa-info-circle"></i>
+                <span class="text-xs">Not assigned to any event</span>
+              </div>
+            <% end %>
+            
+            <%= link_to admin_performer_path(@performer), 
+                method: :delete,
+                class: "btn btn-outline btn-error btn-sm w-full justify-start",
+                data: { 
+                  confirm: "Are you sure you want to delete #{@performer.name}? This action cannot be undone." 
+                } do %>
+              <i class="fas fa-trash mr-2"></i>
+              Delete Performer
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Information -->
+      <% if @performer.event %>
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body">
+            <h2 class="card-title text-lg mb-4">
+              <i class="fas fa-calendar text-primary"></i>
+              Event Details
+            </h2>
+            
+            <div class="space-y-3">
+              <div>
+                <label class="text-sm font-medium text-base-content/70">Event</label>
+                <p class="font-medium">
+                  <%= link_to @performer.event.title, admin_event_path(@performer.event), 
+                      class: "link link-primary" %>
+                </p>
+              </div>
+              
+              <div>
+                <label class="text-sm font-medium text-base-content/70">Date</label>
+                <p class="text-sm">
+                  <%= @performer.event.date.strftime("%B %d, %Y") if @performer.event.date %>
+                </p>
+              </div>
+              
+              <div>
+                <label class="text-sm font-medium text-base-content/70">Location</label>
+                <p class="text-sm">
+                  <%= @performer.event.location if @performer.event.location.present? %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

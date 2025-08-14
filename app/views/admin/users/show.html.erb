@@ -1,0 +1,260 @@
+<% content_for :title, @user.name %>
+
+<div class="container mx-auto px-4 py-6">
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs text-sm mb-6">
+    <ul>
+      <li><%= link_to "Dashboard", admin_root_path, class: "text-primary hover:text-primary-focus" %></li>
+      <li><%= link_to "Users", admin_users_path, class: "text-primary hover:text-primary-focus" %></li>
+      <li class="text-base-content/70"><%= @user.name %></li>
+    </ul>
+  </div>
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div class="flex items-center space-x-4">
+      <div class="avatar placeholder">
+        <div class="bg-primary text-primary-content rounded-full w-16 h-16">
+          <span class="text-xl font-bold"><%= @user.name.first.upcase %></span>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-3xl font-bold text-base-content"><%= @user.name %></h1>
+        <div class="flex items-center space-x-2 mt-1">
+          <% if @user.admin? %>
+            <span class="badge badge-primary badge-sm">Admin</span>
+          <% else %>
+            <span class="badge badge-ghost badge-sm">User</span>
+          <% end %>
+          <span class="text-base-content/70">•</span>
+          <span class="text-base-content/70">Joined <%= @user.created_at.strftime("%B %Y") %></span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 sm:mt-0 flex gap-2">
+      <%= link_to edit_admin_user_path(@user), class: "btn btn-primary btn-sm" do %>
+        <i class="fas fa-edit mr-2"></i>
+        Edit User
+      <% end %>
+      <%= link_to admin_users_path, class: "btn btn-ghost btn-sm" do %>
+        <i class="fas fa-arrow-left mr-2"></i>
+        Back to Users
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- User Information -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Basic Information Card -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-xl mb-4">
+            <i class="fas fa-user text-primary"></i>
+            User Information
+          </h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Full Name</label>
+              <p class="text-base-content font-medium"><%= @user.name %></p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Email</label>
+              <p class="text-base-content font-medium">
+                <a href="mailto:<%= @user.email %>" class="link link-primary">
+                  <%= @user.email %>
+                </a>
+              </p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Phone</label>
+              <p class="text-base-content font-medium">
+                <% if @user.phone.present? %>
+                  <a href="tel:<%= @user.phone %>" class="link link-primary">
+                    <%= @user.phone %>
+                  </a>
+                <% else %>
+                  <span class="text-base-content/50">Not provided</span>
+                <% end %>
+              </p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Account Type</label>
+              <p>
+                <% if @user.admin? %>
+                  <span class="badge badge-primary">Administrator</span>
+                <% else %>
+                  <span class="badge badge-ghost">Regular User</span>
+                <% end %>
+              </p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Member Since</label>
+              <p class="text-base-content font-medium">
+                <%= @user.created_at.strftime("%B %d, %Y") %>
+              </p>
+            </div>
+            
+            <div>
+              <label class="text-sm font-medium text-base-content/70">Last Updated</label>
+              <p class="text-base-content font-medium">
+                <%= @user.updated_at.strftime("%B %d, %Y") %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Tips -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-xl mb-4">
+            <i class="fas fa-coins text-primary"></i>
+            Recent Tips
+          </h2>
+          
+          <% if @tips.any? %>
+            <div class="overflow-x-auto">
+              <table class="table table-zebra">
+                <thead>
+                  <tr>
+                    <th>Event</th>
+                    <th>Amount</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @tips.each do |tip| %>
+                    <tr>
+                      <td>
+                        <%= link_to tip.event.title, admin_event_path(tip.event), 
+                            class: "link link-primary font-medium" %>
+                      </td>
+                      <td>
+                        <span class="badge badge-success">
+                          <%= number_to_currency(tip.amount, unit: "$") %>
+                        </span>
+                      </td>
+                      <td>
+                        <% if tip.message.present? %>
+                          <span class="text-sm"><%= truncate(tip.message, length: 50) %></span>
+                        <% else %>
+                          <span class="text-base-content/50 text-sm">No message</span>
+                        <% end %>
+                      </td>
+                      <td class="text-sm text-base-content/70">
+                        <%= tip.created_at.strftime("%b %d, %Y") %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="card-actions justify-center mt-4">
+              <%= link_to admin_tips_path(user_id: @user.id), 
+                  class: "btn btn-ghost btn-sm" do %>
+                View All Tips
+                <i class="fas fa-arrow-right ml-2"></i>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-8">
+              <i class="fas fa-coins text-4xl text-base-content/30 mb-4"></i>
+              <p class="text-base-content/70">No tips yet</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Sidebar -->
+    <div class="space-y-6">
+      <!-- Quick Stats -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-lg mb-4">
+            <i class="fas fa-chart-bar text-primary"></i>
+            Statistics
+          </h2>
+          
+          <div class="stats stats-vertical shadow-none bg-transparent">
+            <div class="stat px-0">
+              <div class="stat-title text-xs">Total Tips</div>
+              <div class="stat-value text-2xl text-primary">
+                <%= @user.tips.count %>
+              </div>
+            </div>
+            
+            <div class="stat px-0">
+              <div class="stat-title text-xs">Total Amount</div>
+              <div class="stat-value text-2xl text-success">
+                <%= number_to_currency(@total_tips, unit: "$") %>
+              </div>
+            </div>
+            
+            <div class="stat px-0">
+              <div class="stat-title text-xs">Events Attended</div>
+              <div class="stat-value text-2xl text-accent">
+                <%= @events_count %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-lg mb-4">
+            <i class="fas fa-bolt text-primary"></i>
+            Quick Actions
+          </h2>
+          
+          <div class="space-y-2">
+            <%= link_to edit_admin_user_path(@user), 
+                class: "btn btn-outline btn-primary btn-sm w-full justify-start" do %>
+              <i class="fas fa-edit mr-2"></i>
+              Edit User
+            <% end %>
+            
+            <% unless @user == current_user %>
+              <%= link_to admin_user_path(@user, toggle_admin: true), 
+                  method: :patch,
+                  class: "btn btn-outline btn-warning btn-sm w-full justify-start",
+                  data: { 
+                    confirm: @user.admin? ? 
+                      "Remove admin privileges from #{@user.name}?" : 
+                      "Grant admin privileges to #{@user.name}?" 
+                  } do %>
+                <i class="fas fa-user-cog mr-2"></i>
+                <%= @user.admin? ? "Remove Admin" : "Make Admin" %>
+              <% end %>
+              
+              <%= link_to admin_user_path(@user), 
+                  method: :delete,
+                  class: "btn btn-outline btn-error btn-sm w-full justify-start",
+                  data: { 
+                    confirm: "Are you sure you want to delete #{@user.name}? This action cannot be undone." 
+                  } do %>
+                <i class="fas fa-trash mr-2"></i>
+                Delete User
+              <% end %>
+            <% else %>
+              <div class="alert alert-info alert-sm">
+                <i class="fas fa-info-circle"></i>
+                <span class="text-xs">You cannot modify your own account</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

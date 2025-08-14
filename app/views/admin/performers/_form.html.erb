@@ -1,0 +1,142 @@
+<%= form_with model: [:admin, performer], local: true, class: "space-y-6" do |form| %>
+  
+  <!-- Error Messages -->
+  <% if performer.errors.any? %>
+    <div class="alert alert-error">
+      <i class="fas fa-exclamation-circle"></i>
+      <div>
+        <h3 class="font-bold">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% performer.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Name Field -->
+  <div class="form-control">
+    <%= form.label :name, class: "label" do %>
+      <span class="label-text font-medium">Name <span class="text-error">*</span></span>
+    <% end %>
+    <%= form.text_field :name, 
+        class: "input input-bordered w-full #{'input-error' if performer.errors[:name].any?}",
+        placeholder: "Enter performer's name" %>
+    <% if performer.errors[:name].any? %>
+      <div class="label">
+        <span class="label-text-alt text-error">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          <%= performer.errors[:name].first %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Genre Field -->
+  <div class="form-control">
+    <%= form.label :genre, class: "label" do %>
+      <span class="label-text font-medium">Genre</span>
+    <% end %>
+    <%= form.text_field :genre, 
+        class: "input input-bordered w-full #{'input-error' if performer.errors[:genre].any?}",
+        placeholder: "e.g., Jazz, Rock, Classical, Hip-Hop" %>
+    <% if performer.errors[:genre].any? %>
+      <div class="label">
+        <span class="label-text-alt text-error">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          <%= performer.errors[:genre].first %>
+        </span>
+      </div>
+    <% end %>
+    <div class="label">
+      <span class="label-text-alt text-base-content/70">
+        <i class="fas fa-info-circle mr-1"></i>
+        Specify the musical genre or style
+      </span>
+    </div>
+  </div>
+
+  <!-- Contact Field -->
+  <div class="form-control">
+    <%= form.label :contact, class: "label" do %>
+      <span class="label-text font-medium">Contact Information</span>
+    <% end %>
+    <%= form.text_field :contact, 
+        class: "input input-bordered w-full #{'input-error' if performer.errors[:contact].any?}",
+        placeholder: "Phone, email, or other contact details" %>
+    <% if performer.errors[:contact].any? %>
+      <div class="label">
+        <span class="label-text-alt text-error">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          <%= performer.errors[:contact].first %>
+        </span>
+      </div>
+    <% end %>
+    <div class="label">
+      <span class="label-text-alt text-base-content/70">
+        <i class="fas fa-info-circle mr-1"></i>
+        Phone number, email, or other way to reach the performer
+      </span>
+    </div>
+  </div>
+
+  <!-- Event Assignment -->
+  <div class="form-control">
+    <%= form.label :event_id, class: "label" do %>
+      <span class="label-text font-medium">Assign to Event</span>
+    <% end %>
+    <%= form.select :event_id, 
+        options_for_select([["No Event", ""]] + Event.order(title: 1).map { |e| [e.title, e.id] }, performer.event_id),
+        {}, 
+        { class: "select select-bordered w-full #{'select-error' if performer.errors[:event_id].any?}" } %>
+    <% if performer.errors[:event_id].any? %>
+      <div class="label">
+        <span class="label-text-alt text-error">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          <%= performer.errors[:event_id].first %>
+        </span>
+      </div>
+    <% end %>
+    <div class="label">
+      <span class="label-text-alt text-base-content/70">
+        <i class="fas fa-info-circle mr-1"></i>
+        Optional: Assign this performer to a specific event
+      </span>
+    </div>
+  </div>
+
+  <!-- Bio Field -->
+  <div class="form-control">
+    <%= form.label :bio, class: "label" do %>
+      <span class="label-text font-medium">Biography</span>
+    <% end %>
+    <%= form.text_area :bio, 
+        rows: 6,
+        class: "textarea textarea-bordered w-full #{'textarea-error' if performer.errors[:bio].any?}",
+        placeholder: "Tell us about the performer's background, experience, and style..." %>
+    <% if performer.errors[:bio].any? %>
+      <div class="label">
+        <span class="label-text-alt text-error">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          <%= performer.errors[:bio].first %>
+        </span>
+      </div>
+    <% end %>
+    <div class="label">
+      <span class="label-text-alt text-base-content/70">
+        <i class="fas fa-info-circle mr-1"></i>
+        Optional: Add background information, experience, and performance style
+      </span>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="card-actions justify-end pt-6 border-t border-base-200">
+    <%= link_to "Cancel", 
+        performer.persisted? ? admin_performer_path(performer) : admin_performers_path, 
+        class: "btn btn-ghost" %>
+    <%= form.submit performer.persisted? ? "Update Performer" : "Create Performer", 
+        class: "btn btn-primary" %>
+  </div>
+<% end %>
