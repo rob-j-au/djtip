@@ -42,16 +42,20 @@
                 Event Details
               </h3>
               <div class="mt-2">
-                <% if @performer.event %>
-                  <p>Performing at: <%= link_to @performer.event.title, @performer.event, class: "link link-primary" %></p>
-                  <p class="text-sm opacity-70 mt-1">
-                    <%= @performer.event.date.strftime('%B %d, %Y at %I:%M %p') %>
-                    <% if @performer.event.location.present? %>
-                      <br>at <%= @performer.event.location %>
-                    <% end %>
-                  </p>
+                <% if @performer.events.any? %>
+                  <p>Performing at:</p>
+                  <% @performer.events.each_with_index do |event, index| %>
+                    <p><%= link_to event.title, event, class: "link link-primary" %></p>
+                    <p class="text-sm opacity-70 mt-1">
+                      <%= event.date.strftime('%B %d, %Y at %I:%M %p') %>
+                      <% if event.location.present? %>
+                        <br>at <%= event.location %>
+                      <% end %>
+                    </p>
+                    <%= "<br>" if index < @performer.events.count - 1 %>
+                  <% end %>
                 <% else %>
-                  <p class="opacity-70">No event currently assigned</p>
+                  <p class="opacity-70">No events currently assigned</p>
                 <% end %>
               </div>
             </div>
