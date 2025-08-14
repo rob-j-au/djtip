@@ -44,8 +44,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
       </div>
-      <div class="stat-title">Registered Users</div>
-      <div class="stat-value text-primary"><%= @event.users.count %></div>
+      <div class="stat-title">Attendees</div>
+      <div class="stat-value text-primary"><%= @event.users.non_performers.count %></div>
     </div>
     
     <div class="stat">
@@ -77,7 +77,7 @@
           <svg class="w-6 h-6 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
-          Registered Users (<%= @event.users.count %>)
+          Attendees (<%= @event.users.non_performers.count %>)
         </h2>
         <%= link_to new_event_user_path(@event), class: "btn btn-primary btn-sm" do %>
           <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -87,9 +87,9 @@
         <% end %>
       </div>
       
-      <% if @event.users.any? %>
+      <% if @event.users.non_performers.any? %>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
-          <% @event.users.each do |user| %>
+          <% @event.users.non_performers.each do |user| %>
             <div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-200">
               <div class="card-body p-4">
                 <div class="flex justify-between items-center">
@@ -115,7 +115,7 @@
           <svg class="mx-auto h-16 w-16 text-base-content/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
-          <p class="mt-4 text-base-content/70">No users registered yet.</p>
+          <p class="mt-4 text-base-content/70">No attendees registered yet.</p>
           <%= link_to "Add Your First User", new_event_user_path(@event), class: "btn btn-primary btn-sm mt-4" %>
         </div>
       <% end %>

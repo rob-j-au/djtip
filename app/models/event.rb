@@ -13,7 +13,7 @@ class Event
   
   # Performers are Users with _type = 'Performer'
   def performers
-    users.where(_type: 'Performer')
+    users.unscoped.where(_type: 'Performer')
   end
 
   # Validations
