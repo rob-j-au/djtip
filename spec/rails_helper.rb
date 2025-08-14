@@ -42,8 +42,14 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
   
-  # Include FactoryBot methods
+    # Include FactoryBot methods
   config.include FactoryBot::Syntax::Methods
+  
+  # Include file upload helpers
+  config.include ActionDispatch::TestProcess::FixtureFile
+  
+  # Configure file fixtures path
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
   
   # Database cleaner for Mongoid
   config.before(:suite) do
