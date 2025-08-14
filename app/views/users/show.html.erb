@@ -50,19 +50,25 @@
             </h2>
             <div class="space-y-4">
               <div>
-                <p class="text-sm font-medium opacity-70">Assigned Event</p>
-                <% if @user.event %>
-                  <p class="font-medium">
-                    <%= link_to @user.event.title, @user.event, class: "link link-primary" %>
-                  </p>
-                  <p class="text-sm opacity-70 mt-1">
-                    <%= @user.event.date.strftime('%B %d, %Y at %I:%M %p') %>
-                    <% if @user.event.location.present? %>
-                      <br>at <%= @user.event.location %>
+                <p class="text-sm font-medium opacity-70">Associated Events</p>
+                <% if @user.events.any? %>
+                  <div class="space-y-3">
+                    <% @user.events.each do |event| %>
+                      <div class="border border-base-300 rounded-lg p-3">
+                        <p class="font-medium">
+                          <%= link_to event.title, event, class: "link link-primary" %>
+                        </p>
+                        <p class="text-sm opacity-70 mt-1">
+                          <%= event.date.strftime('%B %d, %Y at %I:%M %p') %>
+                          <% if event.location.present? %>
+                            <br>at <%= event.location %>
+                          <% end %>
+                        </p>
+                      </div>
                     <% end %>
-                  </p>
+                  </div>
                 <% else %>
-                  <p class="opacity-70">No event currently assigned</p>
+                  <p class="opacity-70">No events currently associated</p>
                 <% end %>
               </div>
             </div>

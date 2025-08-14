@@ -27,7 +27,11 @@
   <!-- Form Card -->
   <div class="card bg-base-100 shadow-lg">
     <div class="card-body">
-      <%= form_with model: [:admin, @user], local: true, class: "space-y-6" do |form| %>
+      <%= form_with model: [:admin, @user], local: true, class: "space-y-6", 
+          data: { 
+            controller: "form-validation",
+            form_validation_submit_on_valid_value: false
+          } do |form| %>
         
         <!-- Error Messages -->
         <% if @user.errors.any? %>
@@ -132,6 +136,41 @@
               </span>
             </div>
           <% end %>
+        </div>
+
+        <!-- Events Association -->
+        <div class="form-control">
+          <%= form.label :event_ids, class: "label" do %>
+            <span class="label-text font-medium">Associated Events</span>
+          <% end %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-4 border border-base-300 rounded-lg bg-base-50">
+            <% if Event.exists? %>
+              <% Event.order(date: -1).each do |event| %>
+                <label class="label cursor-pointer justify-start">
+                  <%= check_box_tag "user[event_ids][]", event.id, @user.event_ids.include?(event.id), 
+                      class: "checkbox checkbox-primary mr-3" %>
+                  <div class="flex flex-col">
+                    <span class="label-text font-medium"><%= event.title %></span>
+                    <span class="label-text-alt text-base-content/60">
+                      <%= event.date.strftime("%b %d, %Y") %> • <%= event.location %>
+                    </span>
+                  </div>
+                </label>
+              <% end %>
+            <% else %>
+              <div class="col-span-full text-center py-4">
+                <i class="fas fa-calendar-times text-base-content/40 text-2xl mb-2"></i>
+                <p class="text-base-content/60">No events available</p>
+                <%= link_to "Create Event", new_admin_event_path, class: "btn btn-primary btn-sm mt-2" %>
+              </div>
+            <% end %>
+          </div>
+          <div class="label">
+            <span class="label-text-alt text-base-content/70">
+              <i class="fas fa-info-circle mr-1"></i>
+              Select all events this user should be associated with
+            </span>
+          </div>
         </div>
 
         <!-- Admin Checkbox -->

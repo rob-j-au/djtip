@@ -8,7 +8,7 @@ class Event
   field :location, type: String
 
   # Relationships
-  has_many :users, dependent: :destroy
+  has_and_belongs_to_many :users
   has_many :performers, dependent: :destroy
   has_many :tips, dependent: :destroy
 
@@ -16,4 +16,14 @@ class Event
   validates :title, presence: true
   validates :date, presence: true
   validates :location, presence: true
+
+  # Callbacks to clean up many-to-many associations
+  before_destroy :remove_user_associations
+
+  private
+
+  def remove_user_associations
+    # Remove this event from all associated users
+    users.each { |user| user.events.delete(self) }
+  end
 end

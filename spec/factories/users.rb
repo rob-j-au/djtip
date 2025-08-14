@@ -5,15 +5,26 @@ FactoryBot.define do
     phone { Faker::PhoneNumber.phone_number }
     password { 'password123' }
     password_confirmation { 'password123' }
-    event { association :event }
     admin { false }
 
     trait :admin do
       admin { true }
     end
 
-    trait :without_event do
-      event { nil }
+    trait :with_event do
+      after(:create) do |user|
+        user.events << create(:event)
+      end
+    end
+
+    trait :with_events do
+      after(:create) do |user|
+        user.events << create_list(:event, 2)
+      end
+    end
+
+    trait :without_events do
+      # Default - no events associated
     end
   end
 end

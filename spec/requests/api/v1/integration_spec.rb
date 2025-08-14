@@ -11,8 +11,8 @@ RSpec.describe "API Integration Tests", type: :request do
 
   describe "Event with Users and Performers workflow" do
     let!(:event) { create(:event, title: "DJ Night") }
-    let!(:user1) { create(:user, name: "John Doe", event: event) }
-    let!(:user2) { create(:user, name: "Jane Smith", event: event) }
+    let!(:user1) { create(:user, :with_event, name: "John Doe", events: [event]) }
+    let!(:user2) { create(:user, :with_event, name: "Jane Smith", events: [event]) }
     let!(:performer1) { create(:performer, name: "DJ Alpha", genre: "House", event: event) }
     let!(:performer2) { create(:performer, name: "DJ Beta", genre: "Techno", event: event) }
 
@@ -49,7 +49,9 @@ RSpec.describe "API Integration Tests", type: :request do
         name: "New User",
         email: "newuser@example.com",
         phone: "555-1234",
-        event_id: event.id
+        password: "password123",
+        password_confirmation: "password123",
+        event_ids: [event.id]
       }
 
       expect {
@@ -61,7 +63,8 @@ RSpec.describe "API Integration Tests", type: :request do
       user_data = json_response[:data]
       expect(user_data[:type]).to eq('user')
       expect(user_data[:attributes][:name]).to eq("New User")
-      expect(user_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
+      expect(user_data[:relationships][:events][:data]).to be_an(Array)
+      expect(user_data[:relationships][:events][:data].first[:id]).to eq(event.id.to_s)
 
       # Verify the user is now associated with the event
       get "/api/v1/events/#{event.id}"
@@ -95,7 +98,7 @@ RSpec.describe "API Integration Tests", type: :request do
 
     it "handles cascading deletes when event is deleted" do
       event_id = event.id
-      user_count = User.where(event_id: event_id).count
+      user_count = event.users.count
       performer_count = Performer.where(event_id: event_id).count
 
       expect(user_count).to eq(2)
@@ -104,9 +107,18 @@ RSpec.describe "API Integration Tests", type: :request do
       delete "/api/v1/events/#{event_id}"
       expect(response).to have_http_status(:no_content)
 
-      # Verify associated users and performers are also deleted
-      expect(User.where(event_id: event_id).count).to eq(0)
+      # Verify event is deleted
+      expect(Event.where(id: event_id).count).to eq(0)
+      
+      # Verify performers are deleted (they have belongs_to :event with dependent: :destroy)
       expect(Performer.where(event_id: event_id).count).to eq(0)
+      
+      # Users are not deleted with many-to-many association
+      expect(User.count).to eq(2)  # Users still exist
+      
+      # Verify the deleted event no longer exists in the system
+      get "/api/v1/events/#{event_id}"
+      expect(response).to have_http_status(:not_found)
     end
   end
 
