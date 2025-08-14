@@ -96,7 +96,7 @@ Deletes an event and all associated users and performers.
 ### Users
 
 #### GET /api/v1/users
-Returns all users with associated events.
+Returns all users (excluding performers) with associated events.
 
 **Response:**
 ```json
@@ -106,21 +106,34 @@ Returns all users with associated events.
     "name": "John Doe",
     "email": "john@example.com",
     "phone": "123-456-7890",
-    "event": {
-      "id": "event_id",
-      "title": "DJ Night",
-      "date": "2024-01-15T20:00:00Z",
-      "location": "Club XYZ"
-    }
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z",
+    "events": [
+      {
+        "id": "event_id_1",
+        "title": "DJ Night",
+        "date": "2024-01-15T20:00:00Z",
+        "location": "Club XYZ",
+        "description": "Amazing DJ event"
+      },
+      {
+        "id": "event_id_2",
+        "title": "Summer Festival",
+        "date": "2024-07-15T18:00:00Z",
+        "location": "Central Park",
+        "description": "Outdoor music festival"
+      }
+    ],
+    "tips": []
   }
 ]
 ```
 
 #### GET /api/v1/users/:id
-Returns a specific user with associated event.
+Returns a specific user with associated events.
 
 #### POST /api/v1/users
-Creates a new user.
+Creates a new user and associates them with events.
 
 **Request Body:**
 ```json
@@ -129,7 +142,9 @@ Creates a new user.
     "name": "John Doe",
     "email": "john@example.com",
     "phone": "123-456-7890",
-    "event_id": "event_id"
+    "password": "password123",
+    "password_confirmation": "password123",
+    "event_ids": ["event_id_1", "event_id_2"]
   }
 }
 ```
@@ -141,6 +156,8 @@ Updates an existing user.
 Deletes a user.
 
 ### Performers
+
+**Note:** Performers inherit from Users using Single Table Inheritance (STI). They have all User attributes plus performer-specific fields.
 
 #### GET /api/v1/performers
 Returns all performers with associated events.
@@ -154,6 +171,75 @@ Returns all performers with associated events.
     "bio": "Professional DJ with 10 years experience",
     "genre": "House",
     "contact": "dj@example.com",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z",
+    "events": [
+      {
+        "id": "event_id_1",
+        "title": "DJ Night",
+        "date": "2024-01-15T20:00:00Z",
+        "location": "Club XYZ",
+        "description": "Amazing DJ event"
+      },
+      {
+        "id": "event_id_2",
+        "title": "Summer Festival",
+        "date": "2024-07-15T18:00:00Z",
+        "location": "Central Park",
+        "description": "Outdoor music festival"
+      }
+    ]
+  }
+]
+```
+
+#### GET /api/v1/performers/:id
+Returns a specific performer with associated events.
+
+#### POST /api/v1/performers
+Creates a new performer and associates them with events.
+
+**Request Body:**
+```json
+{
+  "performer": {
+    "name": "DJ Beta",
+    "email": "djbeta@example.com",
+    "password": "password123",
+    "password_confirmation": "password123",
+    "bio": "Up and coming DJ",
+    "genre": "Techno",
+    "contact": "djbeta@example.com",
+    "event_ids": ["event_id_1", "event_id_2"]
+  }
+}
+```
+
+#### PUT /api/v1/performers/:id
+Updates an existing performer.
+
+#### DELETE /api/v1/performers/:id
+Deletes a performer.
+
+### Tips
+
+#### GET /api/v1/events/:event_id/tips
+Returns all tips for a specific event.
+
+**Response:**
+```json
+[
+  {
+    "id": "tip_id",
+    "amount": 25.00,
+    "message": "Great performance!",
+    "created_at": "2024-01-15T22:30:00Z",
+    "updated_at": "2024-01-15T22:30:00Z",
+    "user": {
+      "id": "user_id",
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
     "event": {
       "id": "event_id",
       "title": "DJ Night",
@@ -164,30 +250,51 @@ Returns all performers with associated events.
 ]
 ```
 
-#### GET /api/v1/performers/:id
-Returns a specific performer with associated event.
+#### GET /api/v1/events/:event_id/tips/:id
+Returns a specific tip.
 
-#### POST /api/v1/performers
-Creates a new performer.
+#### POST /api/v1/events/:event_id/tips
+Creates a new tip for an event.
 
 **Request Body:**
 ```json
 {
-  "performer": {
-    "name": "DJ Beta",
-    "bio": "Up and coming DJ",
-    "genre": "Techno",
-    "contact": "djbeta@example.com",
-    "event_id": "event_id"
+  "tip": {
+    "amount": 25.00,
+    "message": "Amazing set!",
+    "user_id": "user_id"
   }
 }
 ```
 
-#### PUT /api/v1/performers/:id
-Updates an existing performer.
+#### PUT /api/v1/events/:event_id/tips/:id
+Updates an existing tip.
 
-#### DELETE /api/v1/performers/:id
-Deletes a performer.
+#### DELETE /api/v1/events/:event_id/tips/:id
+Deletes a tip.
+
+## Data Model Relationships
+
+### User Model
+- **Inheritance**: Performer inherits from User (Single Table Inheritance)
+- **Events**: Many-to-many relationship (`has_and_belongs_to_many :events`)
+- **Tips**: One-to-many relationship (`has_many :tips`)
+- **Scope**: `User.non_performers` returns only regular users (excludes performers)
+
+### Event Model
+- **Users**: Many-to-many relationship (`has_and_belongs_to_many :users`)
+- **Tips**: One-to-many relationship (`has_many :tips`)
+- **Performers**: Custom method that returns users with `_type: 'Performer'`
+
+### Performer Model
+- **Inheritance**: Inherits from User model
+- **Additional Fields**: `bio`, `genre`, `contact`
+- **Events**: Inherited many-to-many relationship from User
+
+### Tip Model
+- **User**: Belongs to a user (`belongs_to :user`)
+- **Event**: Belongs to an event (`belongs_to :event`)
+- **Fields**: `amount`, `message`
 
 ## Example Usage
 
@@ -205,7 +312,7 @@ curl -X POST http://localhost:3000/api/v1/events \
   }'
 ```
 
-### Add a User to an Event
+### Add a User to Multiple Events
 ```bash
 curl -X POST http://localhost:3000/api/v1/users \
   -H "Content-Type: application/json" \
@@ -214,7 +321,27 @@ curl -X POST http://localhost:3000/api/v1/users \
       "name": "Alice Johnson",
       "email": "alice@example.com",
       "phone": "555-0123",
-      "event_id": "EVENT_ID_HERE"
+      "password": "password123",
+      "password_confirmation": "password123",
+      "event_ids": ["EVENT_ID_1", "EVENT_ID_2"]
+    }
+  }'
+```
+
+### Add a Performer to Multiple Events
+```bash
+curl -X POST http://localhost:3000/api/v1/performers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "performer": {
+      "name": "DJ Awesome",
+      "email": "djawesome@example.com",
+      "password": "password123",
+      "password_confirmation": "password123",
+      "bio": "Electronic music specialist",
+      "genre": "Techno",
+      "contact": "djawesome@example.com",
+      "event_ids": ["EVENT_ID_1", "EVENT_ID_2"]
     }
   }'
 ```
@@ -222,6 +349,19 @@ curl -X POST http://localhost:3000/api/v1/users \
 ### Get Event with All Users and Performers
 ```bash
 curl http://localhost:3000/api/v1/events/EVENT_ID_HERE
+```
+
+### Create a Tip for an Event
+```bash
+curl -X POST http://localhost:3000/api/v1/events/EVENT_ID/tips \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tip": {
+      "amount": 50.00,
+      "message": "Incredible performance tonight!",
+      "user_id": "USER_ID_HERE"
+    }
+  }'
 ```
 
 ## Testing
@@ -233,11 +373,13 @@ bundle exec rspec spec/requests/api/
 ```
 
 The test suite includes:
-- CRUD operations for all resources
-- Relationship testing
-- Error handling
+- CRUD operations for all resources (Users, Events, Performers, Tips)
+- Many-to-many relationship testing
+- Single Table Inheritance (STI) testing
+- Error handling and validation
 - Content type validation
 - Integration workflows
+- Cascading delete operations
 
 ## Rate Limiting
 
