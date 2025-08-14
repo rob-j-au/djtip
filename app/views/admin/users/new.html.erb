@@ -143,22 +143,26 @@
           <%= form.label :event_ids, class: "label" do %>
             <span class="label-text font-medium">Associated Events</span>
           <% end %>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-4 border border-base-300 rounded-lg bg-base-50">
+          <div class="border border-base-300 rounded-lg bg-base-50 max-h-60 overflow-y-auto">
             <% if Event.exists? %>
-              <% Event.order(date: -1).each do |event| %>
-                <label class="label cursor-pointer justify-start">
-                  <%= check_box_tag "user[event_ids][]", event.id, @user.event_ids.include?(event.id), 
-                      class: "checkbox checkbox-primary mr-3" %>
-                  <div class="flex flex-col">
-                    <span class="label-text font-medium"><%= event.title %></span>
-                    <span class="label-text-alt text-base-content/60">
-                      <%= event.date.strftime("%b %d, %Y") %> • <%= event.location %>
-                    </span>
-                  </div>
-                </label>
-              <% end %>
+              <ul class="menu menu-compact">
+                <% Event.order(date: -1).each do |event| %>
+                  <li>
+                    <label class="label cursor-pointer justify-start gap-3 px-4 py-3 hover:bg-base-200 rounded-lg">
+                      <%= check_box_tag "user[event_ids][]", event.id, @user.event_ids.include?(event.id), 
+                          class: "checkbox checkbox-primary" %>
+                      <div class="flex-1">
+                        <div class="font-medium text-base-content"><%= event.title %></div>
+                        <div class="text-sm text-base-content/70">
+                          <%= event.date.strftime("%b %d, %Y") %> • <%= event.location %>
+                        </div>
+                      </div>
+                    </label>
+                  </li>
+                <% end %>
+              </ul>
             <% else %>
-              <div class="col-span-full text-center py-4">
+              <div class="text-center py-8">
                 <i class="fas fa-calendar-times text-base-content/40 text-2xl mb-2"></i>
                 <p class="text-base-content/60">No events available</p>
                 <%= link_to "Create Event", new_admin_event_path, class: "btn btn-primary btn-sm mt-2" %>

@@ -42,6 +42,44 @@
   </fieldset>
 
   <fieldset class="fieldset">
+    <legend class="fieldset-legend">Account Information</legend>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <%= form.label :email, class: "label" do %>
+          <span class="label-text">Email Address</span>
+          <span class="label-text-alt">Required</span>
+        <% end %>
+        <%= form.email_field :email, class: "input input-bordered w-full", placeholder: "Enter email address" %>
+      </div>
+
+      <div class="form-control w-full">
+        <!-- Spacer for layout balance -->
+      </div>
+    </div>
+
+    <% if performer.new_record? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div class="form-control w-full">
+        <%= form.label :password, class: "label" do %>
+          <span class="label-text">Password</span>
+          <span class="label-text-alt">Required</span>
+        <% end %>
+        <%= form.password_field :password, class: "input input-bordered w-full", placeholder: "Enter password" %>
+      </div>
+
+      <div class="form-control w-full">
+        <%= form.label :password_confirmation, class: "label" do %>
+          <span class="label-text">Confirm Password</span>
+          <span class="label-text-alt">Must match password</span>
+        <% end %>
+        <%= form.password_field :password_confirmation, class: "input input-bordered w-full", placeholder: "Confirm password" %>
+      </div>
+    </div>
+    <% end %>
+  </fieldset>
+
+  <fieldset class="fieldset">
     <legend class="fieldset-legend">Biography</legend>
     
     <div class="form-control w-full">
