@@ -35,6 +35,9 @@ class User
   has_and_belongs_to_many :events
   has_many :tips, dependent: :destroy
 
+  # Scopes
+  scope :attendees, -> { where(:_type.ne => 'Performer') }
+
   # Validations
   validates :name, presence: true
   # Email validation is handled by Devise
