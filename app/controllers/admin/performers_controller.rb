@@ -21,9 +21,9 @@ class Admin::PerformersController < Admin::BaseController
       @performers = @performers.where(event_id: params[:event_id])
     end
     
-    @performers = @performers.order(:name)
-    @genres = Performer.distinct(:genre).compact.sort
-    @events = Event.order(:title)
+    @performers = @performers.order(name: 1)
+    @genres = Performer.where(:genre.exists => true, :genre.ne => "").pluck(:genre).uniq.compact.sort
+    @events = Event.order(title: 1)
   end
   
   def show
@@ -33,39 +33,39 @@ class Admin::PerformersController < Admin::BaseController
   def new
     set_page_title("New Performer")
     @performer = Performer.new
-    @events = Event.order(:title)
+    @events = Event.order(title: 1)
   end
   
   def create
     @performer = Performer.new(performer_params)
     
     if @performer.save
-      redirect_to new_admin_performer_path(@performer), notice: 'Performer was successfully created.'
+      redirect_to admin_performer_path(@performer), notice: 'Performer was successfully created.'
     else
       set_page_title("New Performer")
-      @events = Event.order(:title)
+      @events = Event.order(title: 1)
       render :new, status: :unprocessable_entity
     end
   end
   
   def edit
     set_page_title("Edit Performer: #{@performer.name}")
-    @events = Event.order(:title)
+    @events = Event.order(title: 1)
   end
   
   def update
     if @performer.update(performer_params)
-      redirect_to new_admin_performer_path(@performer), notice: 'Performer was successfully updated.'
+      redirect_to admin_performer_path(@performer), notice: 'Performer was successfully updated.'
     else
       set_page_title("Edit Performer: #{@performer.name}")
-      @events = Event.order(:title)
+      @events = Event.order(title: 1)
       render :edit, status: :unprocessable_entity
     end
   end
   
   def destroy
     @performer.destroy
-    redirect_to new_admin_performers_path, notice: 'Performer was successfully deleted.'
+    redirect_to admin_performers_path, notice: 'Performer was successfully deleted.'
   end
   
   private

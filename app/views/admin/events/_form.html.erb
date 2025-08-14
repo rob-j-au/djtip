@@ -1,4 +1,4 @@
-<%= form_with model: [:new_admin, @event], local: true, class: "space-y-6" do |f| %>
+<%= form_with model: [:admin, @event], local: true, class: "space-y-6" do |f| %>
   <% if @event.errors.any? %>
     <div class="alert alert-error">
       <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
@@ -121,7 +121,7 @@
           Fields marked with * are required
         </div>
         <div class="flex space-x-3">
-          <%= link_to "Cancel", @event.persisted? ? new_admin_event_path(@event) : new_admin_events_path, 
+          <%= link_to "Cancel", @event.persisted? ? admin_event_path(@event) : admin_events_path, 
               class: "btn btn-ghost" %>
           <%= f.submit @event.persisted? ? "Update Event" : "Create Event", 
               class: "btn btn-primary" %>

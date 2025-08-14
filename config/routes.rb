@@ -23,22 +23,7 @@ Rails.application.routes.draw do
     resources :tips, only: [:index, :show, :destroy]
   end
   
-  # Keep new_admin as alias for backward compatibility during transition
-  namespace :new_admin do
-    root 'dashboard#index'
-    resources :events do
-      member do
-        patch :toggle_status
-      end
-    end
-    resources :users do
-      member do
-        patch :toggle_admin
-      end
-    end
-    resources :performers
-    resources :tips, only: [:index, :show, :destroy]
-  end
+
   
   # Sidekiq Web UI
   mount Sidekiq::Web => '/sidekiq'

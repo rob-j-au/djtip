@@ -1,10 +1,10 @@
 <% content_for :page_actions do %>
   <div class="flex space-x-2">
-    <%= link_to new_new_admin_event_path, class: "btn btn-primary btn-sm" do %>
+    <%= link_to new_admin_event_path, class: "btn btn-primary btn-sm" do %>
       <i class="fas fa-plus mr-2"></i>
       New Event
     <% end %>
-    <%= link_to new_new_admin_user_path, class: "btn btn-secondary btn-sm" do %>
+    <%= link_to new_admin_user_path, class: "btn btn-secondary btn-sm" do %>
       <i class="fas fa-user-plus mr-2"></i>
       New User
     <% end %>
@@ -84,7 +84,7 @@
           <i class="fas fa-calendar-alt mr-2"></i>
           Recent Events
         </h2>
-        <%= link_to "View All", new_admin_events_path, class: "btn btn-sm btn-outline" %>
+        <%= link_to "View All", admin_events_path, class: "btn btn-sm btn-outline" %>
       </div>
       
       <% if @stats[:recent_events].any? %>
@@ -93,7 +93,7 @@
             <div class="flex items-center justify-between p-3 bg-base-200 rounded-lg">
               <div class="flex-1">
                 <h3 class="font-semibold text-base-content">
-                  <%= link_to event.title, new_admin_event_path(event), class: "hover:text-primary" %>
+                  <%= link_to event.title, admin_event_path(event), class: "hover:text-primary" %>
                 </h3>
                 <p class="text-sm text-base-content/70">
                   <i class="fas fa-map-marker-alt mr-1"></i>
@@ -116,7 +116,7 @@
         <div class="text-center py-8">
           <i class="fas fa-calendar-plus text-4xl text-base-content/30 mb-4"></i>
           <p class="text-base-content/70">No events yet</p>
-          <%= link_to "Create your first event", new_new_admin_event_path, class: "btn btn-primary btn-sm mt-2" %>
+          <%= link_to "Create your first event", admin_event_path, class: "btn btn-primary btn-sm mt-2" %>
         </div>
       <% end %>
     </div>
@@ -130,7 +130,7 @@
           <i class="fas fa-dollar-sign mr-2"></i>
           Recent Tips
         </h2>
-        <%= link_to "View All", new_admin_tips_path, class: "btn btn-sm btn-outline" %>
+        <%= link_to "View All", admin_tips_path, class: "btn btn-sm btn-outline" %>
       </div>
       
       <% if @stats[:recent_tips].any? %>
@@ -147,7 +147,7 @@
                   <div>
                     <h3 class="font-semibold text-base-content"><%= tip.user.name %></h3>
                     <p class="text-sm text-base-content/70">
-                      <%= link_to tip.event.title, new_admin_event_path(tip.event), class: "hover:text-primary" %>
+                      <%= link_to tip.event.title, admin_event_path(tip.event), class: "hover:text-primary" %>
                     </p>
                   </div>
                 </div>
@@ -186,7 +186,7 @@
       </div>
       <h2 class="card-title text-2xl font-bold text-warning justify-center"><%= @stats[:admin_users] %></h2>
       <p class="text-base-content/70">Admin Users</p>
-      <%= link_to "Manage Users", new_admin_users_path, class: "btn btn-warning btn-sm mt-2" %>
+      <%= link_to "Manage Users", admin_users_path, class: "btn btn-warning btn-sm mt-2" %>
     </div>
   </div>
 
@@ -211,7 +211,7 @@
       <h2 class="card-title text-lg font-bold text-neutral justify-center">Quick Actions</h2>
       <p class="text-base-content/70">Common tasks</p>
       <div class="flex justify-center space-x-2 mt-2">
-        <%= link_to new_new_admin_performer_path, class: "btn btn-neutral btn-xs" do %>
+        <%= link_to new_admin_performer_path, class: "btn btn-neutral btn-xs" do %>
           <i class="fas fa-microphone mr-1"></i>
           Add Performer
         <% end %>

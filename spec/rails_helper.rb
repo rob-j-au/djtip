@@ -17,7 +17,7 @@ require 'database_cleaner/mongoid'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 RSpec.configure do |config|
   # Since we're using Mongoid instead of ActiveRecord, disable ActiveRecord features
@@ -28,6 +28,14 @@ RSpec.configure do |config|
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
   config.infer_spec_type_from_file_location!
+  
+  # Include route helpers in request specs
+  config.include Rails.application.routes.url_helpers, type: :request
+  
+  # Ensure routes are loaded before tests
+  config.before(:suite) do
+    Rails.application.reload_routes!
+  end
 
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
