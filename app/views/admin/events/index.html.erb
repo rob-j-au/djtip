@@ -12,11 +12,19 @@
 <!-- Search and Filters -->
 <div class="card bg-base-100 shadow-sm mb-6">
   <div class="card-body">
-    <%= form_with url: admin_events_path, method: :get, local: true, class: "flex flex-wrap gap-4 items-end" do |f| %>
+    <%= form_with url: admin_events_path, method: :get, local: true, 
+        class: "flex flex-wrap gap-4 items-end",
+        data: { 
+          controller: "search-filter", 
+          search_filter_auto_submit_value: true,
+          search_filter_delay_value: 800,
+          search_filter_form_target: "form"
+        } do |f| %>
       <div class="form-control flex-1 min-w-64">
         <%= f.label :search, "Search Events", class: "label" %>
         <%= f.text_field :search, value: params[:search], placeholder: "Search by title, location, or description...", 
-            class: "input input-bordered w-full" %>
+            class: "input input-bordered w-full", 
+            data: { search_filter_target: "input" } %>
       </div>
       
       <div class="form-control">
@@ -28,12 +36,13 @@
               ['Past Events', 'past'],
               ['This Month', 'this_month']
             ], params[:date_filter]), 
-            {}, { class: "select select-bordered" } %>
+            {}, { class: "select select-bordered", data: { search_filter_target: "select" } } %>
       </div>
       
       <div class="form-control">
         <%= f.submit "Filter", class: "btn btn-primary" %>
-        <%= link_to "Clear", admin_events_path, class: "btn btn-ghost" %>
+        <%= button_to "Clear", admin_events_path, method: :get, class: "btn btn-ghost", 
+            data: { action: "click->search-filter#clear" } %>
       </div>
     <% end %>
   </div>
@@ -127,9 +136,17 @@
                     <%= link_to edit_admin_event_path(event), class: "btn btn-ghost btn-sm" do %>
                       <i class="fas fa-edit"></i>
                     <% end %>
-                    <%= link_to admin_event_path(event), method: :delete, 
+                    <%= link_to admin_event_path(event), 
                         class: "btn btn-ghost btn-sm text-error",
-                        confirm: "Are you sure you want to delete this event? This will also delete all associated users, performers, and tips." do %>
+                        data: { 
+                          controller: "confirmation-dialog",
+                          action: "click->confirmation-dialog#confirm",
+                          confirmation_dialog_title_value: "Delete Event",
+                          confirmation_dialog_message_value: "Are you sure you want to delete '#{event.title}'? This will also delete all associated users, performers, and tips.",
+                          confirmation_dialog_confirm_text_value: "Delete Event",
+                          confirmation_dialog_destructive_value: true,
+                          turbo_method: :delete
+                        } do %>
                       <i class="fas fa-trash"></i>
                     <% end %>
                   </div>

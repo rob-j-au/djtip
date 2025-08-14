@@ -131,6 +131,18 @@
     </div>
   </div>
 
+  <!-- Confirmation Dialog Modal -->
+  <dialog class="modal" data-confirmation-dialog-target="modal" data-action="click->confirmation-dialog#closeOnOutsideClick">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg" data-confirmation-dialog-target="title">Confirm Action</h3>
+      <p class="py-4" data-confirmation-dialog-target="message">Are you sure you want to proceed?</p>
+      <div class="modal-action">
+        <button class="btn btn-ghost" data-confirmation-dialog-target="cancelButton" data-action="click->confirmation-dialog#cancel">Cancel</button>
+        <button class="btn btn-error" data-confirmation-dialog-target="confirmButton" data-action="click->confirmation-dialog#proceed">Confirm</button>
+      </div>
+    </div>
+  </dialog>
+
   <!-- Theme Controller Script -->
   <script>
     // Theme persistence
