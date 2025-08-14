@@ -38,9 +38,9 @@ gem "ostruct"
 gem 'sidekiq', '~> 8.0'
 gem 'redis', '~> 5.0'
 
-# Admin interface
-gem 'rails_admin', '~> 3.3'
-gem 'kaminari-mongoid', '~> 1.0'
+# Admin interface - using custom new_admin interface
+# gem 'rails_admin', '~> 3.3' - REMOVED
+# gem 'kaminari-mongoid', '~> 1.0' - REMOVED
 
 # Authentication
 gem 'devise', '~> 4.9'

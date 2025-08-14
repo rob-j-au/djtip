@@ -1,0 +1,39 @@
+<li>
+  <%= link_to new_admin_root_path, 
+      class: "btn btn-ghost #{current_page?(new_admin_root_path) ? 'btn-active' : ''}" do %>
+    <i class="fas fa-home mr-2"></i>
+    Dashboard
+  <% end %>
+</li>
+
+<li>
+  <%= link_to new_admin_events_path, 
+      class: "btn btn-ghost #{controller_name == 'events' ? 'btn-active' : ''}" do %>
+    <i class="fas fa-calendar-alt mr-2"></i>
+    Events
+  <% end %>
+</li>
+
+<li>
+  <%= link_to new_admin_users_path, 
+      class: "btn btn-ghost #{controller_name == 'users' ? 'btn-active' : ''}" do %>
+    <i class="fas fa-users mr-2"></i>
+    Users
+  <% end %>
+</li>
+
+<li>
+  <%= link_to new_admin_performers_path, 
+      class: "btn btn-ghost #{controller_name == 'performers' ? 'btn-active' : ''}" do %>
+    <i class="fas fa-microphone mr-2"></i>
+    Performers
+  <% end %>
+</li>
+
+<li>
+  <%= link_to new_admin_tips_path, 
+      class: "btn btn-ghost #{controller_name == 'tips' ? 'btn-active' : ''}" do %>
+    <i class="fas fa-dollar-sign mr-2"></i>
+    Tips
+  <% end %>
+</li>

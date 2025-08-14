@@ -4,9 +4,26 @@ Rails.application.routes.draw do
   # Devise routes for authentication
   devise_for :users
   
-  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+  # mount RailsAdmin::Engine => '/admin', as: 'rails_admin' - REMOVED
   
-  # New Admin Interface (Rails 8 + daisyUI)
+  # Admin Interface (Rails 8 + daisyUI) - moved from /new_admin to /admin
+  namespace :admin do
+    root 'dashboard#index'
+    resources :events do
+      member do
+        patch :toggle_status
+      end
+    end
+    resources :users do
+      member do
+        patch :toggle_admin
+      end
+    end
+    resources :performers
+    resources :tips, only: [:index, :show, :destroy]
+  end
+  
+  # Keep new_admin as alias for backward compatibility during transition
   namespace :new_admin do
     root 'dashboard#index'
     resources :events do
