@@ -73,6 +73,114 @@
     </div>
   </fieldset>
 
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Performers</legend>
+    
+    <div class="form-control w-full">
+      <%= form.label :user_ids, class: "label" do %>
+        <span class="label-text">Select Performers</span>
+        <span class="label-text-alt">Choose performers for this event</span>
+      <% end %>
+      
+      <% if Performer.count > 0 %>
+        <div class="bg-base-100 border border-base-300 rounded-lg p-4 max-h-64 overflow-y-auto">
+          <div class="space-y-2">
+            <% Performer.all.each do |performer| %>
+              <label class="cursor-pointer label justify-start gap-3 p-2 hover:bg-base-200 rounded-lg transition-colors">
+                <%= check_box_tag 'event[user_ids][]', performer.id, 
+                    event.users.include?(performer), 
+                    class: "checkbox checkbox-primary", 
+                    id: "event_performer_#{performer.id}" %>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <div class="avatar placeholder">
+                      <div class="bg-primary text-primary-content w-8 h-8 rounded-full">
+                        <span class="text-xs font-medium"><%= performer.name.first %></span>
+                      </div>
+                    </div>
+                    <div>
+                      <span class="label-text font-medium"><%= performer.name %></span>
+                      <% if performer.genre.present? %>
+                        <span class="badge badge-outline badge-sm ml-2"><%= performer.genre %></span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <% if performer.bio.present? %>
+                    <div class="text-xs text-base-content/70 mt-1 ml-10">
+                      <%= truncate(performer.bio, length: 80) %>
+                    </div>
+                  <% end %>
+                </div>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="bg-base-200 border border-base-300 rounded-lg p-6 text-center">
+          <svg class="mx-auto h-12 w-12 text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <p class="mt-2 text-sm text-base-content/70">No performers available</p>
+          <p class="text-xs text-base-content/50">Create performers first to assign them to events</p>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Attendees</legend>
+    
+    <div class="form-control w-full">
+      <%= form.label :user_ids, class: "label" do %>
+        <span class="label-text">Select Attendees</span>
+        <span class="label-text-alt">Choose regular users attending this event</span>
+      <% end %>
+      
+      <% if User.non_performers.count > 0 %>
+        <div class="bg-base-100 border border-base-300 rounded-lg p-4 max-h-64 overflow-y-auto">
+          <div class="space-y-2">
+            <% User.non_performers.each do |user| %>
+              <label class="cursor-pointer label justify-start gap-3 p-2 hover:bg-base-200 rounded-lg transition-colors">
+                <%= check_box_tag 'event[user_ids][]', user.id, 
+                    event.users.include?(user), 
+                    class: "checkbox checkbox-secondary", 
+                    id: "event_user_#{user.id}" %>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <div class="avatar placeholder">
+                      <div class="bg-secondary text-secondary-content w-8 h-8 rounded-full">
+                        <span class="text-xs font-medium"><%= user.name.first %></span>
+                      </div>
+                    </div>
+                    <div>
+                      <span class="label-text font-medium"><%= user.name %></span>
+                      <% if user.admin? %>
+                        <span class="badge badge-accent badge-sm ml-2">Admin</span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <% if user.email.present? %>
+                    <div class="text-xs text-base-content/70 mt-1 ml-10">
+                      <%= user.email %>
+                    </div>
+                  <% end %>
+                </div>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="bg-base-200 border border-base-300 rounded-lg p-6 text-center">
+          <svg class="mx-auto h-12 w-12 text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <p class="mt-2 text-sm text-base-content/70">No attendees available</p>
+          <p class="text-xs text-base-content/50">Create regular users first to assign them as attendees</p>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
   <div class="flex justify-end mt-8 space-x-3">
     <%= link_to "Cancel", events_path, class: "btn btn-ghost" %>
     <button type="submit" class="btn btn-primary">
