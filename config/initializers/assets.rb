@@ -12,4 +12,4 @@
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
 
 # Add additional CSS files to asset precompilation
-Rails.application.config.assets.precompile += %w( application.css application.tailwind.css rails_admin.css rails_admin_daisyui.css )
+Rails.application.config.assets.precompile += %w( application.css application.tailwind.css tailwind.css rails_admin.css rails_admin_daisyui.css )
