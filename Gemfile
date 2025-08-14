@@ -31,6 +31,10 @@ gem "jbuilder"
 # JSON API serializer for consistent API responses
 gem "jsonapi-serializer"
 
+# File uploads
+gem "shrine"
+gem "image_processing", "~> 1.2"
+
 # Add ostruct explicitly as it will not be part of the default gems starting from Ruby 3.5.0
 gem "ostruct"
 

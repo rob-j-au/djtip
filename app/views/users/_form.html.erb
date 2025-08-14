@@ -30,6 +30,35 @@
         <% end %>
         <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Enter full name" %>
       </div>
+      
+      <div class="form-control w-full">
+        <%= form.label :image, "Profile Picture", class: "label" do %>
+          <span class="label-text">Profile Picture</span>
+          <span class="label-text-alt">Optional</span>
+        <% end %>
+        
+        <% if user.image_data? %>
+          <div class="mb-3">
+            <%= image_tag user.image_url(:thumb), class: "w-24 h-24 rounded-full object-cover mb-2" %>
+            <div class="text-sm text-gray-500">
+              <%= form.check_box :remove_image, class: "checkbox checkbox-sm mr-1" %>
+              <%= form.label :remove_image, "Remove image", class: "inline-block align-middle" %>
+            </div>
+          </div>
+        <% end %>
+        
+        <%= form.file_field :image, 
+                          class: "file-input file-input-bordered w-full",
+                          accept: "image/jpeg,image/png,image/gif",
+                          data: { controller: "image-preview", action: "change->image-preview#preview" } %>
+        <div class="mt-2 text-xs text-gray-500">
+          JPG, PNG or GIF (max 5MB)
+        </div>
+        
+        <% if user.image_data? %>
+          <%= form.hidden_field :image, value: user.cached_image_data, id: "user_image_cache" %>
+        <% end %>
+      </div>
 
       <div class="form-control w-full">
         <%= form.label :email, class: "label" do %>
