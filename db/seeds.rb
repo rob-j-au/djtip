@@ -69,32 +69,32 @@ users_data = [
     phone: "+61 2 9876 5432"
   },
   {
-    name: "Stephen Allkins",
-    email: "steve@angry.org",
+    name: "Lisa Javs",
+    email: "lis@javs.org",
     password: "password123",
     password_confirmation: "password123",
     admin: false,
     phone: "+61 404 123 456"
   },
   {
-    name: "Ben Drayton",
-    email: "ben@drayton.org",
+    name: "Aaron Manhattan",
+    email: "manhattan@drag.net",
     password: "password123",
     password_confirmation: "password123",
     admin: false,
     phone: "+61 404 234 567"
   },
   {
-    name: "Emma Rodriguez",
-    email: "emma.rodriguez@email.com",
+    name: "Betty Grumble",
+    email: "betty@grumble.net,
     password: "password123",
     password_confirmation: "password123",
     admin: false,
     phone: "+61 404 345 678"
   },
   {
-    name: "James Wilson",
-    email: "james.wilson@email.com",
+    name: "Tim Owe",
+    email: "tim@owe.org",
     password: "password123",
     password_confirmation: "password123",
     admin: false,
@@ -141,29 +141,29 @@ puts "\nCreating performers..."
 
 performers_data = [
   {
-    name: "DJ Pulse",
-    email: "djpulse@djtip.com",
+    name: "Ben Drayton",
+    email: "ben@djtip.com",
     bio: "Electronic music producer and DJ specializing in progressive house and techno.",
     genre: "Progressive House, Techno",
     event: created_events[0]
   },
   {
-    name: "Bass Master",
-    email: "bassmaster@djtip.com",
+    name: "Jonny Seymour",
+    email: "jonny@djtip.com",
     bio: "Underground bass music specialist with 10+ years experience.",
     genre: "Dubstep, Bass",
     event: created_events[1]
   },
   {
-    name: "Sunset Sounds",
-    email: "sunsetsounds@djtip.com",
+    name: "Gemma",
+    email: "kooky@droppings.org",
     bio: "Chill house and ambient music curator for relaxing vibes.",
     genre: "Chill House, Ambient",
     event: created_events[2]
   },
   {
-    name: "Drop Zone",
-    email: "dropzone@djtip.com",
+    name: "Matt Costain",
+    email: "matt@costain.org",
     bio: "High-energy electronic music for the dance floor.",
     genre: "Electro, Big Room",
     event: created_events[3]
