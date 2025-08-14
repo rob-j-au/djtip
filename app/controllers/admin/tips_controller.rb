@@ -1,5 +1,5 @@
 class Admin::TipsController < Admin::BaseController
-  before_action :set_tip, only: [:show, :destroy]
+  before_action :set_tip, only: [:show, :edit, :update, :destroy]
   
   def index
     set_page_title("Tips")
@@ -55,6 +55,23 @@ class Admin::TipsController < Admin::BaseController
     set_page_title("Tip Details")
   end
   
+  def edit
+    set_page_title("Edit Tip")
+    @events = Event.order(title: 1)
+    @users = User.order(name: 1)
+  end
+  
+  def update
+    if @tip.update(tip_params)
+      redirect_to admin_tip_path(@tip), notice: 'Tip was successfully updated.'
+    else
+      set_page_title("Edit Tip")
+      @events = Event.order(title: 1)
+      @users = User.order(name: 1)
+      render :edit, status: :unprocessable_entity
+    end
+  end
+  
   def destroy
     @tip.destroy
     redirect_to admin_tips_path, notice: 'Tip was successfully deleted.'
@@ -64,5 +81,9 @@ class Admin::TipsController < Admin::BaseController
   
   def set_tip
     @tip = Tip.find(params[:id])
+  end
+  
+  def tip_params
+    params.require(:tip).permit(:amount, :currency, :message, :user_id, :event_id)
   end
 end

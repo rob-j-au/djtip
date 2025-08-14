@@ -1,0 +1,179 @@
+<%= form_with model: [:admin, tip], local: true, 
+    class: "space-y-6",
+    data: { 
+      controller: "form-validation", 
+      form_validation_invalid_class: "input-error",
+      form_validation_valid_class: "input-success"
+    } do |form| %>
+  <% if tip.errors.any? %>
+    <div class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <h3 class="font-bold">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% tip.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Tip Details -->
+  <div class="card bg-base-100 border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-lg mb-4">
+        <i class="fas fa-hand-holding-usd text-success mr-2"></i>
+        Tip Information
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Amount -->
+        <fieldset class="form-control">
+          <legend class="label">
+            <span class="label-text font-medium">Amount *</span>
+          </legend>
+          <%= form.number_field :amount, 
+              step: 0.01, 
+              min: 0,
+              required: true,
+              class: "input input-bordered w-full #{'input-error' if tip.errors[:amount].any?}",
+              placeholder: "0.00",
+              data: { form_validation_target: "field" } %>
+          <% if tip.errors[:amount].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <%= tip.errors[:amount].first %>
+              </span>
+            </div>
+          <% end %>
+        </fieldset>
+
+        <!-- Currency -->
+        <fieldset class="form-control">
+          <legend class="label">
+            <span class="label-text font-medium">Currency</span>
+          </legend>
+          <%= form.select :currency,
+              options_for_select([
+                ['USD ($)', 'USD'],
+                ['EUR (€)', 'EUR'],
+                ['GBP (£)', 'GBP'],
+                ['AUD ($)', 'AUD'],
+                ['CAD ($)', 'CAD']
+              ], tip.currency || 'USD'),
+              {},
+              { class: "select select-bordered w-full #{'select-error' if tip.errors[:currency].any?}" } %>
+          <% if tip.errors[:currency].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <%= tip.errors[:currency].first %>
+              </span>
+            </div>
+          <% end %>
+        </fieldset>
+      </div>
+
+      <!-- Message -->
+      <fieldset class="form-control">
+        <legend class="label">
+          <span class="label-text font-medium">Message</span>
+        </legend>
+        <%= form.text_area :message, 
+            rows: 3,
+            class: "textarea textarea-bordered w-full #{'textarea-error' if tip.errors[:message].any?}",
+            placeholder: "Optional message from the tipper...",
+            data: { form_validation_target: "field" } %>
+        <div class="label">
+          <span class="label-text-alt">Optional personal message</span>
+          <% if tip.errors[:message].any? %>
+            <span class="label-text-alt text-error">
+              <i class="fas fa-exclamation-circle mr-1"></i>
+              <%= tip.errors[:message].first %>
+            </span>
+          <% end %>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+  <!-- Associations -->
+  <div class="card bg-base-100 border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-lg mb-4">
+        <i class="fas fa-link text-primary mr-2"></i>
+        Associations
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- User -->
+        <fieldset class="form-control">
+          <legend class="label">
+            <span class="label-text font-medium">User *</span>
+          </legend>
+          <%= form.select :user_id,
+              options_from_collection_for_select(@users, :id, :name, tip.user_id),
+              { prompt: "Select a user..." },
+              { 
+                class: "select select-bordered w-full #{'select-error' if tip.errors[:user_id].any?}",
+                required: true,
+                data: { form_validation_target: "field" }
+              } %>
+          <% if tip.errors[:user_id].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <%= tip.errors[:user_id].first %>
+              </span>
+            </div>
+          <% end %>
+        </fieldset>
+
+        <!-- Event -->
+        <fieldset class="form-control">
+          <legend class="label">
+            <span class="label-text font-medium">Event *</span>
+          </legend>
+          <%= form.select :event_id,
+              options_from_collection_for_select(@events, :id, :title, tip.event_id),
+              { prompt: "Select an event..." },
+              { 
+                class: "select select-bordered w-full #{'select-error' if tip.errors[:event_id].any?}",
+                required: true,
+                data: { form_validation_target: "field" }
+              } %>
+          <% if tip.errors[:event_id].any? %>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <%= tip.errors[:event_id].first %>
+              </span>
+            </div>
+          <% end %>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="card bg-base-100 border border-base-300">
+    <div class="card-body">
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-base-content/70">
+          <i class="fas fa-info-circle mr-1"></i>
+          Fields marked with * are required
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to "Cancel", tip.persisted? ? admin_tip_path(tip) : admin_tips_path, 
+              class: "btn btn-ghost" %>
+          <%= form.submit tip.persisted? ? "Update Tip" : "Create Tip", 
+              class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

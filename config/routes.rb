@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       end
     end
     resources :performers
-    resources :tips, only: [:index, :show, :destroy]
+    resources :tips, only: [:index, :show, :edit, :update, :destroy]
   end
   
 
