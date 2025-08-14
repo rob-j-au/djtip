@@ -58,24 +58,26 @@
           <span class="label-text">Associated Events</span>
           <span class="label-text-alt">Optional - Select multiple events</span>
         <% end %>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-4 border border-base-300 rounded-lg max-h-60 overflow-y-auto">
-          <% @events.each do |event| %>
-            <div class="form-control">
-              <label class="label cursor-pointer justify-start space-x-3">
-                <%= check_box_tag "user[event_ids][]", event.id, user.event_ids.include?(event.id), 
-                    class: "checkbox checkbox-primary" %>
-                <div class="flex-1">
-                  <span class="label-text font-medium"><%= event.title %></span>
-                  <div class="text-xs opacity-70">
-                    <%= event.date.strftime('%b %d, %Y') if event.date %>
-                    <% if event.location.present? %>
-                      • <%= event.location %>
-                    <% end %>
+        <div class="border border-base-300 rounded-lg max-h-60 overflow-y-auto">
+          <ul class="menu menu-compact">
+            <% @events.each do |event| %>
+              <li>
+                <label class="label cursor-pointer justify-start gap-3 px-4 py-3 hover:bg-base-200 rounded-lg">
+                  <%= check_box_tag "user[event_ids][]", event.id, user.event_ids.include?(event.id), 
+                      class: "checkbox checkbox-primary" %>
+                  <div class="flex-1">
+                    <div class="font-medium text-base-content"><%= event.title %></div>
+                    <div class="text-sm text-base-content/70">
+                      <%= event.date.strftime('%b %d, %Y') if event.date %>
+                      <% if event.location.present? %>
+                        • <%= event.location %>
+                      <% end %>
+                    </div>
                   </div>
-                </div>
-              </label>
-            </div>
-          <% end %>
+                </label>
+              </li>
+            <% end %>
+          </ul>
         </div>
         <%= hidden_field_tag "user[event_ids][]", "" %>
       </div>
