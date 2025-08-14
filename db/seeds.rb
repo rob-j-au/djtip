@@ -86,7 +86,7 @@ users_data = [
   },
   {
     name: "Betty Grumble",
-    email: "betty@grumble.net,
+    email: "betty@grumble.net",
     password: "password123",
     password_confirmation: "password123",
     admin: false,
