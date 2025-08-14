@@ -33,6 +33,74 @@
     <% end %>
   </div>
 
+  <!-- Email Field -->
+  <div class="form-control">
+    <%= form.label :email, class: "label" do %>
+      <span class="label-text font-medium">Email <span class="text-error">*</span></span>
+    <% end %>
+    <%= form.email_field :email, 
+        class: "input input-bordered w-full #{'input-error' if performer.errors[:email].any?}",
+        placeholder: "Enter performer's email address" %>
+    <% if performer.errors[:email].any? %>
+      <div class="label">
+        <span class="label-text-alt text-error">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          <%= performer.errors[:email].first %>
+        </span>
+      </div>
+    <% end %>
+    <div class="label">
+      <span class="label-text-alt text-base-content/70">
+        <i class="fas fa-info-circle mr-1"></i>
+        Used for login and notifications
+      </span>
+    </div>
+  </div>
+
+  <!-- Password Field (only for new performers) -->
+  <% if performer.new_record? %>
+  <div class="form-control">
+    <%= form.label :password, class: "label" do %>
+      <span class="label-text font-medium">Password <span class="text-error">*</span></span>
+    <% end %>
+    <%= form.password_field :password, 
+        class: "input input-bordered w-full #{'input-error' if performer.errors[:password].any?}",
+        placeholder: "Enter password" %>
+    <% if performer.errors[:password].any? %>
+      <div class="label">
+        <span class="label-text-alt text-error">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          <%= performer.errors[:password].first %>
+        </span>
+      </div>
+    <% end %>
+    <div class="label">
+      <span class="label-text-alt text-base-content/70">
+        <i class="fas fa-info-circle mr-1"></i>
+        Minimum 6 characters
+      </span>
+    </div>
+  </div>
+
+  <!-- Password Confirmation Field (only for new performers) -->
+  <div class="form-control">
+    <%= form.label :password_confirmation, class: "label" do %>
+      <span class="label-text font-medium">Confirm Password <span class="text-error">*</span></span>
+    <% end %>
+    <%= form.password_field :password_confirmation, 
+        class: "input input-bordered w-full #{'input-error' if performer.errors[:password_confirmation].any?}",
+        placeholder: "Confirm password" %>
+    <% if performer.errors[:password_confirmation].any? %>
+      <div class="label">
+        <span class="label-text-alt text-error">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          <%= performer.errors[:password_confirmation].first %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+  <% end %>
+
   <!-- Genre Field -->
   <div class="form-control">
     <%= form.label :genre, class: "label" do %>

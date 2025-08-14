@@ -59,6 +59,9 @@ RSpec.describe "Admin::Performers", type: :request do
     let(:valid_attributes) do
       {
         name: "Test Performer",
+        email: "testperformer@example.com",
+        password: "password123",
+        password_confirmation: "password123",
         genre: "Jazz",
         contact: "test@example.com",
         bio: "Test bio"
@@ -68,6 +71,7 @@ RSpec.describe "Admin::Performers", type: :request do
     let(:invalid_attributes) do
       {
         name: "",
+        email: "",
         genre: ""
       }
     end

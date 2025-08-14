@@ -67,6 +67,9 @@ RSpec.describe "Api::V1::Performers", type: :request do
     let(:valid_attributes) do
       {
         name: "DJ Test",
+        email: "djtest@example.com",
+        password: "password123",
+        password_confirmation: "password123",
         bio: "A test DJ",
         genre: "Electronic",
         contact: "dj@example.com",
@@ -77,6 +80,7 @@ RSpec.describe "Api::V1::Performers", type: :request do
     let(:invalid_attributes) do
       {
         name: "",
+        email: "",
         genre: ""
       }
     end
