@@ -7,6 +7,8 @@ FactoryBot.define do
     bio { Faker::Lorem.paragraph }
     genre { Faker::Music.genre }
     contact { Faker::Internet.email }
-    event { association :event }
+    
+    # Don't auto-create events - let tests handle event associations explicitly
+    # This prevents conflicts when tests want to associate with specific events
   end
 end

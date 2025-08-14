@@ -11,7 +11,11 @@ RSpec.describe "Api::V1::Performers", type: :request do
 
   describe "GET /api/v1/performers" do
     let!(:event) { create(:event) }
-    let!(:performers) { create_list(:performer, 3, event: event) }
+    let!(:performers) { create_list(:performer, 3) }
+    
+    before do
+      performers.each { |performer| performer.events << event }
+    end
 
     it "returns all performers with associated events" do
       get "/api/v1/performers"
@@ -23,7 +27,8 @@ RSpec.describe "Api::V1::Performers", type: :request do
       
       first_performer = json_response[:data].first
       expect(first_performer[:type]).to eq('performer')
-      expect(first_performer[:relationships][:event][:data][:id]).to eq(event.id.to_s)
+      expect(first_performer[:relationships][:events][:data]).to be_an(Array)
+      expect(first_performer[:relationships][:events][:data].first[:id]).to eq(event.id.to_s)
       
       # Check included resources
       expect(json_response[:included]).to be_present
@@ -34,7 +39,11 @@ RSpec.describe "Api::V1::Performers", type: :request do
 
   describe "GET /api/v1/performers/:id" do
     let!(:event) { create(:event) }
-    let!(:performer) { create(:performer, event: event) }
+    let!(:performer) { create(:performer) }
+    
+    before do
+      performer.events << event
+    end
 
     it "returns the performer with associated event" do
       get "/api/v1/performers/#{performer.id}"
@@ -47,7 +56,8 @@ RSpec.describe "Api::V1::Performers", type: :request do
       expect(performer_data[:attributes][:name]).to eq(performer.name)
       
       # Check relationships
-      expect(performer_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
+      expect(performer_data[:relationships][:events][:data]).to be_an(Array)
+      expect(performer_data[:relationships][:events][:data].first[:id]).to eq(event.id.to_s)
       
       # Check included resources
       event_resource = find_included_resource(:event, event.id)
@@ -73,7 +83,7 @@ RSpec.describe "Api::V1::Performers", type: :request do
         bio: "A test DJ",
         genre: "Electronic",
         contact: "dj@example.com",
-        event_id: event.id
+        event_ids: [event.id]
       }
     end
 
@@ -95,7 +105,8 @@ RSpec.describe "Api::V1::Performers", type: :request do
       performer_data = json_response[:data]
       expect(performer_data[:type]).to eq('performer')
       expect(performer_data[:attributes][:name]).to eq("DJ Test")
-      expect(performer_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
+      expect(performer_data[:relationships][:events][:data]).to be_an(Array)
+      expect(performer_data[:relationships][:events][:data].first[:id]).to eq(event.id.to_s)
       
       # Check included resources
       event_resource = find_included_resource(:event, event.id)

@@ -24,9 +24,10 @@
           <% if @performer.genre.present? %>
             <span class="badge badge-primary badge-sm"><%= @performer.genre %></span>
           <% end %>
-          <% if @performer.event %>
-            <span class="text-base-content/70">•</span>
-            <span class="text-base-content/70">Performing at <%= @performer.event.title %></span>
+          <% if @performer.events.any? %>
+            <div class="badge badge-primary badge-sm">
+              <span class="text-base-content/70">Performing at <%= @performer.events.count %> event<%= 's' if @performer.events.count != 1 %></span>
+            </div>
           <% end %>
         </div>
       </div>
@@ -85,9 +86,11 @@
             <div>
               <label class="text-sm font-medium text-base-content/70">Event</label>
               <p class="text-base-content font-medium">
-                <% if @performer.event %>
-                  <%= link_to @performer.event.title, admin_event_path(@performer.event), 
-                      class: "link link-primary" %>
+                <% if @performer.events.any? %>
+                  <% @performer.events.each_with_index do |event, index| %>
+                    <%= link_to event.title, admin_event_path(event), 
+                        class: "text-primary hover:text-primary-focus" %><%= ", " if index < @performer.events.count - 1 %>
+                  <% end %>
                 <% else %>
                   <span class="text-base-content/50">Not assigned</span>
                 <% end %>
@@ -152,16 +155,18 @@
               Edit Performer
             <% end %>
             
-            <% if @performer.event %>
-              <%= link_to admin_event_path(@performer.event), 
-                  class: "btn btn-outline btn-secondary btn-sm w-full justify-start" do %>
-                <i class="fas fa-calendar mr-2"></i>
-                View Event
+            <% if @performer.events.any? %>
+              <% @performer.events.each do |event| %>
+                <%= link_to admin_event_path(event), 
+                    class: "btn btn-outline btn-sm mb-2" do %>
+                  <i class="fas fa-calendar mr-2"></i>
+                  <%= event.title %>
+                <% end %>
               <% end %>
             <% else %>
-              <div class="alert alert-info alert-sm">
-                <i class="fas fa-info-circle"></i>
-                <span class="text-xs">Not assigned to any event</span>
+              <div class="text-center py-4">
+                <i class="fas fa-calendar-times text-base-content/40 text-xl mb-2"></i>
+                <span class="text-xs">Not assigned to any events</span>
               </div>
             <% end %>
             
@@ -179,36 +184,38 @@
       </div>
 
       <!-- Event Information -->
-      <% if @performer.event %>
+      <% if @performer.events.any? %>
         <div class="card bg-base-100 shadow-lg">
           <div class="card-body">
             <h2 class="card-title text-lg mb-4">
               <i class="fas fa-calendar text-primary"></i>
-              Event Details
+              Event Details (<%= @performer.events.count %>)
             </h2>
             
             <div class="space-y-3">
-              <div>
-                <label class="text-sm font-medium text-base-content/70">Event</label>
-                <p class="font-medium">
-                  <%= link_to @performer.event.title, admin_event_path(@performer.event), 
-                      class: "link link-primary" %>
-                </p>
-              </div>
-              
-              <div>
-                <label class="text-sm font-medium text-base-content/70">Date</label>
-                <p class="text-sm">
-                  <%= @performer.event.date.strftime("%B %d, %Y") if @performer.event.date %>
-                </p>
-              </div>
-              
-              <div>
-                <label class="text-sm font-medium text-base-content/70">Location</label>
-                <p class="text-sm">
-                  <%= @performer.event.location if @performer.event.location.present? %>
-                </p>
-              </div>
+              <% @performer.events.each_with_index do |event, index| %>
+                <div class="border-b border-base-300 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0">
+                  <div class="space-y-1">
+                    <label class="text-sm font-medium text-base-content/70">Event <%= index + 1 %></label>
+                    <div class="text-base-content">
+                      <%= link_to event.title, admin_event_path(event), 
+                          class: "text-primary hover:text-primary-focus" %>
+                    </div>
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-sm font-medium text-base-content/70">Date</label>
+                    <div class="text-base-content">
+                      <%= event.date.strftime("%B %d, %Y") if event.date %>
+                    </div>
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-sm font-medium text-base-content/70">Location</label>
+                    <div class="text-base-content">
+                      <%= event.location if event.location.present? %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>
