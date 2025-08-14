@@ -74,6 +74,9 @@ RSpec.describe "API Integration Tests", type: :request do
     it "allows creating a new performer for an existing event via API" do
       performer_params = {
         name: "DJ Gamma",
+        email: "djgamma@example.com",
+        password: "password123",
+        password_confirmation: "password123",
         bio: "New DJ on the scene",
         genre: "Drum & Bass",
         contact: "djgamma@example.com",

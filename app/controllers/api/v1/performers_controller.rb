@@ -47,6 +47,6 @@ class Api::V1::PerformersController < Api::V1::BaseController
   end
 
   def performer_params
-    params.require(:performer).permit(:name, :bio, :genre, :contact, :event_id)
+    params.require(:performer).permit(:name, :email, :password, :password_confirmation, :bio, :genre, :contact, :event_id)
   end
 end

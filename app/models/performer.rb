@@ -1,8 +1,5 @@
-class Performer
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
-  field :name, type: String
+class Performer < User
+  # Performer-specific fields
   field :bio, type: String
   field :genre, type: String
   field :contact, type: String
@@ -11,6 +8,9 @@ class Performer
   belongs_to :event, optional: true
 
   # Validations
-  validates :name, presence: true
   validates :genre, presence: true
+  
+  # Override User validations since Performer may not need email/password
+  validates :email, presence: false, allow_blank: true
+  validates :encrypted_password, presence: false, allow_blank: true
 end

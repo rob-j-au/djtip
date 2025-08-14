@@ -142,24 +142,28 @@ puts "\nCreating performers..."
 performers_data = [
   {
     name: "DJ Pulse",
+    email: "djpulse@djtip.com",
     bio: "Electronic music producer and DJ specializing in progressive house and techno.",
     genre: "Progressive House, Techno",
     event: created_events[0]
   },
   {
     name: "Bass Master",
+    email: "bassmaster@djtip.com",
     bio: "Underground bass music specialist with 10+ years experience.",
     genre: "Dubstep, Bass",
     event: created_events[1]
   },
   {
     name: "Sunset Sounds",
+    email: "sunsetsounds@djtip.com",
     bio: "Chill house and ambient music curator for relaxing vibes.",
     genre: "Chill House, Ambient",
     event: created_events[2]
   },
   {
     name: "Drop Zone",
+    email: "dropzone@djtip.com",
     bio: "High-energy electronic music for the dance floor.",
     genre: "Electro, Big Room",
     event: created_events[3]
@@ -168,7 +172,10 @@ performers_data = [
 
 created_performers = []
 performers_data.each do |performer_data|
-  performer = Performer.find_or_create_by(name: performer_data[:name]) do |p|
+  performer = Performer.find_or_create_by(email: performer_data[:email]) do |p|
+    p.name = performer_data[:name]
+    p.password = 'password123'
+    p.password_confirmation = 'password123'
     p.bio = performer_data[:bio]
     p.genre = performer_data[:genre]
     p.event = performer_data[:event]
