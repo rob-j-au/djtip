@@ -16,7 +16,10 @@ test:
       options:
         read:
           mode: :primary
-        max_pool_size: 1
+        max_pool_size: 5
+        server_selection_timeout: 2
+        socket_timeout: 5
+        connect_timeout: 2
 
 production:
   clients:

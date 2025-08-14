@@ -6,7 +6,7 @@
           <h1 class="card-title text-3xl md:text-4xl"><%= @user.name %></h1>
           <p class="text-sm opacity-70 mt-1">User Profile</p>
         </div>
-        <% if @user.image_data? %>
+        <% if @user.image_data? && @user.image_url(:thumb) %>
           <div class="avatar">
             <div class="w-16 md:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
               <%= image_tag @user.image_url(:thumb), alt: @user.name, class: "rounded-full" %>

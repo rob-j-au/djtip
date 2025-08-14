@@ -69,7 +69,7 @@
             <span><%= current_user.name %></span>
           </li>
           <li><%= link_to "Main Site", root_path, class: "text-base-content" %></li>
-          <li><%= link_to "Profile", edit_user_registration_path, class: "text-base-content" %></li>
+          <li><%= link_to "Profile", edit_user_path(current_user), class: "text-base-content" %></li>
           <li><%= link_to "Logout", destroy_user_session_path, method: :delete, class: "text-error" %></li>
         </ul>
       </div>
