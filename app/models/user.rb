@@ -35,6 +35,12 @@ class User
   has_and_belongs_to_many :events
   has_many :tips, dependent: :destroy
 
+  # Default scope to return only User models (exclude Performer subclass)
+ # default_scope -> { where(:_type.ne => 'Performer') }
+
+  # Scopes
+  scope :non_performers, -> { where(:_type.ne => 'Performer') }
+
   # Validations
   validates :name, presence: true
   # Email validation is handled by Devise
