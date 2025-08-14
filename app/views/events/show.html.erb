@@ -223,7 +223,7 @@
                         <div class="text-sm opacity-70">
                           <%= tip.created_at.strftime('%B %d, %Y') %>
                           <% if tip.message.present? %>
-                            <div class="mt-1 italic">"<%= truncate(tip.message, length: 50) %>"</div>
+                            <div class="mt-1 italic">"<%= tip.message %>"</div>
                           <% end %>
                         </div>
                       </div>
