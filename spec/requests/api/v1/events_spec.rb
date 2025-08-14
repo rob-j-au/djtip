@@ -12,7 +12,11 @@ RSpec.describe "Api::V1::Events", type: :request do
   describe "GET /api/v1/events" do
     let!(:events) { create_list(:event, 3) }
     let!(:users) { create_list(:user, 2, :with_event, events: [events.first]) }
-    let!(:performers) { create_list(:performer, 2, event: events.first) }
+    let!(:performers) { create_list(:performer, 2) }
+    
+    before do
+      performers.each { |performer| performer.events << events.first }
+    end
 
     it "returns all events with associated users and performers" do
       get "/api/v1/events"
@@ -24,8 +28,8 @@ RSpec.describe "Api::V1::Events", type: :request do
       
       # Find the event that has associated users and performers
       target_event = json_response[:data].find do |event|
-        event[:relationships][:users][:data].length == 2 &&
-        event[:relationships][:performers][:data].length == 2
+        event[:relationships][:users][:data].length == 4 && # 2 regular users + 2 performers (since Performer inherits from User)
+        event[:attributes][:performers].length == 2
       end
       
       expect(target_event).to be_present
@@ -34,16 +38,20 @@ RSpec.describe "Api::V1::Events", type: :request do
       # Check included resources
       expect(json_response[:included]).to be_present
       user_resources = json_response[:included].select { |resource| resource[:type] == 'user' }
-      performer_resources = json_response[:included].select { |resource| resource[:type] == 'performer' }
-      expect(user_resources.length).to be >= 2
-      expect(performer_resources.length).to be >= 2
+      # Since performers are now custom attributes (not relationships), they won't be in included resources
+      # But all users (including performers) will be in the users relationship
+      expect(user_resources.length).to be >= 4 # At least 2 regular users + 2 performers (since Performer inherits from User)
     end
   end
 
   describe "GET /api/v1/events/:id" do
     let!(:event) { create(:event) }
     let!(:users) { create_list(:user, 2, :with_event, events: [event]) }
-    let!(:performers) { create_list(:performer, 2, event: event) }
+    let!(:performers) { create_list(:performer, 2) }
+    
+    before do
+      performers.each { |performer| performer.events << event }
+    end
 
     it "returns the event with associated users and performers" do
       get "/api/v1/events/#{event.id}"
@@ -55,16 +63,16 @@ RSpec.describe "Api::V1::Events", type: :request do
       expect(event_data[:id]).to eq(event.id.to_s)
       expect(event_data[:attributes][:title]).to eq(event.title)
       
-      # Check relationships
-      expect(event_data[:relationships][:users][:data].length).to eq(2)
-      expect(event_data[:relationships][:performers][:data].length).to eq(2)
+      # Check relationships and attributes
+      expect(event_data[:relationships][:users][:data].length).to eq(4) # 2 regular users + 2 performers (since Performer inherits from User)
+      expect(event_data[:attributes][:performers].length).to eq(2)
       
       # Check included resources
       expect(json_response[:included]).to be_present
       user_resources = json_response[:included].select { |resource| resource[:type] == 'user' }
-      performer_resources = json_response[:included].select { |resource| resource[:type] == 'performer' }
-      expect(user_resources.length).to eq(2)
-      expect(performer_resources.length).to eq(2)
+      # Since performers are now custom attributes (not relationships), they won't be in included resources
+      # But all users (including performers) will be in the users relationship
+      expect(user_resources.length).to eq(4) # 2 regular users + 2 performers (since Performer inherits from User)
     end
 
     it "returns 404 for non-existent event" do

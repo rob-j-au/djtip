@@ -4,8 +4,9 @@ class Performer < User
   field :genre, type: String
   field :contact, type: String
 
-  # Relationships
-  belongs_to :event, optional: true
+  # Relationships inherited from User:
+  # - has_and_belongs_to_many :events
+  # - has_many :tips, dependent: :destroy
 
   # Validations
   validates :genre, presence: true

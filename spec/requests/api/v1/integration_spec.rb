@@ -13,8 +13,8 @@ RSpec.describe "API Integration Tests", type: :request do
     let!(:event) { create(:event, title: "DJ Night") }
     let!(:user1) { create(:user, :with_event, name: "John Doe", events: [event]) }
     let!(:user2) { create(:user, :with_event, name: "Jane Smith", events: [event]) }
-    let!(:performer1) { create(:performer, name: "DJ Alpha", genre: "House", event: event) }
-    let!(:performer2) { create(:performer, name: "DJ Beta", genre: "Techno", event: event) }
+    let!(:performer1) { create(:performer, name: "DJ Alpha", genre: "House", events: [event]) }
+    let!(:performer2) { create(:performer, name: "DJ Beta", genre: "Techno", events: [event]) }
 
     it "returns complete event data with all associated users and performers" do
       get "/api/v1/events/#{event.id}"
@@ -26,21 +26,21 @@ RSpec.describe "API Integration Tests", type: :request do
       expect(event_data[:type]).to eq('event')
       expect(event_data[:attributes][:title]).to eq("DJ Night")
       
-      # Verify relationships
-      expect(event_data[:relationships][:users][:data].length).to eq(2)
-      expect(event_data[:relationships][:performers][:data].length).to eq(2)
+      # Verify relationships and attributes
+      expect(event_data[:relationships][:users][:data].length).to eq(4) # 2 regular users + 2 performers (since Performer inherits from User)
+      expect(event_data[:attributes][:performers].length).to eq(2)
       
       # Verify included resources
       expect(json_response[:included]).to be_present
       user_resources = json_response[:included].select { |resource| resource[:type] == 'user' }
-      performer_resources = json_response[:included].select { |resource| resource[:type] == 'performer' }
-      
-      expect(user_resources.length).to eq(2)
+      # Since performers are now custom attributes (not relationships), they won't be in included resources
+      # But all users (including performers) will be in the users relationship
+      expect(user_resources.length).to eq(4) # 2 regular users + 2 performers (since Performer inherits from User)
       user_names = user_resources.map { |u| u[:attributes][:name] }
       expect(user_names).to include("John Doe", "Jane Smith")
       
-      expect(performer_resources.length).to eq(2)
-      performer_names = performer_resources.map { |p| p[:attributes][:name] }
+      # Verify performers are in the custom attributes
+      performer_names = event_data[:attributes][:performers].map { |p| p[:name] }
       expect(performer_names).to include("DJ Alpha", "DJ Beta")
     end
 
@@ -68,7 +68,7 @@ RSpec.describe "API Integration Tests", type: :request do
 
       # Verify the user is now associated with the event
       get "/api/v1/events/#{event.id}"
-      expect(json_response[:data][:relationships][:users][:data].length).to eq(3)
+      expect(json_response[:data][:relationships][:users][:data].length).to eq(5) # 3 regular users + 2 performers (since Performer inherits from User)
     end
 
     it "allows creating a new performer for an existing event via API" do
@@ -80,7 +80,7 @@ RSpec.describe "API Integration Tests", type: :request do
         bio: "New DJ on the scene",
         genre: "Drum & Bass",
         contact: "djgamma@example.com",
-        event_id: event.id
+        event_ids: [event.id]
       }
 
       expect {
@@ -92,19 +92,20 @@ RSpec.describe "API Integration Tests", type: :request do
       performer_data = json_response[:data]
       expect(performer_data[:type]).to eq('performer')
       expect(performer_data[:attributes][:name]).to eq("DJ Gamma")
-      expect(performer_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
+      expect(performer_data[:relationships][:events][:data]).to be_present
+      expect(performer_data[:relationships][:events][:data].first[:id]).to eq(event.id.to_s)
 
       # Verify the performer is now associated with the event
       get "/api/v1/events/#{event.id}"
-      expect(json_response[:data][:relationships][:performers][:data].length).to eq(3)
+      expect(json_response[:data][:attributes][:performers].length).to eq(3)
     end
 
     it "handles cascading deletes when event is deleted" do
       event_id = event.id
       user_count = event.users.count
-      performer_count = Performer.where(event_id: event_id).count
+      performer_count = event.performers.count
 
-      expect(user_count).to eq(2)
+      expect(user_count).to eq(4) # 2 regular users + 2 performers (since Performer inherits from User)
       expect(performer_count).to eq(2)
 
       delete "/api/v1/events/#{event_id}"
@@ -113,11 +114,11 @@ RSpec.describe "API Integration Tests", type: :request do
       # Verify event is deleted
       expect(Event.where(id: event_id).count).to eq(0)
       
-      # Verify performers are deleted (they have belongs_to :event with dependent: :destroy)
-      expect(Performer.where(event_id: event_id).count).to eq(0)
+      # Verify performers still exist (they use many-to-many association now, not dependent: :destroy)
+      expect(Performer.count).to eq(2)  # Performers still exist
       
       # Users are not deleted with many-to-many association
-      expect(User.count).to eq(2)  # Users still exist
+      expect(User.count).to eq(4)  # All users (including performers) still exist
       
       # Verify the deleted event no longer exists in the system
       get "/api/v1/events/#{event_id}"

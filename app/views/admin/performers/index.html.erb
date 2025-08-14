@@ -67,13 +67,13 @@
     
     <div class="stat bg-base-100 shadow rounded-lg">
       <div class="stat-title">With Events</div>
-      <div class="stat-value text-accent"><%= @performers.where(:event_id.ne => nil).count %></div>
+      <div class="stat-value text-accent"><%= @performers.select { |p| p.events.any? }.count %></div>
       <div class="stat-desc">Assigned to events</div>
     </div>
     
     <div class="stat bg-base-100 shadow rounded-lg">
       <div class="stat-title">Available</div>
-      <div class="stat-value text-info"><%= @performers.where(event_id: nil).count %></div>
+      <div class="stat-value text-info"><%= @performers.select { |p| p.events.empty? }.count %></div>
       <div class="stat-desc">Not assigned</div>
     </div>
   </div>
@@ -123,11 +123,13 @@
                     <% end %>
                   </td>
                   <td>
-                    <% if performer.event %>
-                      <%= link_to performer.event.title, admin_event_path(performer.event), 
-                          class: "link link-primary" %>
+                    <% if performer.events.any? %>
+                      <% performer.events.each_with_index do |event, index| %>
+                        <%= link_to event.title, admin_event_path(event), 
+                            class: "text-primary hover:text-primary-focus" %><%= ", " if index < performer.events.count - 1 %>
+                      <% end %>
                     <% else %>
-                      <span class="text-base-content/50">No event</span>
+                      <span class="text-base-content/50">No events</span>
                     <% end %>
                   </td>
                   <td>

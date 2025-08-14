@@ -3,13 +3,13 @@ class Api::V1::PerformersController < Api::V1::BaseController
 
   # GET /api/v1/performers
   def index
-    @performers = Performer.includes(:event).all
-    render json: PerformerSerializer.new(@performers, include: [:event]).serializable_hash
+    @performers = Performer.includes(:events).all
+    render json: PerformerSerializer.new(@performers, include: [:events]).serializable_hash
   end
 
   # GET /api/v1/performers/:id
   def show
-    render json: PerformerSerializer.new(@performer, include: [:event]).serializable_hash
+    render json: PerformerSerializer.new(@performer, include: [:events]).serializable_hash
   end
 
   # POST /api/v1/performers
@@ -17,7 +17,7 @@ class Api::V1::PerformersController < Api::V1::BaseController
     @performer = Performer.new(performer_params)
     
     if @performer.save
-      render json: PerformerSerializer.new(@performer, include: [:event]).serializable_hash, status: :created
+      render json: PerformerSerializer.new(@performer, include: [:events]).serializable_hash, status: :created
     else
       render json: { error: 'Failed to create performer', details: @performer.errors.full_messages }, 
              status: :unprocessable_content
@@ -27,7 +27,7 @@ class Api::V1::PerformersController < Api::V1::BaseController
   # PATCH/PUT /api/v1/performers/:id
   def update
     if @performer.update(performer_params)
-      render json: PerformerSerializer.new(@performer, include: [:event]).serializable_hash
+      render json: PerformerSerializer.new(@performer, include: [:events]).serializable_hash
     else
       render json: { error: 'Failed to update performer', details: @performer.errors.full_messages }, 
              status: :unprocessable_content
@@ -47,6 +47,6 @@ class Api::V1::PerformersController < Api::V1::BaseController
   end
 
   def performer_params
-    params.require(:performer).permit(:name, :email, :password, :password_confirmation, :bio, :genre, :contact, :event_id)
+    params.require(:performer).permit(:name, :email, :password, :password_confirmation, :bio, :genre, :contact, event_ids: [])
   end
 end

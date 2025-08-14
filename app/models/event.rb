@@ -9,12 +9,11 @@ class Event
 
   # Relationships
   has_and_belongs_to_many :users
-  has_many :performers, dependent: :destroy
   has_many :tips, dependent: :destroy
   
-  # Helper method to get performers as users
-  def performer_users
-    performers
+  # Performers are Users with _type = 'Performer'
+  def performers
+    users.where(_type: 'Performer')
   end
 
   # Validations

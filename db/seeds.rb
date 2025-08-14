@@ -178,8 +178,14 @@ performers_data.each do |performer_data|
     p.password_confirmation = 'password123'
     p.bio = performer_data[:bio]
     p.genre = performer_data[:genre]
-    p.event = performer_data[:event]
   end
+  
+  # Associate performer with event using inherited User events association
+  event = performer_data[:event]
+  if event && !performer.events.include?(event)
+    performer.events << event
+  end
+  
   created_performers << performer
   if performer.persisted? && performer.created_at == performer.updated_at
     puts "  ✅ Created performer: #{performer.name}"

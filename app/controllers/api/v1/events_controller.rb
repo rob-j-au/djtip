@@ -3,13 +3,13 @@ class Api::V1::EventsController < Api::V1::BaseController
 
   # GET /api/v1/events
   def index
-    @events = Event.includes(:users, :performers, :tips).all
-    render json: EventSerializer.new(@events, include: [:users, :performers, :tips]).serializable_hash
+    @events = Event.includes(:users, :tips).all
+    render json: EventSerializer.new(@events, include: [:users, :tips]).serializable_hash
   end
 
   # GET /api/v1/events/:id
   def show
-    render json: EventSerializer.new(@event, include: [:users, :performers, :tips]).serializable_hash
+    render json: EventSerializer.new(@event, include: [:users, :tips]).serializable_hash
   end
 
   # POST /api/v1/events
@@ -17,7 +17,7 @@ class Api::V1::EventsController < Api::V1::BaseController
     @event = Event.new(event_params)
     
     if @event.save
-      render json: EventSerializer.new(@event, include: [:users, :performers, :tips]).serializable_hash, status: :created
+      render json: EventSerializer.new(@event, include: [:users, :tips]).serializable_hash, status: :created
     else
       render json: { error: 'Failed to create event', details: @event.errors.full_messages }, 
              status: :unprocessable_content
@@ -27,7 +27,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   # PATCH/PUT /api/v1/events/:id
   def update
     if @event.update(event_params)
-      render json: EventSerializer.new(@event, include: [:users, :performers, :tips]).serializable_hash
+      render json: EventSerializer.new(@event, include: [:users, :tips]).serializable_hash
     else
       render json: { error: 'Failed to update event', details: @event.errors.full_messages }, 
              status: :unprocessable_content

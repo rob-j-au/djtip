@@ -69,6 +69,6 @@ class PerformersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def performer_params
-      params.require(:performer).permit(:name, :email, :password, :password_confirmation, :bio, :genre, :contact, :event_id)
+      params.require(:performer).permit(:name, :email, :password, :password_confirmation, :bio, :genre, :contact, event_ids: [])
     end
 end

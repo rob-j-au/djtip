@@ -109,14 +109,32 @@
       </div>
 
       <div class="form-control w-full">
-        <%= form.label :event_id, class: "label" do %>
-          <span class="label-text">Associated Event</span>
-          <span class="label-text-alt">Optional</span>
+        <%= form.label :event_ids, class: "label" do %>
+          <span class="label-text">Events</span>
+          <span class="label-text-alt">Optional - Select multiple events</span>
         <% end %>
-        <%= form.select :event_id, 
-                      options_from_collection_for_select(@events, :id, :title, performer.event_id),
-                      { include_blank: "Select an event" },
-                      { class: "select select-bordered w-full" } %>
+        <div class="border border-base-300 rounded-lg max-h-60 overflow-y-auto">
+          <ul class="menu menu-compact">
+            <% @events.each do |event| %>
+              <li>
+                <label class="label cursor-pointer justify-start gap-3 px-4 py-3 hover:bg-base-200 rounded-lg">
+                  <%= check_box_tag "performer[event_ids][]", event.id, performer.event_ids.include?(event.id), 
+                      class: "checkbox checkbox-primary" %>
+                  <div class="flex-1">
+                    <div class="font-medium text-base-content"><%= event.title %></div>
+                    <div class="text-sm text-base-content/70">
+                      <%= event.date.strftime('%b %d, %Y') if event.date %>
+                      <% if event.location.present? %>
+                        • <%= event.location %>
+                      <% end %>
+                    </div>
+                  </div>
+                </label>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        <%= hidden_field_tag "performer[event_ids][]", "" %>
       </div>
     </div>
   </fieldset>
