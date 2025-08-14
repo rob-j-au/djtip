@@ -4,7 +4,7 @@ A Ruby on Rails 8 application using Mongoid (MongoDB) instead of ActiveRecord, w
 
 ## Admin User
 
-Email: admin@example.com
+Email: admin@djtip.com
 Password: password123
 
 
