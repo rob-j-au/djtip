@@ -20,11 +20,32 @@ require 'database_cleaner/mongoid'
 Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 RSpec.configure do |config|
-  # Since we're using Mongoid instead of ActiveRecord, disable ActiveRecord features
+  # Disable ActiveRecord since we're using Mongoid
   config.use_active_record = false
   config.use_transactional_fixtures = false
 
-  # RSpec Rails can automatically mix in different behaviours to your tests
+  # Configure Mongoid for testing
+  config.before(:suite) do
+    # Load all models to ensure they're properly loaded
+    Rails.application.eager_load!
+    
+    # Ensure routes are properly loaded in test environment
+    Rails.application.reload_routes!
+    
+    # Clear all collections before the test suite runs
+    Mongoid.purge!
+    
+    # Set up database cleaner for Mongoid
+    DatabaseCleaner[:mongoid].strategy = :deletion
+    DatabaseCleaner[:mongoid].clean_with(:deletion)
+  end
+
+  config.before(:each) do
+    # Clear all collections before each test
+    Mongoid.purge!
+  end
+
+  # RSpec Rails can automatically mix in different behaviors to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
   config.infer_spec_type_from_file_location!
@@ -32,17 +53,10 @@ RSpec.configure do |config|
   # Include route helpers in request specs
   config.include Rails.application.routes.url_helpers, type: :request
   
-  # Ensure routes are loaded before tests
-  config.before(:suite) do
-    Rails.application.reload_routes!
-  end
-
-  # Filter lines from Rails gems in backtraces.
+  # Filter lines from Rails gems in backtraces
   config.filter_rails_from_backtrace!
-  # arbitrary gems may also be filtered via:
-  # config.filter_gems_from_backtrace("gem name")
   
-    # Include FactoryBot methods
+  # Include FactoryBot methods
   config.include FactoryBot::Syntax::Methods
   
   # Include file upload helpers
@@ -53,16 +67,18 @@ RSpec.configure do |config|
   
   # Database cleaner for Mongoid
   config.before(:suite) do
-    DatabaseCleaner.strategy = :deletion
-    DatabaseCleaner.clean_with(:deletion)
+    # Ensure the test database is clean
+    Mongoid.purge!
+    
+    # Set up database cleaner for Mongoid
+    DatabaseCleaner[:mongoid].strategy = :deletion
+    DatabaseCleaner[:mongoid].clean_with(:deletion)
   end
 
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    DatabaseCleaner.clean
+  config.around(:each) do |example|
+    DatabaseCleaner[:mongoid].cleaning do
+      example.run
+    end
   end
   
   # Suppress deprecation warnings for cleaner test output

@@ -1,8 +1,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  # Devise routes for authentication
-  devise_for :users
+  # Devise routes for authentication (skip registrations to avoid conflict with custom UsersController)
+  devise_for :users, skip: [:registrations]
   
   # mount RailsAdmin::Engine => '/admin', as: 'rails_admin' - REMOVED
   

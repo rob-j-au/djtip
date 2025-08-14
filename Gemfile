@@ -33,7 +33,10 @@ gem "jsonapi-serializer"
 
 # File uploads
 gem "shrine"
+gem "shrine-mongoid"
 gem "image_processing", "~> 1.2"
+gem "fastimage" # Required by Shrine's store_dimensions plugin
+gem "mimemagic" # Required by Shrine's determine_mime_type plugin
 
 # Add ostruct explicitly as it will not be part of the default gems starting from Ruby 3.5.0
 gem "ostruct"

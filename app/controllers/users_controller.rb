@@ -39,6 +39,11 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1 or /users/1.json
   def update
+    # Handle image removal separately since it's a Shrine virtual attribute
+    if params[:user][:remove_image] == "1"
+      @user.image = nil
+    end
+    
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: "User was successfully updated." }

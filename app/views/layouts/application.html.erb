@@ -66,11 +66,11 @@
               <% if current_user.admin? %>
                 <li><%= link_to "Admin", admin_root_path, class: "btn btn-ghost" %></li>
               <% end %>
-              <li><%= link_to "Profile", edit_user_registration_path, class: "btn btn-ghost" %></li>
+              <li><%= link_to "Profile", edit_user_path(current_user), class: "btn btn-ghost" %></li>
               <li><%= link_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-outline" %></li>
             <% else %>
               <li><%= link_to "Login", new_user_session_path, class: "btn btn-ghost" %></li>
-              <li><%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %></li>
+              <li><%= link_to "Sign Up", new_user_path, class: "btn btn-primary" %></li>
             <% end %>
           </ul>
         </div>
@@ -112,11 +112,11 @@
             <% if current_user.admin? %>
               <li><%= link_to "Admin", admin_root_path, class: "text-lg" %></li>
             <% end %>
-            <li><%= link_to "Profile", edit_user_registration_path, class: "text-lg" %></li>
+            <li><%= link_to "Profile", edit_user_path(current_user), class: "text-lg" %></li>
             <li><%= link_to "Logout", destroy_user_session_path, method: :delete, class: "text-lg" %></li>
           <% else %>
             <li><%= link_to "Login", new_user_session_path, class: "text-lg" %></li>
-            <li><%= link_to "Sign Up", new_user_registration_path, class: "text-lg" %></li>
+            <li><%= link_to "Sign Up", new_user_path, class: "text-lg" %></li>
           <% end %>
         </ul>
         <div class="modal-action">

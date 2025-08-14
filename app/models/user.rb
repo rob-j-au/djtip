@@ -1,3 +1,5 @@
+require_relative '../uploaders/image_uploader'
+
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -11,6 +13,9 @@ class User
   field :name, type: String
   field :email, type: String
   field :phone, type: String
+  
+  # Image attachment data for Shrine
+  field :image_data, type: String
   
   # Admin role field
   field :admin, type: Boolean, default: false

@@ -1,11 +1,8 @@
 class ImageUploader < Shrine
   # Plugins for image processing and validation
-  plugin :processing
-  plugin :versions   # enable Shrine to handle a hash of files
-  plugin :delete_raw # delete processed files after uploading
+  plugin :derivatives
   plugin :validation_helpers
   plugin :store_dimensions
-  plugin :derivation_endpoint, secret_key: Rails.application.credentials.secret_key_base
 
   # File validation
   Attacher.validate do
@@ -13,19 +10,23 @@ class ImageUploader < Shrine
     validate_mime_type_inclusion ['image/jpeg', 'image/png', 'image/gif']
   end
 
-  # Process files as they're uploaded
-  process(:store) do |io, _context|
-    versions = { original: io }
+  # Define derivatives for different image sizes
+  Attacher.derivatives do |original|
+    derivatives = {}
     
-    if image?(io)
+    # Always create derivatives for image files (validation handles MIME type checking)
+    begin
       # Create thumbnail version (150x150)
-      versions[:thumb] = process_upload(io, 150, 150)
+      derivatives[:thumb] = process_upload(original, 150, 150)
       
       # Create medium version (300x300)
-      versions[:medium] = process_upload(io, 300, 300)
+      derivatives[:medium] = process_upload(original, 300, 300)
+    rescue => e
+      # Skip derivative creation if image processing fails
+      Rails.logger.warn "Failed to create image derivatives: #{e.message}"
     end
     
-    versions
+    derivatives
   end
 
   # Helper method to check if file is an image
@@ -37,7 +38,9 @@ class ImageUploader < Shrine
 
   # Helper method to process image uploads with specified dimensions
   def process_upload(io, width, height)
-    pipeline = ImageProcessing::Vips.source(io.download)
+    # Handle both UploadedFile and Tempfile objects
+    source_file = io.respond_to?(:download) ? io.download : io
+    pipeline = ImageProcessing::Vips.source(source_file)
     
     # Resize and convert to JPG
     pipeline = pipeline
