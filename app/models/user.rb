@@ -59,4 +59,6 @@ class User
   def make_admin!
     update!(admin: true)
   end
+  
+  private
 end
