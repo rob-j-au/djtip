@@ -99,6 +99,30 @@ users_data = [
     password_confirmation: "password123",
     admin: false,
     phone: "+61 404 456 789"
+  },
+  {
+    name: "Sarah Chen",
+    email: "sarah@chen.com",
+    password: "password123",
+    password_confirmation: "password123",
+    admin: false,
+    phone: "+61 404 567 890"
+  },
+  {
+    name: "Marcus Rodriguez",
+    email: "marcus@rodriguez.net",
+    password: "password123",
+    password_confirmation: "password123",
+    admin: false,
+    phone: "+61 404 678 901"
+  },
+  {
+    name: "Emma Thompson",
+    email: "emma@thompson.org",
+    password: "password123",
+    password_confirmation: "password123",
+    admin: false,
+    phone: "+61 404 789 012"
   }
 ]
 
@@ -111,6 +135,18 @@ users_data.each do |user_data|
     u.admin = user_data[:admin]
     u.phone = user_data[:phone]
   end
+  
+  # Attach the female dancer emoji image to all users
+  image_path = Rails.root.join('db', 'seed_images', 'female_dancer.png')
+  if File.exist?(image_path) && !user.image_data?
+    # Use Shrine's direct assignment for file attachment
+    file = File.open(image_path)
+    user.image = file
+    user.save!
+    file.close
+    puts "  🖼️  Attached profile image to #{user.name}"
+  end
+  
   created_users << user
   if user.persisted? && user.created_at == user.updated_at
     puts "  ✅ Created user: #{user.name} (#{user.admin? ? 'Admin' : 'Regular'})"
