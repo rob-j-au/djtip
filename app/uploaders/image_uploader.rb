@@ -12,21 +12,12 @@ class ImageUploader < Shrine
 
   # Define derivatives for different image sizes
   Attacher.derivatives do |original|
-    derivatives = {}
+    magick = ImageProcessing::MiniMagick.source(original)
     
-    # Always create derivatives for image files (validation handles MIME type checking)
-    begin
-      # Create thumbnail version (150x150)
-      derivatives[:thumb] = process_upload(original, 150, 150)
-      
-      # Create medium version (300x300)
-      derivatives[:medium] = process_upload(original, 300, 300)
-    rescue => e
-      # Skip derivative creation if image processing fails
-      Rails.logger.warn "Failed to create image derivatives: #{e.message}"
-    end
-    
-    derivatives
+    {
+      thumb: magick.resize_to_limit(150, 150).convert("jpg").call,
+      medium: magick.resize_to_limit(300, 300).convert("jpg").call
+    }
   end
 
   # Helper method to check if file is an image
@@ -37,16 +28,15 @@ class ImageUploader < Shrine
   private
 
   # Helper method to process image uploads with specified dimensions
-  def process_upload(io, width, height)
+  def self.process_upload(io, width, height)
     # Handle both UploadedFile and Tempfile objects
     source_file = io.respond_to?(:download) ? io.download : io
-    pipeline = ImageProcessing::Vips.source(source_file)
+    pipeline = ImageProcessing::MiniMagick.source(source_file)
     
     # Resize and convert to JPG
     pipeline = pipeline
-      .resize_to_limit!(width, height)
+      .resize_to_limit(width, height)
       .convert('jpg')
-      .saver(quality: 85)
       .call
     
     # Return a File object with the correct extension
