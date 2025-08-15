@@ -93,9 +93,9 @@
                     id: "event_performer_#{performer.id}" %>
                 <div class="flex-1">
                   <div class="flex items-center gap-2">
-                    <div class="avatar placeholder">
-                      <div class="bg-primary text-primary-content w-8 h-8 rounded-full">
-                        <span class="text-xs font-medium"><%= performer.name.first %></span>
+                    <div class="avatar">
+                      <div class="w-8 h-8 rounded-full">
+                        <%= user_avatar_image(performer, size: :thumb, css_classes: "w-8 h-8 rounded-full object-cover") %>
                       </div>
                     </div>
                     <div>
@@ -147,9 +147,9 @@
                     id: "event_user_#{user.id}" %>
                 <div class="flex-1">
                   <div class="flex items-center gap-2">
-                    <div class="avatar placeholder">
-                      <div class="bg-secondary text-secondary-content w-8 h-8 rounded-full">
-                        <span class="text-xs font-medium"><%= user.name.first %></span>
+                    <div class="avatar">
+                      <div class="w-8 h-8 rounded-full">
+                        <%= user_avatar_image(user, size: :thumb, css_classes: "w-8 h-8 rounded-full object-cover") %>
                       </div>
                     </div>
                     <div>
