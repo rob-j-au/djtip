@@ -95,11 +95,19 @@
                 </td>
                 <td>
                   <div class="flex items-center space-x-3">
-                    <div class="avatar placeholder">
-                      <div class="bg-primary text-primary-content rounded-full w-12">
-                        <span class="text-xl"><%= user.name.first.upcase %></span>
+                    <% if user.image_data? && user.image_url(:thumb) %>
+                      <div class="avatar">
+                        <div class="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                          <%= image_tag user.image_url(:thumb), alt: user.name, class: "rounded-full object-cover" %>
+                        </div>
                       </div>
-                    </div>
+                    <% else %>
+                      <div class="avatar placeholder">
+                        <div class="bg-gradient-to-br from-primary to-secondary text-primary-content rounded-full w-12">
+                          <span class="text-xl font-bold"><%= user.name.first.upcase %></span>
+                        </div>
+                      </div>
+                    <% end %>
                     <div>
                       <div class="font-bold text-base-content">
                         <%= link_to user.name, admin_user_path(user), class: "hover:text-primary" %>
