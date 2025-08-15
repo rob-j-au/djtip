@@ -27,19 +27,11 @@
             <tr class="hover">
               <td>
                 <div class="flex items-center gap-3">
-                  <% if user.image_data? && user.image_url(:thumb) %>
-                    <div class="avatar">
-                      <div class="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
-                        <%= image_tag user.image_url(:thumb), alt: user.name, class: "rounded-full object-cover" %>
-                      </div>
+                  <div class="avatar">
+                    <div class="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
+                      <%= user_avatar_image(user, size: :thumb) %>
                     </div>
-                  <% else %>
-                    <div class="avatar placeholder">
-                      <div class="bg-gradient-to-br from-primary to-secondary text-primary-content rounded-full w-10">
-                        <span class="text-sm font-bold"><%= user.name&.first&.upcase || 'U' %></span>
-                      </div>
-                    </div>
-                  <% end %>
+                  </div>
                   <div>
                     <div class="font-bold"><%= user.name %></div>
                   </div>
