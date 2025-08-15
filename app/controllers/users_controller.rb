@@ -27,6 +27,13 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        # Promote image if it's cached after creation
+        if @user.image_attacher.cached?
+          @user.image_attacher.promote
+          @user.image_attacher.create_derivatives
+          @user.save!
+        end
+        
         format.html { redirect_to @user, notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
@@ -46,6 +53,13 @@ class UsersController < ApplicationController
     
     respond_to do |format|
       if @user.update(user_params)
+        # Promote image if it's cached after update
+        if @user.image_attacher.cached?
+          @user.image_attacher.promote
+          @user.image_attacher.create_derivatives
+          @user.save!
+        end
+        
         format.html { redirect_to @user, notice: "User was successfully updated." }
         format.json { render :show, status: :ok, location: @user }
       else

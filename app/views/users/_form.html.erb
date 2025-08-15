@@ -55,7 +55,7 @@
           JPG, PNG or GIF (max 5MB)
         </div>
         
-        <% if user.image_data? %>
+        <% if user.image_attacher.cached? %>
           <%= form.hidden_field :image, value: user.cached_image_data, id: "user_image_cache" %>
         <% end %>
       </div>

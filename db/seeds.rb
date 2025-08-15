@@ -139,9 +139,11 @@ users_data.each do |user_data|
   # Attach the female dancer emoji image to all users
   image_path = Rails.root.join('db', 'seed_images', 'female_dancer.png')
   if File.exist?(image_path) && !user.image_data?
-    # Use Shrine's direct assignment for file attachment
+    # Use Shrine's attacher to properly store image and generate derivatives
     file = File.open(image_path)
-    user.image = file
+    user.image_attacher.assign(file)
+    user.image_attacher.promote
+    user.image_attacher.create_derivatives
     user.save!
     file.close
     puts "  🖼️  Attached profile image to #{user.name}"
@@ -214,6 +216,19 @@ performers_data.each do |performer_data|
     p.password_confirmation = 'password123'
     p.bio = performer_data[:bio]
     p.genre = performer_data[:genre]
+  end
+  
+  # Attach the female dancer emoji image to all performers
+  image_path = Rails.root.join('db', 'seed_images', 'female_dancer.png')
+  if File.exist?(image_path) && !performer.image_data?
+    # Use Shrine's attacher to properly store image and generate derivatives
+    file = File.open(image_path)
+    performer.image_attacher.assign(file)
+    performer.image_attacher.promote
+    performer.image_attacher.create_derivatives
+    performer.save!
+    file.close
+    puts "  🖼️  Attached profile image to #{performer.name}"
   end
   
   # Associate performer with event using inherited User events association
