@@ -149,13 +149,8 @@
                     <p class="text-sm text-base-content/70">
                       <%= link_to tip.event.title, admin_event_path(tip.event), class: "hover:text-primary" %>
                     </p>
-                  <% if tip.message.present? %>
-                    <p class="text-sm text-base-content/70 mt-1 italic">"<%= truncate(tip.message, length: 50) %>"</p>
-                  <% end %>
+                  </div>
                 </div>
-                <% if tip.message.present? %>
-                  <p class="text-sm text-base-content/70 mt-1 italic">"<%= truncate(tip.message, length: 50) %>"</p>
-                <% end %>
               </div>
               <div class="text-right">
                 <div class="badge badge-success font-bold">
