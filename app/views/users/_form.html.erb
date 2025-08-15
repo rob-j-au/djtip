@@ -37,7 +37,7 @@
           <span class="label-text-alt">Optional</span>
         <% end %>
         
-        <% if user.image_data? %>
+        <% if user.image_data? && user.image_url(:thumb) %>
           <div class="mb-3">
             <%= image_tag user.image_url(:thumb), class: "w-24 h-24 rounded-full object-cover mb-2" %>
             <div class="text-sm text-gray-500">
