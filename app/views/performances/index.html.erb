@@ -1,0 +1,82 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+      <h1 class="card-title text-3xl">Performances</h1>
+      <p class="text-base-content/70">Manage all scheduled performances</p>
+      <div class="card-actions justify-end">
+        <%= link_to "New Performance", new_performance_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <% if @performances.any? %>
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Performer</th>
+            <th>Event</th>
+            <th>Location</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @performances.each do |performance| %>
+            <tr class="hover">
+              <td>
+                <div class="font-medium"><%= performance.time.strftime("%B %d, %Y") if performance.time %></div>
+                <div class="text-sm text-base-content/70"><%= performance.time.strftime("%I:%M %p") if performance.time %></div>
+              </td>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar placeholder">
+                    <div class="bg-primary text-primary-content rounded-full w-10">
+                      <span class="text-sm"><%= performance.performer.name.first.upcase if performance.performer %></span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="font-medium"><%= performance.performer.name if performance.performer %></div>
+                  </div>
+                </div>
+              </td>
+              <td><%= performance.event.name if performance.event %></td>
+              <td>
+                <% if performance.location.present? %>
+                  <div class="text-sm">
+                    <div>Lat: <%= performance.latitude %></div>
+                    <div>Lng: <%= performance.longitude %></div>
+                  </div>
+                <% else %>
+                  <span class="text-base-content/50">No location</span>
+                <% end %>
+              </td>
+              <td class="text-right">
+                <div class="flex gap-2 justify-end">
+                  <%= link_to "View", performance, class: "btn btn-sm btn-ghost" %>
+                  <%= link_to "Edit", edit_performance_path(performance), class: "btn btn-sm btn-ghost" %>
+                  <%= button_to "Delete", performance, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-ghost text-error" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body items-center text-center">
+        <div class="w-16 h-16 rounded-full bg-base-200 flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-base-content/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+          </svg>
+        </div>
+        <h2 class="card-title">No performances yet</h2>
+        <p class="text-base-content/70">Get started by scheduling your first performance</p>
+        <div class="card-actions">
+          <%= link_to "Create Performance", new_performance_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

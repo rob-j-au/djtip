@@ -1,0 +1,55 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h1 class="text-3xl font-bold mb-2"><%= @venue.name %></h1>
+          <div class="badge badge-primary badge-lg"><%= @venue.venue_type.capitalize %></div>
+        </div>
+        <div class="flex gap-2">
+          <%= link_to "Edit", edit_venue_path(@venue), class: "btn btn-primary" %>
+          <%= button_to "Delete", @venue, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-error" %>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm text-base-content/70 mb-1">Name</p>
+          <p class="text-lg font-medium"><%= @venue.name %></p>
+        </div>
+        <div>
+          <p class="text-sm text-base-content/70 mb-1">Type</p>
+          <p class="text-lg font-medium"><%= @venue.venue_type.capitalize %></p>
+        </div>
+      </div>
+
+      <% if @venue.events.any? %>
+        <div class="divider"></div>
+        <div>
+          <h2 class="text-xl font-bold mb-4">Events at this Venue</h2>
+          <div class="space-y-2">
+            <% @venue.events.each do |event| %>
+              <div class="card bg-base-200">
+                <div class="card-body p-4">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <h3 class="font-medium"><%= event.name %></h3>
+                      <p class="text-sm text-base-content/70"><%= event.date.strftime("%B %d, %Y") if event.date %></p>
+                    </div>
+                    <%= link_to "View", event, class: "btn btn-sm btn-ghost" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="card-actions justify-start mt-6">
+        <%= link_to "Back to Venues", venues_path, class: "btn btn-ghost" %>
+      </div>
+    </div>
+  </div>
+</div>

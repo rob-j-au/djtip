@@ -7,6 +7,9 @@ class Performer < User
   # Relationships inherited from User:
   # - has_and_belongs_to_many :events
   # - has_many :tips, dependent: :destroy
+  
+  # Performer-specific relationships
+  has_many :performances, dependent: :destroy
 
   # Validations
   validates :genre, presence: true

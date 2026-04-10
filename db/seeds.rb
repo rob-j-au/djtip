@@ -137,7 +137,7 @@ users_data.each do |user_data|
   end
   
   # Attach the female dancer emoji image to all users
-  image_path = Rails.root.join('db', 'seed_images', 'female_dancer.png')
+  image_path = Rails.root.join('app', 'assets', 'images', 'female_dancer.png')
   if File.exist?(image_path) && !user.image_data?
     # Use Shrine's attacher to properly store image and generate derivatives
     file = File.open(image_path)
@@ -219,7 +219,7 @@ performers_data.each do |performer_data|
   end
   
   # Attach the female dancer emoji image to all performers
-  image_path = Rails.root.join('db', 'seed_images', 'female_dancer.png')
+  image_path = Rails.root.join('app', 'assets', 'images', 'female_dancer.png')
   if File.exist?(image_path) && !performer.image_data?
     # Use Shrine's attacher to properly store image and generate derivatives
     file = File.open(image_path)

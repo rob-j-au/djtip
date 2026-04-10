@@ -1,0 +1,36 @@
+<%= form_with(model: venue, class: "space-y-6") do |form| %>
+  <% if venue.errors.any? %>
+    <div class="alert alert-error">
+      <div>
+        <h2 class="font-bold"><%= pluralize(venue.errors.count, "error") %> prohibited this venue from being saved:</h2>
+        <ul class="list-disc list-inside mt-2">
+          <% venue.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Venue Details</legend>
+    
+    <div class="form-control w-full">
+      <%= form.label :name, class: "label" %>
+      <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Enter venue name" %>
+    </div>
+
+    <div class="form-control w-full">
+      <%= form.label :venue_type, "Type", class: "label" %>
+      <%= form.select :venue_type, 
+          options_for_select([['Bar', 'bar'], ['Club', 'club'], ['Festival', 'festival'], ['Gallery', 'gallery']], venue.venue_type),
+          { prompt: 'Select venue type' },
+          class: "select select-bordered w-full" %>
+    </div>
+  </fieldset>
+
+  <div class="flex gap-2">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "Cancel", venue.persisted? ? venue : venues_path, class: "btn btn-ghost" %>
+  </div>
+<% end %>

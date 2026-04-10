@@ -10,6 +10,8 @@ class Event
   # Relationships
   has_and_belongs_to_many :users
   has_many :tips, dependent: :destroy
+  has_many :performances, dependent: :destroy
+  belongs_to :venue, optional: true
   
   # Performers are Users with _type = 'Performer'
   def performers

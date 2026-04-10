@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   
   resources :performers
   resources :users
+  resources :venues
+  resources :performances
   resources :events do
     resources :users, shallow: true, only: [:new, :create]
     resources :performers, shallow: true, only: [:new, :create]
@@ -48,6 +50,8 @@ Rails.application.routes.draw do
       end
       resources :users, defaults: { format: :json }
       resources :performers, defaults: { format: :json }
+      resources :venues, defaults: { format: :json }
+      resources :performances, defaults: { format: :json }
     end
   end
   
