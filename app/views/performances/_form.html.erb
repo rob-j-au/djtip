@@ -1,0 +1,70 @@
+<%= form_with(model: performance, class: "space-y-6") do |form| %>
+  <% if performance.errors.any? %>
+    <div class="alert alert-error">
+      <div>
+        <h2 class="font-bold"><%= pluralize(performance.errors.count, "error") %> prohibited this performance from being saved:</h2>
+        <ul class="list-disc list-inside mt-2">
+          <% performance.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Performance Details</legend>
+    
+    <div class="form-control w-full">
+      <%= form.label :time, class: "label" %>
+      <%= form.datetime_field :time, class: "input input-bordered w-full" %>
+    </div>
+
+    <div class="form-control w-full">
+      <%= form.label :performer_id, "Performer", class: "label" %>
+      <%= form.collection_select :performer_id, @performers, :id, :name, 
+          { prompt: 'Select a performer' },
+          class: "select select-bordered w-full" %>
+    </div>
+
+    <div class="form-control w-full">
+      <%= form.label :event_id, "Event", class: "label" %>
+      <%= form.collection_select :event_id, @events, :id, :name, 
+          { prompt: 'Select an event' },
+          class: "select select-bordered w-full" %>
+    </div>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Location (Optional)</legend>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="form-control w-full">
+        <%= form.label :latitude, class: "label" %>
+        <%= form.number_field :latitude, 
+            step: :any, 
+            class: "input input-bordered w-full", 
+            placeholder: "e.g., -33.8688" %>
+        <label class="label">
+          <span class="label-text-alt">Range: -90 to 90</span>
+        </label>
+      </div>
+
+      <div class="form-control w-full">
+        <%= form.label :longitude, class: "label" %>
+        <%= form.number_field :longitude, 
+            step: :any, 
+            class: "input input-bordered w-full", 
+            placeholder: "e.g., 151.2093" %>
+        <label class="label">
+          <span class="label-text-alt">Range: -180 to 180</span>
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="flex gap-2">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "Cancel", performance.persisted? ? performance : performances_path, class: "btn btn-ghost" %>
+  </div>
+<% end %>

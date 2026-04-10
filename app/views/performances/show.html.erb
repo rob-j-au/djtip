@@ -1,0 +1,79 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h1 class="text-3xl font-bold mb-2">Performance Details</h1>
+          <div class="badge badge-primary badge-lg"><%= @performance.time.strftime("%B %d, %Y at %I:%M %p") if @performance.time %></div>
+        </div>
+        <div class="flex gap-2">
+          <%= link_to "Edit", edit_performance_path(@performance), class: "btn btn-primary" %>
+          <%= button_to "Delete", @performance, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-error" %>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-sm text-base-content/70 mb-1">Time</p>
+          <p class="text-lg font-medium">
+            <%= @performance.time.strftime("%B %d, %Y") if @performance.time %>
+            <br>
+            <span class="text-base"><%= @performance.time.strftime("%I:%M %p") if @performance.time %></span>
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm text-base-content/70 mb-1">Performer</p>
+          <% if @performance.performer %>
+            <div class="flex items-center gap-3">
+              <div class="avatar placeholder">
+                <div class="bg-primary text-primary-content rounded-full w-12">
+                  <span><%= @performance.performer.name.first.upcase %></span>
+                </div>
+              </div>
+              <div>
+                <p class="text-lg font-medium"><%= @performance.performer.name %></p>
+                <%= link_to "View Performer", @performance.performer, class: "link link-primary text-sm" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div>
+          <p class="text-sm text-base-content/70 mb-1">Event</p>
+          <% if @performance.event %>
+            <p class="text-lg font-medium"><%= @performance.event.name %></p>
+            <%= link_to "View Event", @performance.event, class: "link link-primary text-sm" %>
+          <% end %>
+        </div>
+
+        <div>
+          <p class="text-sm text-base-content/70 mb-1">Location</p>
+          <% if @performance.location.present? %>
+            <div class="space-y-1">
+              <p class="text-lg font-medium">
+                <span class="text-sm text-base-content/70">Latitude:</span> <%= @performance.latitude %>
+              </p>
+              <p class="text-lg font-medium">
+                <span class="text-sm text-base-content/70">Longitude:</span> <%= @performance.longitude %>
+              </p>
+              <a href="https://www.google.com/maps?q=<%= @performance.latitude %>,<%= @performance.longitude %>" 
+                 target="_blank" 
+                 class="link link-primary text-sm">
+                View on Google Maps
+              </a>
+            </div>
+          <% else %>
+            <p class="text-base-content/50">No location set</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card-actions justify-start mt-6">
+        <%= link_to "Back to Performances", performances_path, class: "btn btn-ghost" %>
+      </div>
+    </div>
+  </div>
+</div>

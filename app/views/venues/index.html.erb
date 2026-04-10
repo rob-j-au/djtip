@@ -1,0 +1,46 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+      <h1 class="card-title text-3xl">Venues</h1>
+      <p class="text-base-content/70">Manage all your event venues</p>
+      <div class="card-actions justify-end">
+        <%= link_to "New Venue", new_venue_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <% if @venues.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @venues.each do |venue| %>
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+          <div class="card-body">
+            <h2 class="card-title">
+              <%= venue.name %>
+              <div class="badge badge-primary"><%= venue.venue_type.capitalize %></div>
+            </h2>
+            <div class="card-actions justify-end mt-4">
+              <%= link_to "View", venue, class: "btn btn-sm btn-ghost" %>
+              <%= link_to "Edit", edit_venue_path(venue), class: "btn btn-sm btn-ghost" %>
+              <%= button_to "Delete", venue, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-ghost text-error" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body items-center text-center">
+        <div class="w-16 h-16 rounded-full bg-base-200 flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-base-content/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <h2 class="card-title">No venues yet</h2>
+        <p class="text-base-content/70">Get started by creating your first venue</p>
+        <div class="card-actions">
+          <%= link_to "Create Venue", new_venue_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
