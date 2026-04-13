@@ -82,11 +82,9 @@ minikube service argocd-server -n argocd --url
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
-**Current Password:** `SWCTPRjmtRPQ24VB`
-
 ### Login Credentials
 - **Username:** `admin`
-- **Password:** Use the password from above
+- **Password:** Use the password from the command above
 
 ### Change Admin Password (Recommended)
 
@@ -97,8 +95,11 @@ Via UI:
 
 Via CLI:
 ```bash
-# Login first
-argocd login localhost:8080 --username admin --password SWCTPRjmtRPQ24VB --insecure
+# Get password
+PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
+
+# Login
+argocd login localhost:8080 --username admin --password "$PASSWORD" --insecure
 
 # Change password
 argocd account update-password
@@ -518,5 +519,5 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 - **Namespace:** `argocd`
 - **UI URL:** https://localhost:8080 (with port-forward)
 - **Username:** `admin`
-- **Initial Password:** `SWCTPRjmtRPQ24VB`
+- **Password:** Get from secret: `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
 - **Cluster:** Minikube (local)

@@ -7,7 +7,7 @@ kube-prometheus-stack:
   # Grafana configuration
   grafana:
     enabled: true
-    adminPassword: admin  # Change in production!
+    # adminPassword: ""  # Not needed - using anonymous auth
 
     # Anonymous authentication enabled
     grafana.ini:
