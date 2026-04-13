@@ -6,9 +6,9 @@ if [ -z "${LD_PRELOAD+x}" ]; then
   export LD_PRELOAD
 fi
 
-# If running the rails server then create database and seed if needed
+# If running the rails server then create database (skip seeding to avoid permission errors)
 if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
-  ./bin/rails db:create db:seed || true
+  ./bin/rails db:create || true
 fi
 
 exec "${@}"
