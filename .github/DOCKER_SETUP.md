@@ -41,7 +41,7 @@ The workflow (`.github/workflows/docker-build.yml`) will:
 
 ### 3. Image Location
 
-Images are pushed to: **`robjau/djtip`**
+Images are pushed to: **`robj/djtip`**
 
 ### 4. Manual Trigger
 
@@ -62,12 +62,12 @@ You can manually trigger a build:
 
 Pull the latest image:
 ```bash
-docker pull robjau/djtip:latest
+docker pull robj/djtip:latest
 ```
 
 Pull a specific version:
 ```bash
-docker pull robjau/djtip:main-abc1234
+docker pull robj/djtip:main-abc1234
 ```
 
 ## Security Notes
