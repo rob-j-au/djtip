@@ -51,11 +51,10 @@ OpenTelemetry::SDK.configure do |c|
     )
   )
   
-  # Sampling - 100% in dev, configurable in production
-  sample_rate = ENV.fetch('OTEL_TRACE_SAMPLE_RATE', Rails.env.production? ? '0.1' : '1.0').to_f
-  c.sampler = OpenTelemetry::SDK::Trace::Samplers::TraceIdRatioBased.new(sample_rate)
+  # Sampling is controlled via OTEL_TRACE_SAMPLE_RATE environment variable
+  # Set in deployment.yaml: OTEL_TRACE_SAMPLE_RATE=1.0 for 100% sampling
   
-  Rails.logger.info "OpenTelemetry initialized: service=#{c.service_name}, endpoint=#{otlp_endpoint}, sample_rate=#{sample_rate}"
+  Rails.logger.info "OpenTelemetry initialized: service=#{c.service_name}, endpoint=#{otlp_endpoint}"
 end
 
 # Add custom instrumentation helpers
