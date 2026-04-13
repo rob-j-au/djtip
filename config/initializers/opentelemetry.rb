@@ -10,11 +10,11 @@ OpenTelemetry::SDK.configure do |c|
   c.service_name = ENV.fetch('OTEL_SERVICE_NAME', 'djtip')
   c.service_version = '1.0.0'
   
-  # Resource attributes - additional metadata
+  # Resource attributes - additional metadata (must be strings, integers, floats, or booleans)
   c.resource = OpenTelemetry::SDK::Resources::Resource.create(
-    'deployment.environment' => Rails.env,
+    'deployment.environment' => Rails.env.to_s,
     'service.namespace' => 'djtip',
-    'service.instance.id' => Socket.gethostname
+    'service.instance.id' => Socket.gethostname.to_s
   )
   
   # Auto-instrument everything (like NewRelic)
