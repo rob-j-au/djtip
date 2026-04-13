@@ -120,3 +120,7 @@ Thumbs.db
 # mkcert certificates
 *.pem
 *.key
+
+# Helm chart dependencies
+.cicd/helm/djtip/charts/*.tgz
+.cicd/helm/djtip/Chart.lock

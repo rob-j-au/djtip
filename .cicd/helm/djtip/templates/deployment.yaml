@@ -47,9 +47,9 @@ spec:
                   name: djtip-secrets
                   key: SECRET_KEY_BASE
             - name: MONGODB_URI
-              value: mongodb://{{ include "djtip.fullname" . }}-mongodb:27017/djtip_production
+              value: mongodb://{{ .Release.Name }}-mongodb:27017/djtip_production
             - name: REDIS_URL
-              value: redis://{{ include "djtip.fullname" . }}-redis:6379/0
+              value: redis://{{ .Release.Name }}-redis-master:6379/0
             - name: RAILS_ENV
               value: "production"
           ports:

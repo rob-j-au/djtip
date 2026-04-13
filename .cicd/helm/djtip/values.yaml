@@ -111,3 +111,36 @@ volumeMounts: []
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+# MongoDB configuration (Bitnami chart)
+mongodb:
+  enabled: true
+  auth:
+    enabled: false  # Disable auth for local development
+  architecture: standalone
+  persistence:
+    enabled: false  # Disable persistence for local development
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+# Redis configuration (Bitnami chart)
+redis:
+  enabled: true
+  auth:
+    enabled: false  # Disable auth for local development
+  architecture: standalone
+  master:
+    persistence:
+      enabled: false  # Disable persistence for local development
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "50m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
