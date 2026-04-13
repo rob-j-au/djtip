@@ -5,57 +5,28 @@ require 'opentelemetry/sdk'
 require 'opentelemetry/exporter/otlp'
 require 'opentelemetry/instrumentation/all'
 
-OpenTelemetry::SDK.configure do |c|
-  # Service name - appears in Grafana/Tempo
-  c.service_name = ENV.fetch('OTEL_SERVICE_NAME', 'djtip')
-  c.service_version = '1.0.0'
-  
-  # Resource attributes - additional metadata (must be strings, integers, floats, or booleans)
-  c.resource = OpenTelemetry::SDK::Resources::Resource.create(
-    'deployment.environment' => Rails.env.to_s,
-    'service.namespace' => 'djtip',
-    'service.instance.id' => Socket.gethostname.to_s
-  )
-  
-  # Auto-instrument everything (like NewRelic)
-  c.use_all({
-    'OpenTelemetry::Instrumentation::ActionPack' => { enabled: true },
-    'OpenTelemetry::Instrumentation::ActionView' => { enabled: true },
-    'OpenTelemetry::Instrumentation::ActiveJob' => { enabled: true },
-    'OpenTelemetry::Instrumentation::ActiveSupport' => { enabled: true },
-    'OpenTelemetry::Instrumentation::Faraday' => { enabled: true },
-    'OpenTelemetry::Instrumentation::HttpClient' => { enabled: true },
-    'OpenTelemetry::Instrumentation::Net::HTTP' => { enabled: true },
-    'OpenTelemetry::Instrumentation::Rack' => { enabled: true },
-    'OpenTelemetry::Instrumentation::Rails' => { enabled: true },
-    'OpenTelemetry::Instrumentation::Redis' => { enabled: true },
-    'OpenTelemetry::Instrumentation::Sidekiq' => { enabled: true },
-  })
-  
-  # Configure OTLP exporter to send traces to Tempo
-  otlp_endpoint = ENV.fetch('OTEL_EXPORTER_OTLP_ENDPOINT') do
-    if Rails.env.production?
-      'http://observability-tempo.observability.svc.cluster.local:4318'
-    else
-      'http://localhost:4318'  # For local development
-    end
+# Configure OTLP endpoint
+otlp_endpoint = ENV.fetch('OTEL_EXPORTER_OTLP_ENDPOINT') do
+  if Rails.env.production?
+    'http://observability-tempo.observability.svc.cluster.local:4318'
+  else
+    'http://localhost:4318'  # For local development
   end
-  
-  c.add_span_processor(
-    OpenTelemetry::SDK::Trace::Export::BatchSpanProcessor.new(
-      OpenTelemetry::Exporter::OTLP::Exporter.new(
-        endpoint: "#{otlp_endpoint}/v1/traces",
-        headers: {},
-        compression: 'gzip'
-      )
-    )
-  )
-  
-  # Sampling is controlled via OTEL_TRACE_SAMPLE_RATE environment variable
-  # Set in deployment.yaml: OTEL_TRACE_SAMPLE_RATE=1.0 for 100% sampling
-  
-  Rails.logger.info "OpenTelemetry initialized: service=#{c.service_name}, endpoint=#{otlp_endpoint}"
 end
+
+# Set environment variables for OpenTelemetry SDK
+ENV['OTEL_SERVICE_NAME'] ||= 'djtip'
+ENV['OTEL_EXPORTER_OTLP_ENDPOINT'] ||= otlp_endpoint
+ENV['OTEL_TRACES_EXPORTER'] ||= 'otlp'
+ENV['OTEL_EXPORTER_OTLP_PROTOCOL'] ||= 'http/protobuf'
+
+# Configure OpenTelemetry SDK
+OpenTelemetry::SDK.configure do |c|
+  # Auto-instrument everything (like NewRelic)
+  c.use_all
+end
+
+Rails.logger.info "OpenTelemetry initialized: service=djtip, endpoint=#{otlp_endpoint}"
 
 # Add custom instrumentation helpers
 module OpenTelemetryHelpers
