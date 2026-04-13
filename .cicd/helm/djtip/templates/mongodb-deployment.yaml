@@ -26,7 +26,7 @@ spec:
               protocol: TCP
           env:
             - name: MONGO_INITDB_DATABASE
-              value: dj_tip_production
+              value: djtip_production
           volumeMounts:
             - name: mongodb-data
               mountPath: /data/db
