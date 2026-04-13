@@ -40,6 +40,12 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: djtip-secrets
+                  key: SECRET_KEY_BASE
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
