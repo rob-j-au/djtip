@@ -1,12 +1,14 @@
 # Custom logger formatter that includes OpenTelemetry trace IDs
 # This enables log-trace correlation in Grafana
 
-class TraceIdLogFormatter < ActiveSupport::Logger::SimpleFormatter
+class TraceIdLogFormatter < ActiveSupport::TaggedLogging::Formatter
   def call(severity, timestamp, progname, msg)
     trace_id = current_trace_id
     
     if trace_id
-      "[#{trace_id}] #{super}"
+      # Add trace ID as a tag
+      tags_text = tags.any? ? "#{tags_text} " : ""
+      "[#{trace_id}] #{tags_text}#{msg}\n"
     else
       super
     end
@@ -29,8 +31,11 @@ class TraceIdLogFormatter < ActiveSupport::Logger::SimpleFormatter
   end
 end
 
-# Apply custom formatter to Rails logger
+# Apply custom formatter to Rails logger with tagged logging support
 Rails.application.config.after_initialize do
-  Rails.logger.formatter = TraceIdLogFormatter.new
+  # Use TaggedLogging wrapper with our custom formatter
+  logger = ActiveSupport::Logger.new($stdout)
+  logger.formatter = TraceIdLogFormatter.new
+  Rails.logger = ActiveSupport::TaggedLogging.new(logger)
   Rails.logger.info "Trace ID logging enabled"
 end
