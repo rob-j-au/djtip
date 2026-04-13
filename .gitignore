@@ -116,3 +116,7 @@ Thumbs.db
 !/app/assets/builds/.keep
 
 /node_modules
+
+# mkcert certificates
+*.pem
+*.key
