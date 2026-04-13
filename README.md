@@ -1,21 +1,49 @@
 # DJ Tip App
 
-A Ruby on Rails 8 application using Mongoid (MongoDB) instead of ActiveRecord, with Tailwind CSS styling for managing events, users, and performers.
+A modern Ruby on Rails 8.1 application for managing DJ events and tips, built with MongoDB, deployed on Kubernetes, and featuring production-grade observability.
 
-## Admin User
+## 🎯 Overview
 
-Email: admin@djtip.com
-Password: password123
+DJ Tip is a full-stack web application that allows event organizers to manage DJ events, track attendees, and collect tips for performers. Built with modern technologies and best practices, it includes:
 
+- **Rails 8.1** with Mongoid 9 (MongoDB ODM)
+- **daisyUI 5** + Tailwind CSS for beautiful, responsive UI
+- **Kubernetes deployment** via ArgoCD GitOps
+- **Production observability** with OpenTelemetry, Prometheus, Grafana, Loki, and Tempo
+- **Docker containerization** with multi-stage builds
+- **Devise authentication** with user management
+- **Shrine file uploads** for user avatars
+- **Sidekiq** for background job processing
+- **Comprehensive testing** with RSpec
 
-## Features
+## 🔐 Admin Access
 
-- **Events Management**: Create and manage events with title, description, date, and location
-- **Users Management**: Register users for events with contact information
-- **Performers Management**: Add performers to events with bio and genre information
-- **Relationships**: Events can have multiple users and performers
-- **Tailwind CSS UI**: Modern, responsive design with Tailwind CSS
-- **MongoDB**: Uses Mongoid ODM instead of ActiveRecord
+**Email:** admin@djtip.com  
+**Password:** password123
+
+## ✨ Features
+
+### Core Functionality
+- **Event Management**: Create and manage DJ events with dates, locations, and details
+- **User Management**: User registration, authentication, and profile management
+- **Tip Tracking**: Track and manage tips for DJs/performers
+- **Image Uploads**: User profile images with Shrine and image processing
+- **Geocoding**: Location-based features with Geocoder gem
+
+### UI/UX
+- **daisyUI 5 Components**: Modern, accessible component library
+- **Tailwind CSS**: Utility-first styling with custom theme
+- **Responsive Design**: Mobile-first, works on all devices
+- **Dark Mode**: Theme switching with localStorage persistence
+- **Stimulus Controllers**: Interactive JavaScript features
+
+### DevOps & Observability
+- **Kubernetes Deployment**: Helm charts with ArgoCD GitOps
+- **OpenTelemetry Tracing**: Distributed tracing for all requests
+- **Prometheus Metrics**: Application and business metrics
+- **Grafana Dashboards**: Visualization and monitoring
+- **Loki Log Aggregation**: Centralized logging
+- **Tempo Distributed Tracing**: Request flow visualization
 
 ## Models
 
@@ -39,36 +67,73 @@ Password: password123
 - `contact` (String) - Contact information
 - **Relationships**: `belongs_to :event` (optional)
 
-## Setup Instructions
+## 🚀 Quick Start
 
-### Prerequisites
-- Ruby 3.2.0 or higher
-- MongoDB installed and running
-- Bundler gem
+### Local Development
 
-### Installation
+#### Prerequisites
+- Ruby 3.4.1
+- MongoDB 7.0+
+- Redis 7.0+
+- Node.js 18+ (for Tailwind CSS)
 
-1. **Install dependencies:**
+#### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/rob-j-au/djtip.git
+   cd djtip
+   ```
+
+2. **Install dependencies:**
    ```bash
    bundle install
    ```
 
-2. **Start MongoDB:**
+3. **Start services:**
    ```bash
-   # On macOS with Homebrew:
+   # MongoDB
    brew services start mongodb-community
    
-   # Or manually:
-   mongod
+   # Redis
+   brew services start redis
    ```
 
-3. **Start the Rails server:**
+4. **Setup database:**
    ```bash
-   rails server
+   rails db:seed
    ```
 
-4. **Visit the application:**
-   Open your browser and go to `http://localhost:3000`
+5. **Start the Rails server:**
+   ```bash
+   bin/dev
+   ```
+
+6. **Visit the application:**
+   Open `http://localhost:3000`
+
+### Docker Development
+
+```bash
+# Build and run with Docker Compose
+docker-compose up
+
+# Access at http://localhost:3000
+```
+
+See `docs/DOCKER.md` for detailed Docker instructions.
+
+### Kubernetes Deployment
+
+```bash
+# Deploy to Minikube
+kubectl apply -f .cicd/argocd/djtip-app.yaml
+
+# Access via ingress
+open https://djtip.minikube.local
+```
+
+See `docs/ARGO.md` for complete Kubernetes deployment guide.
 
 ## Usage
 
@@ -112,38 +177,118 @@ The app uses MongoDB with the following databases:
 - Test: `djtip_test`
 - Production: Uses `MONGODB_URI` environment variable
 
-### Key Technologies
+### 🛠 Tech Stack
 
-- **Rails 8.0**: Latest Rails framework
-- **Mongoid 8.1**: MongoDB ODM
-- **Tailwind CSS**: Utility-first CSS framework
-- **Stimulus**: JavaScript framework
-- **Turbo**: SPA-like page acceleration
+**Backend:**
+- Rails 8.1.3
+- Ruby 3.4.1
+- Mongoid 9.0 (MongoDB ODM)
+- Devise 4.9 (Authentication)
+- Sidekiq 8.0 (Background Jobs)
+- Shrine (File Uploads)
 
-### File Structure
+**Frontend:**
+- daisyUI 5 (Component Library)
+- Tailwind CSS 4 (Styling)
+- Stimulus (JavaScript)
+- Turbo (SPA-like Navigation)
+- Importmap (JavaScript Modules)
+
+**Observability:**
+- OpenTelemetry (Distributed Tracing)
+- Prometheus (Metrics)
+- Grafana (Visualization)
+- Loki (Log Aggregation)
+- Tempo (Trace Storage)
+
+**Infrastructure:**
+- Docker (Containerization)
+- Kubernetes (Orchestration)
+- ArgoCD (GitOps)
+- Helm (Package Management)
+- HAProxy Ingress (Load Balancing)
+
+### 📁 Project Structure
 
 ```
-app/
-├── controllers/          # Application controllers
-├── models/              # Mongoid models
-├── views/               # ERB templates with Tailwind CSS styling
-└── assets/              # Stylesheets and JavaScript
-
-config/
-├── mongoid.yml          # MongoDB configuration
-├── routes.rb            # Application routes
-└── application.rb       # Rails configuration
+djtip/
+├── app/
+│   ├── controllers/           # Rails controllers
+│   ├── models/               # Mongoid models
+│   │   └── concerns/         # Traceable, BusinessMetrics
+│   ├── views/                # ERB templates with daisyUI
+│   ├── uploaders/            # Shrine uploaders
+│   └── jobs/                 # Sidekiq background jobs
+├── config/
+│   ├── initializers/         # OpenTelemetry, Prometheus, etc.
+│   ├── mongoid.yml           # MongoDB configuration
+│   └── routes.rb             # Application routes
+├── .cicd/
+│   ├── helm/                 # Helm charts
+│   │   ├── djtip/           # Application chart
+│   │   └── observability/   # Observability stack
+│   └── argocd/              # ArgoCD applications
+├── docs/                     # Documentation
+│   ├── ARGO.md              # Kubernetes deployment
+│   ├── DOCKER.md            # Docker guide
+│   ├── OBSERVABILITY.md     # Observability stack
+│   ├── INSTRUMENTATION.md   # OpenTelemetry guide
+│   └── OTEL_ENHANCEMENTS.md # Rails-specific tracing
+└── spec/                     # RSpec tests
 ```
 
-## Contributing
+## 📚 Documentation
+
+- **[ArgoCD & Kubernetes](docs/ARGO.md)** - Complete deployment guide
+- **[Docker Setup](docs/DOCKER.md)** - Docker and Docker Compose
+- **[HTTPS Development](docs/HTTPS_DEV.md)** - Local HTTPS with mkcert
+- **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
+- **[Application Instrumentation](docs/INSTRUMENTATION.md)** - OpenTelemetry usage
+- **[OpenTelemetry Enhancements](docs/OTEL_ENHANCEMENTS.md)** - Rails-specific tracing
+- **[API Documentation](docs/API_DOCUMENTATION.md)** - REST API reference
+- **[Deployment Complete](docs/DEPLOYMENT_COMPLETE.md)** - Deployment summary
+
+## 🔍 Observability
+
+Access the observability stack at:
+- **Grafana**: https://grafana.minikube.local (anonymous login enabled)
+- **Prometheus**: http://observability-kube-prometh-prometheus:9090
+- **Metrics Endpoint**: http://localhost:3000/metrics
+
+Features:
+- ✅ Distributed tracing with OpenTelemetry
+- ✅ Automatic log-trace correlation
+- ✅ User context in all traces
+- ✅ Slow query detection (>100ms)
+- ✅ Business metrics tracking
+- ✅ Enhanced Sidekiq job tracing
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+bundle exec rspec
+
+# Run with coverage
+COVERAGE=true bundle exec rspec
+
+# Run specific tests
+bundle exec rspec spec/models/
+bundle exec rspec spec/requests/api/
+```
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test your changes
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## License
+## 📝 License
 
 This project is open source and available under the [MIT License](LICENSE).
-# Test pre-commit hook
+
+## 🙏 Acknowledgments
+
+Built with modern Rails best practices and production-grade observability.
