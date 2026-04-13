@@ -1,0 +1,86 @@
+# See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files.
+
+# Ignore git directory and files
+.git/
+.gitignore
+.gitattributes
+
+# Ignore bundler config and cached gems
+/.bundle
+/vendor/bundle
+
+# Ignore all environment files
+.env*
+!.env.example
+
+# Ignore all default key files
+/config/master.key
+/config/credentials/*.key
+
+# Ignore all logfiles and tempfiles
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Ignore storage files
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/.keep
+
+# Ignore uploaded files in development
+/public/uploads
+
+# Ignore assets that are compiled on build
+/public/assets
+/public/packs
+/public/packs-test
+
+# Ignore node modules
+/node_modules
+
+# Ignore yarn files
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# Ignore test files
+/spec
+/test
+.rspec
+
+# Ignore development and test databases
+/mongodb-data
+
+# Ignore CI/CD files (optional - remove if you want to include them)
+.cicd/
+
+# Ignore documentation
+/docs
+*.md
+!README.md
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Ignore development tools
+Procfile.dev
+/bin/dev
+
+# Ignore coverage reports
+/coverage
+
+# Ignore docker files to avoid recursion
+Dockerfile*
+docker-compose*.yml
+.dockerignore

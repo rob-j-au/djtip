@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: djtip-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: performer_tip_production
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - djtip-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: djtip-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - djtip-network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: djtip-web
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - redis
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: production
+      MONGODB_URL: mongodb://mongodb:27017/performer_tip_production
+      REDIS_URL: redis://redis:6379/0
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      IPINFO_API_KEY: ${IPINFO_API_KEY}
+    volumes:
+      - storage_data:/rails/storage
+    networks:
+      - djtip-network
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: djtip-sidekiq
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - redis
+    command: bundle exec sidekiq
+    environment:
+      RAILS_ENV: production
+      MONGODB_URL: mongodb://mongodb:27017/performer_tip_production
+      REDIS_URL: redis://redis:6379/0
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+    volumes:
+      - storage_data:/rails/storage
+    networks:
+      - djtip-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+  storage_data:
+
+networks:
+  djtip-network:
+    driver: bridge
