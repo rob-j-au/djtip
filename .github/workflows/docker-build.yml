@@ -17,7 +17,7 @@ env:
   DOCKER_PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
-  build-and-push:
+  build-and-push-to-dockerhub:
     runs-on: ubuntu-latest
     
     steps:
