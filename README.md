@@ -239,6 +239,7 @@ djtip/
 
 ## 📚 Documentation
 
+- **[Development Endpoints](docs/DEV_ENDPOINTS.md)** - All service URLs and ports
 - **[ArgoCD & Kubernetes](docs/ARGO.md)** - Complete deployment guide
 - **[Docker Setup](docs/DOCKER.md)** - Docker and Docker Compose
 - **[HTTPS Development](docs/HTTPS_DEV.md)** - Local HTTPS with mkcert
