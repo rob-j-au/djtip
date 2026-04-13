@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "djtip.fullname" . }}-env
+  labels:
+    {{- include "djtip.labels" . | nindent 4 }}
+data:
+  # Rails Environment
+  RAILS_ENV: "production"
+  RAILS_LOG_TO_STDOUT: "true"
+  RAILS_SERVE_STATIC_FILES: "true"
+  
+  # Puma Configuration
+  RAILS_MAX_THREADS: "5"
+  RAILS_MIN_THREADS: "5"
+  WEB_CONCURRENCY: "2"
+  PORT: "3000"
+  
+  # Database Configuration
+  MONGODB_URI: "mongodb://{{ .Release.Name }}-mongodb:27017/djtip_production"
+  
+  # Redis Configuration
+  REDIS_URL: "redis://{{ .Release.Name }}-redis-master:6379/0"
+  
+  # OpenTelemetry Configuration
+  OTEL_SERVICE_NAME: "djtip"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://observability-tempo.observability.svc.cluster.local:4318"
+  OTEL_TRACES_EXPORTER: "otlp"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+  OTEL_TRACE_SAMPLE_RATE: "1.0"
+  
+  # Logging Configuration
+  LOG_LEVEL: "info"
+  
+  # Application Configuration
+  RACK_ENV: "production"

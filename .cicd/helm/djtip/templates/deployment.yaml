@@ -40,24 +40,15 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "djtip.fullname" . }}-env
           env:
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
                   name: djtip-secrets
                   key: SECRET_KEY_BASE
-            - name: MONGODB_URI
-              value: mongodb://{{ .Release.Name }}-mongodb:27017/djtip_production
-            - name: REDIS_URL
-              value: redis://{{ .Release.Name }}-redis-master:6379/0
-            - name: RAILS_ENV
-              value: "production"
-            - name: OTEL_SERVICE_NAME
-              value: "djtip"
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "http://observability-tempo.observability.svc.cluster.local:4318"
-            - name: OTEL_TRACE_SAMPLE_RATE
-              value: "1.0"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
