@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "djtip.fullname" . }}-redis
+  labels:
+    {{- include "djtip.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cache
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: redis
+      protocol: TCP
+      name: redis
+  selector:
+    {{- include "djtip.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: cache
