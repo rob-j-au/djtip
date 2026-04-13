@@ -14,7 +14,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 
 **Credentials:**
 - Username: `admin`
-- Password: `SWCTPRjmtRPQ24VB`
+- Password: `X7Ff-siflLm4b7yo`
 
 ## 📦 Deploy DJ Tip Application
 
@@ -26,7 +26,7 @@ kubectl apply -f .cicd/argocd/djtip-app.yaml
 ### Method 2: ArgoCD CLI
 ```bash
 # Login first
-argocd login localhost:8080 --username admin --password SWCTPRjmtRPQ24VB --insecure
+argocd login localhost:8080 --username admin --password X7Ff-siflLm4b7yo --insecure
 
 # Create app
 argocd app create -f .cicd/argocd/djtip-app.yaml
