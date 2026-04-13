@@ -18,34 +18,22 @@ kube-prometheus-stack:
         root_url: "http://grafana.minikube.local"
     
     # Pre-configure datasources
-    datasources:
-      datasources.yaml:
-        apiVersion: 1
-        datasources:
-          # Prometheus (auto-configured by kube-prometheus-stack)
-          - name: Prometheus
-            type: prometheus
-            url: http://{{ .Release.Name }}-kube-prometheus-prometheus:9090
-            access: proxy
-            isDefault: true
-            
-          # Loki for logs
-          - name: Loki
-            type: loki
-            url: http://{{ .Release.Name }}-loki:3100
-            access: proxy
-            jsonData:
-              maxLines: 1000
-            
-          # Tempo for traces
-          - name: Tempo
-            type: tempo
-            url: http://{{ .Release.Name }}-tempo:3100
-            access: proxy
-            jsonData:
-              httpMethod: GET
-              serviceMap:
-                datasourceUid: Prometheus
+    additionalDataSources:
+      # Loki for logs
+      - name: Loki
+        type: loki
+        url: http://observability-loki:3100
+        access: proxy
+        jsonData:
+          maxLines: 1000
+        
+      # Tempo for traces
+      - name: Tempo
+        type: tempo
+        url: http://observability-tempo:3100
+        access: proxy
+        jsonData:
+          httpMethod: GET
     
     # Ingress for Grafana
     ingress:
