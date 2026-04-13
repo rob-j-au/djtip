@@ -9,3 +9,7 @@ AllCops:
     - 'tmp/**/*'
     - 'log/**/*'
     - 'public/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'

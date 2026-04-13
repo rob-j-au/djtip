@@ -5,10 +5,10 @@ source 'https://rubygems.org'
 ruby '3.4.1'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 8.0.2'
+gem 'rails', '~> 8.1.3'
 
 # Use MongoDB as the database for Active Record
-gem 'mongoid', '~> 8.1'
+gem 'mongoid', '~> 9.0'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'

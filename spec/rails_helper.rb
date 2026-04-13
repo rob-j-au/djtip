@@ -65,7 +65,7 @@ RSpec.configure do |config|
   config.include ActionDispatch::TestProcess::FixtureFile
 
   # Configure file fixtures path
-  config.fixture_path = "#{Rails.root}/spec/fixtures"
+  config.fixture_paths = ["#{Rails.root}/spec/fixtures"]
 
   # Database cleaner for Mongoid
   config.before(:suite) do
