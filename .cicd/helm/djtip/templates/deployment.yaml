@@ -47,7 +47,7 @@ spec:
                   name: djtip-secrets
                   key: SECRET_KEY_BASE
             - name: MONGODB_URI
-              value: mongodb://{{ include "djtip.fullname" . }}-mongodb:27017/performer_tip_production
+              value: mongodb://{{ include "djtip.fullname" . }}-mongodb:27017/dj_tip_production
             - name: RAILS_ENV
               value: "production"
           ports:

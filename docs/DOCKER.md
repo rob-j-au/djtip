@@ -97,7 +97,7 @@ docker run -d \
   --name djtip-web \
   -p 3000:3000 \
   -e RAILS_ENV=production \
-  -e MONGODB_URL=mongodb://your-mongodb:27017/performer_tip_production \
+  -e MONGODB_URL=mongodb://your-mongodb:27017/dj_tip_production \
   -e REDIS_URL=redis://your-redis:6379/0 \
   -e RAILS_MASTER_KEY=your_master_key \
   -e GOOGLE_MAPS_API_KEY=your_api_key \
