@@ -44,7 +44,7 @@
         <div>
           <p class="text-sm text-base-content/70 mb-1">Event</p>
           <% if @performance.event %>
-            <p class="text-lg font-medium"><%= @performance.event.name %></p>
+            <p class="text-lg font-medium"><%= @performance.event.title %></p>
             <%= link_to "View Event", @performance.event, class: "link link-primary text-sm" %>
           <% end %>
         </div>

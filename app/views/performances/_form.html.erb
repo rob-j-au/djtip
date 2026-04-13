@@ -29,7 +29,7 @@
 
     <div class="form-control w-full">
       <%= form.label :event_id, "Event", class: "label" %>
-      <%= form.collection_select :event_id, @events, :id, :name, 
+      <%= form.collection_select :event_id, @events, :id, :title, 
           { prompt: 'Select an event' },
           class: "select select-bordered w-full" %>
     </div>
@@ -38,27 +38,59 @@
   <fieldset class="fieldset">
     <legend class="fieldset-legend">Location (Optional)</legend>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="form-control w-full">
-        <%= form.label :latitude, class: "label" %>
-        <%= form.number_field :latitude, 
-            step: :any, 
-            class: "input input-bordered w-full", 
-            placeholder: "e.g., -33.8688" %>
+    <div data-controller="map-picker"
+         data-map-picker-api-key-value="<%= ENV['GOOGLE_MAPS_API_KEY'] || 'YOUR_API_KEY_HERE' %>"
+         data-map-picker-default-lat-value="<%= @default_location[:lat] %>"
+         data-map-picker-default-lng-value="<%= @default_location[:lng] %>">
+      
+      <!-- Address Search -->
+      <div class="form-control w-full mb-4">
+        <%= form.label :address_search, "Search Address", class: "label" %>
+        <input type="text" 
+               data-map-picker-target="search"
+               class="input input-bordered w-full" 
+               placeholder="Search for an address..." />
         <label class="label">
-          <span class="label-text-alt">Range: -90 to 90</span>
+          <span class="label-text-alt">Search and click on the map to set location</span>
         </label>
       </div>
 
-      <div class="form-control w-full">
-        <%= form.label :longitude, class: "label" %>
-        <%= form.number_field :longitude, 
-            step: :any, 
-            class: "input input-bordered w-full", 
-            placeholder: "e.g., 151.2093" %>
-        <label class="label">
-          <span class="label-text-alt">Range: -180 to 180</span>
-        </label>
+      <!-- Map Container -->
+      <div data-map-picker-target="map" 
+           class="w-full h-96 rounded-lg border border-base-300 mb-4">
+      </div>
+
+      <!-- Coordinate Inputs -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-control w-full">
+          <%= form.label :latitude, class: "label" %>
+          <%= form.number_field :latitude, 
+              step: :any, 
+              class: "input input-bordered w-full", 
+              placeholder: "e.g., -33.8688",
+              data: { 
+                map_picker_target: "latitude",
+                action: "change->map-picker#latitudeChanged"
+              } %>
+          <label class="label">
+            <span class="label-text-alt">Range: -90 to 90</span>
+          </label>
+        </div>
+
+        <div class="form-control w-full">
+          <%= form.label :longitude, class: "label" %>
+          <%= form.number_field :longitude, 
+              step: :any, 
+              class: "input input-bordered w-full", 
+              placeholder: "e.g., 151.2093",
+              data: { 
+                map_picker_target: "longitude",
+                action: "change->map-picker#longitudeChanged"
+              } %>
+          <label class="label">
+            <span class="label-text-alt">Range: -180 to 180</span>
+          </label>
+        </div>
       </div>
     </div>
   </fieldset>
