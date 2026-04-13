@@ -45,6 +45,14 @@ gem "ostruct"
 gem 'sidekiq', '~> 8.0'
 gem 'redis', '~> 5.0'
 
+# OpenTelemetry for distributed tracing (NewRelic-style observability)
+gem 'opentelemetry-sdk'
+gem 'opentelemetry-exporter-otlp'
+gem 'opentelemetry-instrumentation-all'
+
+# Prometheus metrics
+gem 'prometheus-client'
+
 # Admin interface - using custom new_admin interface
 # gem 'rails_admin', '~> 3.3' - REMOVED
 # gem 'kaminari-mongoid', '~> 1.0' - REMOVED

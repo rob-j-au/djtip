@@ -52,6 +52,12 @@ spec:
               value: redis://{{ .Release.Name }}-redis-master:6379/0
             - name: RAILS_ENV
               value: "production"
+            - name: OTEL_SERVICE_NAME
+              value: "djtip"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://observability-tempo.observability.svc.cluster.local:4318"
+            - name: OTEL_TRACE_SAMPLE_RATE
+              value: "1.0"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
