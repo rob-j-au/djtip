@@ -52,6 +52,9 @@ gem 'redis', '~> 5.0'
 # Authentication
 gem 'devise', '~> 4.9'
 
+# Geocoding and GeoIP
+gem 'geocoder'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

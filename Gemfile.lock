@@ -96,6 +96,7 @@ GEM
     connection_pool (2.5.3)
     content_disposition (1.0.0)
     crass (1.0.6)
+    csv (3.3.5)
     database_cleaner-core (2.0.1)
     database_cleaner-mongoid (2.0.1)
       database_cleaner-core (~> 2.0.0)
@@ -133,6 +134,9 @@ GEM
     ffi (1.17.2-x86_64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
     ffi (1.17.2-x86_64-linux-musl)
+    geocoder (1.8.6)
+      base64 (>= 0.1.0)
+      csv (>= 3.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.7)
@@ -417,6 +421,7 @@ DEPENDENCIES
   factory_bot_rails (~> 6.2)
   faker (~> 3.2)
   fastimage
+  geocoder
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
