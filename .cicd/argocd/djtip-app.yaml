@@ -16,6 +16,8 @@ spec:
     helm:
       valueFiles:
         - values.yaml
+      # Build dependencies before deploying
+      skipCrds: false
       # Override values here if needed
       # parameters:
       #   - name: image.tag
