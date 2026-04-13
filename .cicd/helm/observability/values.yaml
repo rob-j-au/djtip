@@ -132,6 +132,14 @@ loki:
         memory: "512Mi"
         cpu: "500m"
   
+  # Disable other components
+  backend:
+    replicas: 0
+  read:
+    replicas: 0
+  write:
+    replicas: 0
+  
   # Loki configuration
   loki:
     auth_enabled: false
