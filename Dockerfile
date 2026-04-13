@@ -43,9 +43,11 @@ COPY Gemfile Gemfile.lock ./
 # This layer is cached unless Gemfile or Gemfile.lock changes
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    find "${BUNDLE_PATH}" -name "*.o" -delete && \
+    find "${BUNDLE_PATH}" -name "*.c" -delete && \
     bundle exec bootsnap precompile --gemfile
 
-# Copy application code
+# Copy application code (excludes files listed in .dockerignore)
 COPY . .
 
 # Precompile bootsnap code for faster boot times
