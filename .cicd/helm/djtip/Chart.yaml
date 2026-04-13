@@ -26,10 +26,10 @@ appVersion: "1.1.0"
 # Dependencies - using Bitnami charts for MongoDB and Redis
 dependencies:
   - name: mongodb
-    version: 15.6.24
+    version: 18.6.25
     repository: https://charts.bitnami.com/bitnami
     condition: mongodb.enabled
   - name: redis
-    version: 19.6.4
+    version: 25.3.11
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
