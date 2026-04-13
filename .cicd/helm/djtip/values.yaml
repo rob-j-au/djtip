@@ -112,6 +112,10 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
+# Metrics and observability
+metrics:
+  enabled: true  # Enable Prometheus ServiceMonitor
+
 # MongoDB configuration (Bitnami chart)
 mongodb:
   enabled: true

@@ -1,0 +1,17 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "djtip.fullname" . }}
+  labels:
+    {{- include "djtip.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "djtip.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+{{- end }}

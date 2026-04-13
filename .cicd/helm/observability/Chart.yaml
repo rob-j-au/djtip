@@ -1,0 +1,32 @@
+apiVersion: v2
+name: observability
+description: Observability stack with Prometheus, Grafana, Loki, and OpenTelemetry
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+# Observability stack dependencies
+dependencies:
+  # Prometheus + Grafana (includes Prometheus, Grafana, Alertmanager, node-exporter, kube-state-metrics)
+  - name: kube-prometheus-stack
+    version: 83.4.0
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: kube-prometheus-stack.enabled
+  
+  # Loki for log aggregation
+  - name: loki
+    version: 6.55.0
+    repository: https://grafana.github.io/helm-charts
+    condition: loki.enabled
+  
+  # Promtail for log collection (ships logs to Loki)
+  - name: promtail
+    version: 6.17.1
+    repository: https://grafana.github.io/helm-charts
+    condition: promtail.enabled
+  
+  # Tempo for distributed tracing (OpenTelemetry compatible)
+  - name: tempo
+    version: 1.24.4
+    repository: https://grafana.github.io/helm-charts
+    condition: tempo.enabled

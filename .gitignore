@@ -124,3 +124,5 @@ Thumbs.db
 # Helm chart dependencies
 .cicd/helm/djtip/charts/*.tgz
 .cicd/helm/djtip/Chart.lock
+.cicd/helm/observability/charts/*.tgz
+.cicd/helm/observability/Chart.lock
