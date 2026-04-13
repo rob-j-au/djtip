@@ -3,12 +3,12 @@
 # Prometheus + Grafana Stack
 kube-prometheus-stack:
   enabled: true
-  
+
   # Grafana configuration
   grafana:
     enabled: true
     adminPassword: admin  # Change in production!
-    
+
     # Anonymous authentication enabled
     grafana.ini:
       auth.anonymous:
@@ -16,7 +16,7 @@ kube-prometheus-stack:
         org_role: Admin  # Give anonymous users admin role (for local dev only!)
       server:
         root_url: "http://grafana.minikube.local"
-    
+
     # Pre-configure datasources
     additionalDataSources:
       # Loki for logs
@@ -26,7 +26,7 @@ kube-prometheus-stack:
         access: proxy
         jsonData:
           maxLines: 1000
-        
+
       # Tempo for traces
       - name: Tempo
         type: tempo
@@ -34,7 +34,7 @@ kube-prometheus-stack:
         access: proxy
         jsonData:
           httpMethod: GET
-    
+
     # Ingress for Grafana
     ingress:
       enabled: true
@@ -47,7 +47,7 @@ kube-prometheus-stack:
         - secretName: grafana-tls
           hosts:
             - grafana.minikube.local
-    
+
     # Resource limits
     resources:
       requests:
@@ -56,7 +56,7 @@ kube-prometheus-stack:
       limits:
         memory: "512Mi"
         cpu: "500m"
-  
+
   # Prometheus configuration
   prometheus:
     enabled: true
@@ -69,11 +69,11 @@ kube-prometheus-stack:
         limits:
           memory: "2Gi"
           cpu: "1000m"
-      
+
       # Service monitors - automatically discover services
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
-      
+
       # Storage
       storageSpec:
         volumeClaimTemplate:
@@ -82,7 +82,7 @@ kube-prometheus-stack:
             resources:
               requests:
                 storage: 10Gi
-  
+
   # Alertmanager
   alertmanager:
     enabled: true
@@ -94,11 +94,11 @@ kube-prometheus-stack:
         limits:
           memory: "256Mi"
           cpu: "200m"
-  
+
   # Node exporter - collects node metrics
   nodeExporter:
     enabled: true
-  
+
   # Kube-state-metrics - collects Kubernetes object metrics
   kubeStateMetrics:
     enabled: true
@@ -106,10 +106,10 @@ kube-prometheus-stack:
 # Loki - Log aggregation
 loki:
   enabled: true
-  
+
   # Single binary mode for simplicity (local dev)
   deploymentMode: SingleBinary
-  
+
   singleBinary:
     replicas: 1
     resources:
@@ -119,7 +119,7 @@ loki:
       limits:
         memory: "512Mi"
         cpu: "500m"
-  
+
   # Disable other components
   backend:
     replicas: 0
@@ -127,7 +127,7 @@ loki:
     replicas: 0
   write:
     replicas: 0
-  
+
   # Loki configuration
   loki:
     auth_enabled: false
@@ -148,11 +148,11 @@ loki:
 # Promtail - Log shipper (runs on every node)
 promtail:
   enabled: true
-  
+
   config:
     clients:
       - url: http://{{ .Release.Name }}-loki:3100/loki/api/v1/push
-    
+
     # Scrape all pod logs
     snippets:
       scrapeConfigs: |
@@ -230,7 +230,7 @@ promtail:
 # Tempo - Distributed tracing (OpenTelemetry compatible)
 tempo:
   enabled: true
-  
+
   tempo:
     resources:
       requests:
@@ -239,7 +239,7 @@ tempo:
       limits:
         memory: "512Mi"
         cpu: "500m"
-    
+
     # Receivers for different trace formats
     receivers:
       otlp:
@@ -256,7 +256,7 @@ tempo:
             endpoint: 0.0.0.0:14268
       zipkin:
         endpoint: 0.0.0.0:9411
-    
+
     storage:
       trace:
         backend: local

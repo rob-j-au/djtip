@@ -7,7 +7,7 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  
+
   source:
     # Update this to your actual Git repository URL
     repoURL: https://github.com/rob-j-au/djtip.git
@@ -24,30 +24,30 @@ spec:
       #     value: "v1.0.0"
       #   - name: replicaCount
       #     value: "2"
-  
+
   destination:
     server: https://kubernetes.default.svc
     namespace: default
-  
+
   syncPolicy:
     # Automated sync - comment out for manual sync
     automated:
       prune: true      # Delete resources that are no longer in Git
       selfHeal: true   # Sync when cluster state differs from Git
       allowEmpty: false
-    
+
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
-    
+
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  
+
   # Ignore differences in certain fields (optional)
   ignoreDifferences:
     - group: apps

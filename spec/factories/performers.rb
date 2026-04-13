@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :performer do
     name { Faker::Name.name }
@@ -7,7 +9,7 @@ FactoryBot.define do
     bio { Faker::Lorem.paragraph }
     genre { Faker::Music.genre }
     contact { Faker::Internet.email }
-    
+
     # Don't auto-create events - let tests handle event associations explicitly
     # This prevents conflicts when tests want to associate with specific events
   end

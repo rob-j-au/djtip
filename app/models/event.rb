@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Event
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -12,7 +14,7 @@ class Event
   has_many :tips, dependent: :destroy
   has_many :performances, dependent: :destroy
   belongs_to :venue, optional: true
-  
+
   # Performers are Users with _type = 'Performer'
   def performers
     users.unscoped.where(_type: 'Performer')

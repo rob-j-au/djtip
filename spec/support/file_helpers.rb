@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # spec/support/file_helpers.rb
 module FileHelpers
   def fixture_file_upload(path, mime_type = nil, binary = false)

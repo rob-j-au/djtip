@@ -1,4 +1,6 @@
-require "active_support/core_ext/integer/time"
+# frozen_string_literal: true
+
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -19,13 +21,13 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join("tmp/caching-dev.txt").exist?
+  if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=#{2.days.to_i}"
+      'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }
   else
     config.action_controller.perform_caching = false
@@ -37,7 +39,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.perform_caching = false
-  
+
   # Devise configuration for development
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
@@ -72,17 +74,17 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   # Configure meta_request for RailsPanel Chrome extension
-  config.middleware.use Rack::Cors do
-    allow do
-      origins '*'
-      resource '*', headers: :any, methods: [:get, :post, :options]
+  if defined?(Rack::Cors)
+    config.middleware.use Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: %i[get post options]
+      end
     end
-  end if defined?(Rack::Cors)
+  end
 
   # Ensure meta_request is properly loaded
   config.after_initialize do
-    if defined?(MetaRequest)
-      MetaRequest.enabled = true
-    end
+    MetaRequest.enabled = true if defined?(MetaRequest)
   end
 end

@@ -1,93 +1,95 @@
-class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :toggle_admin]
-  
-  def index
-    set_page_title("Users")
-    
-    @users = User.all
-    
-    # Search functionality
-    if params[:search].present?
-      @users = search_collection(@users, [:name, :email], params[:search])
+# frozen_string_literal: true
+
+module Admin
+  class UsersController < Admin::BaseController
+    before_action :set_user, only: %i[show edit update destroy toggle_admin]
+
+    def index
+      set_page_title('Users')
+
+      @users = User.all
+
+      # Search functionality
+      @users = search_collection(@users, %i[name email], params[:search]) if params[:search].present?
+
+      # Filter by admin status
+      case params[:filter]
+      when 'admins'
+        @users = @users.where(admin: true)
+      when 'regular'
+        @users = @users.where(admin: false)
+      end
+
+      @users = @users.order(name: 1)
     end
-    
-    # Filter by admin status
-    case params[:filter]
-    when 'admins'
-      @users = @users.where(admin: true)
-    when 'regular'
-      @users = @users.where(admin: false)
+
+    def show
+      set_page_title("User: #{@user.name}")
+
+      @tips = @user.tips.includes(:event).order(created_at: :desc).limit(20)
+      @total_tips = @user.tips.sum(:amount)
+      @events_count = @user.tips.distinct(:event_id).count
     end
-    
-    @users = @users.order(name: 1)
-  end
-  
-  def show
-    set_page_title("User: #{@user.name}")
-    
-    @tips = @user.tips.includes(:event).order(created_at: :desc).limit(20)
-    @total_tips = @user.tips.sum(:amount)
-    @events_count = @user.tips.distinct(:event_id).count
-  end
-  
-  def new
-    set_page_title("New User")
-    @user = User.new
-  end
-  
-  def create
-    @user = User.new(user_params)
-    @user.password = SecureRandom.hex(8) if @user.password.blank?
-    
-    if @user.save
-      redirect_to admin_user_path(@user), notice: 'User was successfully created.'
-    else
-      set_page_title("New User")
-      render :new, status: :unprocessable_entity
+
+    def new
+      set_page_title('New User')
+      @user = User.new
     end
-  end
-  
-  def edit
-    set_page_title("Edit User: #{@user.name}")
-  end
-  
-  def update
-    if @user.update(user_params)
-      redirect_to admin_user_path(@user), notice: 'User was successfully updated.'
-    else
+
+    def create
+      @user = User.new(user_params)
+      @user.password = SecureRandom.hex(8) if @user.password.blank?
+
+      if @user.save
+        redirect_to admin_user_path(@user), notice: 'User was successfully created.'
+      else
+        set_page_title('New User')
+        render :new, status: :unprocessable_entity
+      end
+    end
+
+    def edit
       set_page_title("Edit User: #{@user.name}")
-      render :edit, status: :unprocessable_entity
     end
-  end
-  
-  def destroy
-    if @user == current_user
-      redirect_to admin_users_path, alert: 'You cannot delete yourself.'
-      return
+
+    def update
+      if @user.update(user_params)
+        redirect_to admin_user_path(@user), notice: 'User was successfully updated.'
+      else
+        set_page_title("Edit User: #{@user.name}")
+        render :edit, status: :unprocessable_entity
+      end
     end
-    
-    @user.destroy
-    redirect_to admin_users_path, notice: 'User was successfully deleted.'
-  end
-  
-  def toggle_admin
-    if @user == current_user
-      redirect_to admin_user_path(@user), alert: 'You cannot change your own admin status.'
-      return
+
+    def destroy
+      if @user == current_user
+        redirect_to admin_users_path, alert: 'You cannot delete yourself.'
+        return
+      end
+
+      @user.destroy
+      redirect_to admin_users_path, notice: 'User was successfully deleted.'
     end
-    
-    @user.update!(admin: !@user.admin?)
-    status = @user.admin? ? 'granted' : 'revoked'
-    redirect_to admin_user_path(@user), notice: "Admin privileges #{status}."
-  end
-  
-  private
-  
-  def set_user
-    @user = User.find(params[:id])
-  end
-  
-  def user_params
-    params.require(:user).permit(:name, :email, :phone, :admin, :password, :password_confirmation, event_ids: [])
+
+    def toggle_admin
+      if @user == current_user
+        redirect_to admin_user_path(@user), alert: 'You cannot change your own admin status.'
+        return
+      end
+
+      @user.update!(admin: !@user.admin?)
+      status = @user.admin? ? 'granted' : 'revoked'
+      redirect_to admin_user_path(@user), notice: "Admin privileges #{status}."
+    end
+
+    private
+
+    def set_user
+      @user = User.find(params[:id])
+    end
+
+    def user_params
+      params.require(:user).permit(:name, :email, :phone, :admin, :password, :password_confirmation, event_ids: [])
+    end
   end
 end

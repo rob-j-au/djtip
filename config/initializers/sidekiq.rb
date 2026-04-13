@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Sidekiq configuration for djtip Rails application
 
 Sidekiq.configure_server do |config|

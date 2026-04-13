@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class TipsController < ApplicationController
   before_action :set_event
-  before_action :set_tip, only: [:show, :edit, :update, :destroy]
+  before_action :set_tip, only: %i[show edit update destroy]
 
   # GET /events/:event_id/tips
   def index
@@ -9,8 +11,7 @@ class TipsController < ApplicationController
 
   # GET /events/:event_id/tips/:id
   # GET /tips/1
-  def show
-  end
+  def show; end
 
   # GET /events/:event_id/tips/new
   def new
@@ -18,8 +19,7 @@ class TipsController < ApplicationController
   end
 
   # GET /events/:event_id/tips/:id/edit
-  def edit
-  end
+  def edit; end
 
   # POST /events/:event_id/tips
   def create

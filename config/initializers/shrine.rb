@@ -1,10 +1,12 @@
-require "shrine"
-require "shrine/storage/file_system"
+# frozen_string_literal: true
+
+require 'shrine'
+require 'shrine/storage/file_system'
 
 # For files stored locally on disk
 Shrine.storages = {
-  cache: Shrine::Storage::FileSystem.new("public", prefix: "uploads/cache"),
-  store: Shrine::Storage::FileSystem.new("public", prefix: "uploads")
+  cache: Shrine::Storage::FileSystem.new('public', prefix: 'uploads/cache'),
+  store: Shrine::Storage::FileSystem.new('public', prefix: 'uploads')
 }
 
 # For direct uploads (optional)
@@ -23,30 +25,30 @@ Shrine.plugin :derivatives
 
 # Derivation endpoint configuration with fallback for all environments
 derivation_secret_key = if Rails.env.test?
-  'test_secret_key' * 10 # 128 bits for test environment
-elsif Rails.application.credentials.secret_key_base.present?
-  Rails.application.credentials.secret_key_base
-else
-  # Fallback for development or when credentials are not available
-  'development_secret_key' * 10 # 128 bits for development environment
-end
+                          'test_secret_key' * 10 # 128 bits for test environment
+                        elsif Rails.application.credentials.secret_key_base.present?
+                          Rails.application.credentials.secret_key_base
+                        else
+                          # Fallback for development or when credentials are not available
+                          'development_secret_key' * 10 # 128 bits for development environment
+                        end
 
-Shrine.plugin :derivation_endpoint, 
-  prefix: "derivations",
-  secret_key: derivation_secret_key
+Shrine.plugin :derivation_endpoint,
+              prefix: 'derivations',
+              secret_key: derivation_secret_key
 
 # For direct uploads (optional)
-Shrine.plugin :presign_endpoint, presign_options: -> (request) do
+Shrine.plugin :presign_endpoint, presign_options: lambda { |request|
   # Uppy will send the "filename" with the name of the file
-  filename = request.params["filename"]
-  type     = request.params["type"]
+  filename = request.params['filename']
+  type     = request.params['type']
 
   {
-    content_type:        type,                  # set content type
+    content_type: type, # set content type
     content_disposition: "inline; filename=#{filename}",
-    content_length_range: 0..(10*1024*1024)     # limit filesize to 10MB
+    content_length_range: 0..(10 * 1024 * 1024) # limit filesize to 10MB
   }
-end
+}
 
 # Background job plugin for processing (disabled in test environment)
 unless Rails.env.test?

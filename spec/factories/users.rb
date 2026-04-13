@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :user do
     name { Faker::Name.name }
@@ -6,7 +8,7 @@ FactoryBot.define do
     password { 'password123' }
     password_confirmation { 'password123' }
     admin { false }
-    
+
     trait :with_image do
       after(:build) do |user|
         user.image = Rack::Test::UploadedFile.new(

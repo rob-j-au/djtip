@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Performer < User
   # Performer-specific fields
   field :bio, type: String
@@ -7,13 +9,13 @@ class Performer < User
   # Relationships inherited from User:
   # - has_and_belongs_to_many :events
   # - has_many :tips, dependent: :destroy
-  
+
   # Performer-specific relationships
   has_many :performances, dependent: :destroy
 
   # Validations
   validates :genre, presence: true
-  
+
   # Override User validations since Performer may not need email/password
   validates :email, presence: false, allow_blank: true
   validates :encrypted_password, presence: false, allow_blank: true

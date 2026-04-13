@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class PerformersController < ApplicationController
-  before_action :set_performer, only: %i[ show edit update destroy ]
+  before_action :set_performer, only: %i[show edit update destroy]
 
   # GET /performers or /performers.json
   def index
@@ -7,8 +9,7 @@ class PerformersController < ApplicationController
   end
 
   # GET /performers/1 or /performers/1.json
-  def show
-  end
+  def show; end
 
   # GET /performers/new
   def new
@@ -27,7 +28,7 @@ class PerformersController < ApplicationController
 
     respond_to do |format|
       if @performer.save
-        format.html { redirect_to @performer, notice: "Performer was successfully created." }
+        format.html { redirect_to @performer, notice: 'Performer was successfully created.' }
         format.json { render :show, status: :created, location: @performer }
       else
         @events = Event.all
@@ -41,7 +42,7 @@ class PerformersController < ApplicationController
   def update
     respond_to do |format|
       if @performer.update(performer_params)
-        format.html { redirect_to @performer, notice: "Performer was successfully updated." }
+        format.html { redirect_to @performer, notice: 'Performer was successfully updated.' }
         format.json { render :show, status: :ok, location: @performer }
       else
         @events = Event.all
@@ -56,19 +57,21 @@ class PerformersController < ApplicationController
     @performer.destroy!
 
     respond_to do |format|
-      format.html { redirect_to performers_path, status: :see_other, notice: "Performer was successfully destroyed." }
+      format.html { redirect_to performers_path, status: :see_other, notice: 'Performer was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_performer
-      @performer = Performer.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def performer_params
-      params.require(:performer).permit(:name, :email, :password, :password_confirmation, :bio, :genre, :contact, event_ids: [])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_performer
+    @performer = Performer.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def performer_params
+    params.require(:performer).permit(:name, :email, :password, :password_confirmation, :bio, :genre, :contact,
+                                      event_ids: [])
+  end
 end

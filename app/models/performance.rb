@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Performance
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -35,20 +37,20 @@ class Performance
 
   def validate_location_format
     return if location.blank?
-    
+
     unless location.is_a?(Array) && location.size == 2
-      errors.add(:location, "must be an array of [longitude, latitude]")
+      errors.add(:location, 'must be an array of [longitude, latitude]')
       return
     end
 
     lng, lat = location
     unless lng.is_a?(Numeric) && lat.is_a?(Numeric)
-      errors.add(:location, "coordinates must be numeric")
+      errors.add(:location, 'coordinates must be numeric')
       return
     end
 
-    unless lng.between?(-180, 180) && lat.between?(-90, 90)
-      errors.add(:location, "coordinates out of valid range")
-    end
+    return if lng.between?(-180, 180) && lat.between?(-90, 90)
+
+    errors.add(:location, 'coordinates out of valid range')
   end
 end

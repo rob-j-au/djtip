@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require_relative '../uploaders/image_uploader'
 
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ImageUploader::Attachment(:image) # adds an `image` virtual attribute
-  
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -13,15 +15,15 @@ class User
   field :name, type: String
   field :email, type: String
   field :phone, type: String
-  
+
   # Image attachment data for Shrine
   field :image_data, type: String
-  
+
   # Admin role field
   field :admin, type: Boolean, default: false
 
   ## Database authenticatable
-  field :encrypted_password, type: String, default: ""
+  field :encrypted_password, type: String, default: ''
 
   ## Recoverable
   field :reset_password_token,   type: String
@@ -42,7 +44,7 @@ class User
   has_many :tips, dependent: :destroy
 
   # Default scope to return only User models (exclude Performer subclass)
- # default_scope -> { where(:_type.ne => 'Performer') }
+  # default_scope -> { where(:_type.ne => 'Performer') }
 
   # Scopes
   scope :non_performers, -> { where(:_type.ne => 'Performer') }
@@ -50,15 +52,13 @@ class User
   # Validations
   validates :name, presence: true
   # Email validation is handled by Devise
-  
+
   # Admin methods
   def admin?
     admin == true
   end
-  
+
   def make_admin!
     update!(admin: true)
   end
-  
-  private
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HomeController < ApplicationController
   def index
     @recent_events = Event.order(created_at: :desc).limit(3)

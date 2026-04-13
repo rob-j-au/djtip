@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
   # Devise routes for authentication
   devise_for :users
-  
+
   # mount RailsAdmin::Engine => '/admin', as: 'rails_admin' - REMOVED
-  
+
   # Admin Interface (Rails 8 + daisyUI) - moved from /new_admin to /admin
   namespace :admin do
     root 'dashboard#index'
@@ -20,27 +22,25 @@ Rails.application.routes.draw do
       end
     end
     resources :performers
-    resources :tips, only: [:index, :show, :edit, :update, :destroy]
+    resources :tips, only: %i[index show edit update destroy]
   end
-  
 
-  
   # Sidekiq Web UI
   mount Sidekiq::Web => '/sidekiq'
-  
+
   resources :performers
   resources :users
   resources :venues
   resources :performances
   resources :events do
-    resources :users, shallow: true, only: [:new, :create]
-    resources :performers, shallow: true, only: [:new, :create]
+    resources :users, shallow: true, only: %i[new create]
+    resources :performers, shallow: true, only: %i[new create]
     resources :tips
   end
-  
+
   # Chrome DevTools / RailsPanel support
-  get "/.well-known/appspecific/com.chrome.devtools.json", to: proc { [200, {}, ['']] }
-  
+  get '/.well-known/appspecific/com.chrome.devtools.json', to: proc { [200, {}, ['']] }
+
   # API routes
   namespace :api do
     namespace :v1 do
@@ -54,19 +54,19 @@ Rails.application.routes.draw do
       resources :performances, defaults: { format: :json }
     end
   end
-  
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  
+
   # Root route
   root 'events#index'
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by uptime monitors and load balancers.
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
 
   # Render dynamic PWA files from app/views/pwa/*
-  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+  get 'service-worker' => 'rails/pwa#service_worker', as: :pwa_service_worker
+  get 'manifest' => 'rails/pwa#manifest', as: :pwa_manifest
 
   # Root route already defined above as root 'events#index'
 end

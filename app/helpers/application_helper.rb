@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
-  def user_avatar_image(user, size: :thumb, css_classes: "rounded-full object-cover")
+  def user_avatar_image(user, size: :thumb, css_classes: 'rounded-full object-cover')
     if user&.image_data? && user.image_url(size)
       image_tag user.image_url(size), alt: user.name, class: css_classes
     else

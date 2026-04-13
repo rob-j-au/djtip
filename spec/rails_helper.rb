@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'database_cleaner/mongoid'
 
@@ -17,7 +19,7 @@ require 'database_cleaner/mongoid'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   # Disable ActiveRecord since we're using Mongoid
@@ -28,13 +30,13 @@ RSpec.configure do |config|
   config.before(:suite) do
     # Load all models to ensure they're properly loaded
     Rails.application.eager_load!
-    
+
     # Ensure routes are properly loaded in test environment
     Rails.application.reload_routes!
-    
+
     # Clear all collections before the test suite runs
     Mongoid.purge!
-    
+
     # Set up database cleaner for Mongoid
     DatabaseCleaner[:mongoid].strategy = :deletion
     DatabaseCleaner[:mongoid].clean_with(:deletion)
@@ -49,27 +51,27 @@ RSpec.configure do |config|
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
   config.infer_spec_type_from_file_location!
-  
+
   # Include route helpers in request specs
   config.include Rails.application.routes.url_helpers, type: :request
-  
+
   # Filter lines from Rails gems in backtraces
   config.filter_rails_from_backtrace!
-  
+
   # Include FactoryBot methods
   config.include FactoryBot::Syntax::Methods
-  
+
   # Include file upload helpers
   config.include ActionDispatch::TestProcess::FixtureFile
-  
+
   # Configure file fixtures path
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  
+  config.fixture_path = "#{Rails.root}/spec/fixtures"
+
   # Database cleaner for Mongoid
   config.before(:suite) do
     # Ensure the test database is clean
     Mongoid.purge!
-    
+
     # Set up database cleaner for Mongoid
     DatabaseCleaner[:mongoid].strategy = :deletion
     DatabaseCleaner[:mongoid].clean_with(:deletion)
@@ -80,9 +82,11 @@ RSpec.configure do |config|
       example.run
     end
   end
-  
+
   # Suppress deprecation warnings for cleaner test output
   config.before(:suite) do
-    Rails.application.deprecators.silenced = true if Rails.respond_to?(:application) && Rails.application.respond_to?(:deprecators)
+    if Rails.respond_to?(:application) && Rails.application.respond_to?(:deprecators)
+      Rails.application.deprecators.silenced = true
+    end
   end
 end

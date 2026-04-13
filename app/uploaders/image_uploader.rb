@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ImageUploader < Shrine
   # Plugins for image processing and validation
   plugin :derivatives
@@ -13,10 +15,10 @@ class ImageUploader < Shrine
   # Define derivatives for different image sizes
   Attacher.derivatives do |original|
     magick = ImageProcessing::MiniMagick.source(original)
-    
+
     {
-      thumb: magick.resize_to_limit(150, 150).convert("jpg").call,
-      medium: magick.resize_to_limit(300, 300).convert("jpg").call
+      thumb: magick.resize_to_limit(150, 150).convert('jpg').call,
+      medium: magick.resize_to_limit(300, 300).convert('jpg').call
     }
   end
 
@@ -25,20 +27,18 @@ class ImageUploader < Shrine
     %w[image/jpeg image/png image/gif].include?(io.mime_type)
   end
 
-  private
-
   # Helper method to process image uploads with specified dimensions
   def self.process_upload(io, width, height)
     # Handle both UploadedFile and Tempfile objects
     source_file = io.respond_to?(:download) ? io.download : io
     pipeline = ImageProcessing::MiniMagick.source(source_file)
-    
+
     # Resize and convert to JPG
     pipeline = pipeline
-      .resize_to_limit(width, height)
-      .convert('jpg')
-      .call
-    
+               .resize_to_limit(width, height)
+               .convert('jpg')
+               .call
+
     # Return a File object with the correct extension
     File.open(pipeline.path, 'rb')
   end

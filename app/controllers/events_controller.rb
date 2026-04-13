@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class EventsController < ApplicationController
-  before_action :set_event, only: %i[ show edit update destroy ]
+  before_action :set_event, only: %i[show edit update destroy]
 
   # GET /events or /events.json
   def index
@@ -7,8 +9,7 @@ class EventsController < ApplicationController
   end
 
   # GET /events/1 or /events/1.json
-  def show
-  end
+  def show; end
 
   # GET /events/new
   def new
@@ -16,8 +17,7 @@ class EventsController < ApplicationController
   end
 
   # GET /events/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /events or /events.json
   def create
@@ -26,7 +26,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: "Event was successfully created." }
+        format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render :show, status: :created, location: @event }
       else
         format.html { render :new, status: :unprocessable_content }
@@ -39,10 +39,10 @@ class EventsController < ApplicationController
   def update
     @event.assign_attributes(event_params)
     combine_date_and_time(@event)
-    
+
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: "Event was successfully updated." }
+        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
         format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit, status: :unprocessable_content }
@@ -56,40 +56,40 @@ class EventsController < ApplicationController
     @event.destroy!
 
     respond_to do |format|
-      format.html { redirect_to events_path, status: :see_other, notice: "Event was successfully destroyed." }
+      format.html { redirect_to events_path, status: :see_other, notice: 'Event was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_event
-      @event = Event.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def event_params
-      params.require(:event).permit(:title, :description, :date, :time, :location, user_ids: [])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_event
+    @event = Event.find(params[:id])
+  end
 
-    # Handle datetime-local input format
-    def combine_date_and_time(event)
-      if params[:event][:date].present?
-        begin
-          date_str = params[:event][:date]
-          
-          # Handle datetime-local format (YYYY-MM-DDTHH:MM)
-          if date_str.include?('T')
-            event.date = DateTime.parse(date_str)
-          else
-            # Fallback for other date formats
-            event.date = DateTime.parse(date_str)
-          end
-        rescue => e
-          Rails.logger.error "Error parsing date: #{e.message}"
-          # If parsing fails, set to nil to trigger validation error
-          event.date = nil
-        end
+  # Only allow a list of trusted parameters through.
+  def event_params
+    params.require(:event).permit(:title, :description, :date, :time, :location, user_ids: [])
+  end
+
+  # Handle datetime-local input format
+  def combine_date_and_time(event)
+    return unless params[:event][:date].present?
+
+    begin
+      date_str = params[:event][:date]
+
+      # Handle datetime-local format (YYYY-MM-DDTHH:MM)
+      if date_str.include?('T')
+      else
+        # Fallback for other date formats
       end
+      event.date = DateTime.parse(date_str)
+    rescue StandardError => e
+      Rails.logger.error "Error parsing date: #{e.message}"
+      # If parsing fails, set to nil to trigger validation error
+      event.date = nil
     end
+  end
 end

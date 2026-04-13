@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 class ShrineDestroyJob
   include Sidekiq::Worker
+
   sidekiq_options queue: :default
 
   def perform(attacher_data)

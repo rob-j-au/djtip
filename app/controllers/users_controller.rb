@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :set_user, only: %i[show edit update destroy]
 
   # GET /users or /users.json
   def index
@@ -7,8 +9,7 @@ class UsersController < ApplicationController
   end
 
   # GET /users/1 or /users/1.json
-  def show
-  end
+  def show; end
 
   # GET /users/new
   def new
@@ -33,8 +34,8 @@ class UsersController < ApplicationController
           @user.image_attacher.create_derivatives
           @user.save!
         end
-        
-        format.html { redirect_to @user, notice: "User was successfully created." }
+
+        format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
         @events = Event.all
@@ -47,10 +48,8 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1 or /users/1.json
   def update
     # Handle image removal separately since it's a Shrine virtual attribute
-    if params[:user][:remove_image] == "1"
-      @user.image = nil
-    end
-    
+    @user.image = nil if params[:user][:remove_image] == '1'
+
     respond_to do |format|
       if @user.update(user_params)
         # Promote image if it's cached after update
@@ -59,8 +58,8 @@ class UsersController < ApplicationController
           @user.image_attacher.create_derivatives
           @user.save!
         end
-        
-        format.html { redirect_to @user, notice: "User was successfully updated." }
+
+        format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { render :show, status: :ok, location: @user }
       else
         @events = Event.all
@@ -75,19 +74,21 @@ class UsersController < ApplicationController
     @user.destroy!
 
     respond_to do |format|
-      format.html { redirect_to users_path, status: :see_other, notice: "User was successfully destroyed." }
+      format.html { redirect_to users_path, status: :see_other, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.require(:user).permit(:name, :email, :phone, :admin, :password, :password_confirmation, :image, event_ids: [])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def user_params
+    params.require(:user).permit(:name, :email, :phone, :admin, :password, :password_confirmation, :image,
+                                 event_ids: [])
+  end
 end

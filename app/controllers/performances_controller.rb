@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 class PerformancesController < ApplicationController
-  before_action :set_performance, only: [:show, :edit, :update, :destroy]
+  before_action :set_performance, only: %i[show edit update destroy]
 
   def index
     @performances = Performance.all.includes(:performer, :event)
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @performance = Performance.new
@@ -18,9 +19,11 @@ class PerformancesController < ApplicationController
   def edit
     @performers = Performer.all
     @events = Event.all
-    @default_location = @performance.location.present? ? 
-      { lat: @performance.latitude, lng: @performance.longitude } : 
-      get_user_location
+    @default_location = if @performance.location.present?
+                          { lat: @performance.latitude, lng: @performance.longitude }
+                        else
+                          get_user_location
+                        end
   end
 
   def create
@@ -42,9 +45,11 @@ class PerformancesController < ApplicationController
     else
       @performers = Performer.all
       @events = Event.all
-      @default_location = @performance.location.present? ? 
-        { lat: @performance.latitude, lng: @performance.longitude } : 
-        get_user_location
+      @default_location = if @performance.location.present?
+                            { lat: @performance.latitude, lng: @performance.longitude }
+                          else
+                            get_user_location
+                          end
       render :edit, status: :unprocessable_entity
     end
   end

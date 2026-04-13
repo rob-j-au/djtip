@@ -1,54 +1,56 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
 
-ruby "3.4.1"
+source 'https://rubygems.org'
+
+ruby '3.4.1'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2"
+gem 'rails', '~> 8.0.2'
 
 # Use MongoDB as the database for Active Record
-gem "mongoid", "~> 8.1"
+gem 'mongoid', '~> 8.1'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
+gem 'puma', '>= 5.0'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
+gem 'importmap-rails'
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "turbo-rails"
+gem 'turbo-rails'
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "stimulus-rails"
+gem 'stimulus-rails'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem "sprockets-rails"
+gem 'sprockets-rails'
 
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem "jbuilder"
+gem 'jbuilder'
 
 # JSON API serializer for consistent API responses
-gem "jsonapi-serializer"
+gem 'jsonapi-serializer'
 
 # File uploads
-gem "shrine"
-gem "shrine-mongoid"
-gem "image_processing", "~> 1.2"
-gem "fastimage" # Required by Shrine's store_dimensions plugin
-gem "mimemagic" # Required by Shrine's determine_mime_type plugin
+gem 'fastimage' # Required by Shrine's store_dimensions plugin
+gem 'image_processing', '~> 1.2'
+gem 'mimemagic' # Required by Shrine's determine_mime_type plugin
+gem 'shrine'
+gem 'shrine-mongoid'
 
 # Add ostruct explicitly as it will not be part of the default gems starting from Ruby 3.5.0
-gem "ostruct"
+gem 'ostruct'
 
 # Use Redis adapter to run Action Cable in production
-gem 'sidekiq', '~> 8.0'
 gem 'redis', '~> 5.0'
+gem 'sidekiq', '~> 8.0'
 
 # OpenTelemetry for distributed tracing (NewRelic-style observability)
-gem 'opentelemetry-sdk'
 gem 'opentelemetry-exporter-otlp'
 gem 'opentelemetry-instrumentation-all'
+gem 'opentelemetry-sdk'
 
 # Prometheus metrics
 gem 'prometheus-client'
@@ -70,41 +72,40 @@ gem 'geocoder'
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem 'bootsnap', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri mingw mswin x64_mingw ], require: "debug/prelude"
+  gem 'debug', platforms: %i[mri mingw mswin x64_mingw], require: 'debug/prelude'
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem "brakeman", require: false
+  gem 'brakeman', require: false
 
   # Omakase Ruby styling [https://github.com/Shopify/ruby-lsp]
-  gem "rubocop-rails-omakase", require: false
-  
+  gem 'rubocop-rails-omakase', require: false
+
   # Testing gems
-  gem "rspec-rails", "~> 6.0"
-  gem "factory_bot_rails", "~> 6.2"
-  gem "faker", "~> 3.2"
-  gem "database_cleaner-mongoid", "~> 2.0"
+  gem 'database_cleaner-mongoid', '~> 2.0'
+  gem 'factory_bot_rails', '~> 6.2'
+  gem 'faker', '~> 3.2'
+  gem 'rspec-rails', '~> 6.0'
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem "web-console"
-  gem "meta_request", "~> 0.8.5"
-  gem "rack-cors"
-  
+  gem 'meta_request', '~> 0.8.5'
+  gem 'rack-cors'
+  gem 'web-console'
+
   # Alternative debugging tools if RailsPanel doesn't work
-  gem "better_errors"
-  gem "binding_of_caller"
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
-
-gem "tailwindcss-rails", "~> 4.3"
+gem 'tailwindcss-rails', '~> 4.3'

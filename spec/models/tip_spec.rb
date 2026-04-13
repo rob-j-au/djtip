@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Tip, type: :model do
@@ -29,7 +31,7 @@ RSpec.describe Tip, type: :model do
     it 'validates numericality of amount' do
       tip = build(:tip, amount: 0)
       expect(tip).not_to be_valid
-      expect(tip.errors[:amount]).to include("must be greater than 0")
+      expect(tip.errors[:amount]).to include('must be greater than 0')
     end
   end
 
@@ -105,13 +107,13 @@ RSpec.describe Tip, type: :model do
     it 'is invalid with zero amount' do
       tip = build(:tip, amount: 0)
       expect(tip).not_to be_valid
-      expect(tip.errors[:amount]).to include("must be greater than 0")
+      expect(tip.errors[:amount]).to include('must be greater than 0')
     end
 
     it 'is invalid with negative amount' do
       tip = build(:tip, amount: -10)
       expect(tip).not_to be_valid
-      expect(tip.errors[:amount]).to include("must be greater than 0")
+      expect(tip.errors[:amount]).to include('must be greater than 0')
     end
 
     it 'is invalid without currency' do
