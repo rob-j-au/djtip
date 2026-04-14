@@ -43,7 +43,7 @@ spec:
           value: "true"
         envFrom:
         - configMapRef:
-            name: {{ include "djtip.fullname" . }}-environment
+            name: {{ include "djtip.fullname" . }}-env
         - secretRef:
             name: {{ include "djtip.fullname" . }}-secrets
         resources:
