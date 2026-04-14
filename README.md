@@ -260,9 +260,8 @@ djtip/
 - **[ArgoCD & Kubernetes](docs/ARGO.md)** - Complete deployment guide
 - **[Docker Setup](docs/DOCKER.md)** - Docker and Docker Compose
 - **[HTTPS Development](docs/HTTPS_DEV.md)** - Local HTTPS with mkcert
-- **[Local TLS Setup](docs/LOCAL_TLS_SETUP.md)** - TLS certificates for minikube.local domains
+- **[cert-manager Setup](docs/CERT_MANAGER.md)** - Wildcard TLS with Cloudflare DNS-01
 - **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
-- **[cert-manager Setup](.cicd/helm/cert-manager/README.md)** - Automated TLS certificates
 - **[Security Audit](docs/SECURITY_AUDIT.md)** - Security best practices
 - **[Application Instrumentation](docs/INSTRUMENTATION.md)** - OpenTelemetry usage
 - **[OpenTelemetry Enhancements](docs/OTEL_ENHANCEMENTS.md)** - Rails-specific tracing
