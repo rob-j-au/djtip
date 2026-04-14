@@ -26,12 +26,8 @@ class ApplicationController < ActionController::Base
     trace_id = current_trace_id
     return unless trace_id
     
-    # Add trace_id to log tags
-    logger.tagged(trace_id) do
-      # This block ensures all logs in this request include the trace_id
-    end
-    
-    # Also set as thread-local for use in models/jobs
+    # Set as thread-local for use in models/jobs
+    # Note: logger.tagged() disabled due to Rails TaggedLogging compatibility issues
     Thread.current[:trace_id] = trace_id
   end
   
