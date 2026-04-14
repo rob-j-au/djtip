@@ -15,12 +15,5 @@ variable "dev_ip" {
   type        = string
 }
 
-variable "staging_ip" {
-  description = "IP address for staging environment (Pi cluster)"
-  type        = string
-}
-
-variable "prod_ip" {
-  description = "IP address for production environment (Pi cluster)"
-  type        = string
-}
+# Note: staging_ip and prod_ip are automatically fetched from pi.jennings.au DNS record
+# This allows the wildcard domains to stay in sync with your Cloudflare DDNS updates

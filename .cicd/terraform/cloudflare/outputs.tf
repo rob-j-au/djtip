@@ -30,6 +30,11 @@ output "prod_wildcard_record" {
   }
 }
 
+output "pi_ip_address" {
+  description = "Pi IP address (auto-fetched from pi.jennings.au)"
+  value       = data.cloudflare_record.pi.value
+}
+
 output "dns_records_summary" {
   description = "Summary of all DNS records created"
   value = <<-EOT
@@ -37,10 +42,13 @@ output "dns_records_summary" {
     ✅ DNS Records Created:
     
     Development:  *.dev.djtip.jennings.au     → ${var.dev_ip}
-    Staging:      *.staging.djtip.jennings.au → ${var.staging_ip}
-    Production:   *.djtip.jennings.au         → ${var.prod_ip}
+    Staging:      *.staging.djtip.jennings.au → ${data.cloudflare_record.pi.value} (auto-synced from pi.jennings.au)
+    Production:   *.djtip.jennings.au         → ${data.cloudflare_record.pi.value} (auto-synced from pi.jennings.au)
     
     All records are set to DNS only (not proxied) for cert-manager compatibility.
+    
+    🔄 Pi IP is automatically fetched from pi.jennings.au DNS record
+       When your Cloudflare DDNS updates pi.jennings.au, run 'terraform apply' to sync the wildcards
     
     Test your DNS:
       dig djtip.dev.djtip.jennings.au

@@ -33,8 +33,9 @@ if [ ! -f terraform.tfvars ]; then
     echo ""
     echo "⚠️  Please edit terraform.tfvars with your values:"
     echo "   - cloudflare_api_token (required)"
-    echo "   - staging_ip (your Pi IP)"
-    echo "   - prod_ip (your Pi IP)"
+    echo "   - dev_ip (your Minikube IP - already set if Minikube is running)"
+    echo ""
+    echo "Note: Staging and production IPs are auto-fetched from pi.jennings.au"
     echo ""
     echo "Then run this script again."
     exit 0

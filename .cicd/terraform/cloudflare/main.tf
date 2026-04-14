@@ -18,6 +18,12 @@ data "cloudflare_zone" "djtip" {
   name = var.domain
 }
 
+# Get the current IP from pi.jennings.au DNS record
+data "cloudflare_record" "pi" {
+  zone_id  = data.cloudflare_zone.djtip.id
+  hostname = "pi.jennings.au"
+}
+
 # Development wildcard DNS record (*.dev.djtip.jennings.au)
 resource "cloudflare_record" "dev_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
@@ -30,25 +36,27 @@ resource "cloudflare_record" "dev_wildcard" {
 }
 
 # Staging wildcard DNS record (*.staging.djtip.jennings.au)
+# Uses the IP from pi.jennings.au (updated via Cloudflare DDNS)
 resource "cloudflare_record" "staging_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
   name    = "*.staging.djtip"
-  value   = var.staging_ip
+  value   = data.cloudflare_record.pi.value
   type    = "A"
   ttl     = 1  # Auto
   proxied = false  # MUST be false for cert-manager DNS-01
-  comment = "Staging environment - Pi cluster wildcard"
+  comment = "Staging environment - Pi cluster wildcard (auto-synced from pi.jennings.au)"
 }
 
 # Production wildcard DNS record (*.djtip.jennings.au)
+# Uses the IP from pi.jennings.au (updated via Cloudflare DDNS)
 resource "cloudflare_record" "prod_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
   name    = "*.djtip"
-  value   = var.prod_ip
+  value   = data.cloudflare_record.pi.value
   type    = "A"
   ttl     = 1  # Auto
   proxied = false  # MUST be false for cert-manager DNS-01
-  comment = "Production environment - Pi cluster wildcard"
+  comment = "Production environment - Pi cluster wildcard (auto-synced from pi.jennings.au)"
 }
 
 # Optional: Create API token for cert-manager (requires higher permissions)

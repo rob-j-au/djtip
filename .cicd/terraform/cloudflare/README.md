@@ -5,11 +5,19 @@ Automates the creation of wildcard DNS records in Cloudflare for cert-manager.
 ## What This Does
 
 Creates 3 wildcard DNS A records:
-- `*.dev.djtip.jennings.au` → Your Minikube IP
-- `*.staging.djtip.jennings.au` → Your Pi IP
-- `*.djtip.jennings.au` → Your Pi IP
+- `*.dev.djtip.jennings.au` → Your Minikube IP (manual)
+- `*.staging.djtip.jennings.au` → **Auto-fetched from pi.jennings.au**
+- `*.djtip.jennings.au` → **Auto-fetched from pi.jennings.au**
 
 All records are set to **DNS only** (not proxied) for cert-manager DNS-01 challenges.
+
+### 🔄 Automatic Pi IP Sync
+
+The staging and production wildcards automatically use the IP from `pi.jennings.au`, which is kept up-to-date by your Cloudflare DDNS. When your Pi's IP changes:
+
+1. Cloudflare DDNS updates `pi.jennings.au`
+2. Run `terraform apply` to sync the wildcards
+3. Done! No manual IP entry needed
 
 ## Prerequisites
 
@@ -49,11 +57,11 @@ nano terraform.tfvars
 
 **terraform.tfvars:**
 ```hcl
-cloudflare_api_token = "your-actual-token-here"
+cloudflare_api_token = "your-actual-cloudflare-api-token-here"
 domain               = "djtip.jennings.au"
 dev_ip              = "192.168.49.2"      # Your Minikube IP
-staging_ip          = "192.168.1.100"     # Your Pi IP
-prod_ip             = "192.168.1.100"     # Your Pi IP
+
+# Note: staging and production IPs are auto-fetched from pi.jennings.au
 ```
 
 ### 4. Initialize Terraform
@@ -83,15 +91,20 @@ After applying, you'll see:
 ```
 Outputs:
 
+pi_ip_address = "203.0.113.42"  # Auto-fetched from pi.jennings.au
+
 dns_records_summary = <<EOT
 
 ✅ DNS Records Created:
 
 Development:  *.dev.djtip.jennings.au     → 192.168.49.2
-Staging:      *.staging.djtip.jennings.au → 192.168.1.100
-Production:   *.djtip.jennings.au         → 192.168.1.100
+Staging:      *.staging.djtip.jennings.au → 203.0.113.42 (auto-synced from pi.jennings.au)
+Production:   *.djtip.jennings.au         → 203.0.113.42 (auto-synced from pi.jennings.au)
 
 All records are set to DNS only (not proxied) for cert-manager compatibility.
+
+🔄 Pi IP is automatically fetched from pi.jennings.au DNS record
+   When your Cloudflare DDNS updates pi.jennings.au, run 'terraform apply' to sync the wildcards
 
 Test your DNS:
   dig djtip.dev.djtip.jennings.au

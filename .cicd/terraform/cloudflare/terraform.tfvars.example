@@ -11,9 +11,6 @@ domain = "djtip.jennings.au"
 # Get with: minikube ip
 dev_ip = "192.168.49.2"
 
-# Staging IP (Pi cluster)
-# Get with: ssh pi "hostname -I | awk '{print \$1}'"
-staging_ip = "192.168.1.100"
-
-# Production IP (Pi cluster - usually same as staging)
-prod_ip = "192.168.1.100"
+# Note: staging_ip and prod_ip are automatically fetched from pi.jennings.au
+# Your Cloudflare DDNS keeps pi.jennings.au updated, and Terraform uses that IP
+# for the *.staging.djtip.jennings.au and *.djtip.jennings.au wildcards
