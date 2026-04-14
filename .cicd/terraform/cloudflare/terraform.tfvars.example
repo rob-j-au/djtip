@@ -11,6 +11,6 @@ domain = "djtip.jennings.au"
 # Get with: minikube ip
 dev_ip = "192.168.49.2"
 
-# Note: staging_ip and prod_ip are automatically fetched from pi.jennings.au
-# Your Cloudflare DDNS keeps pi.jennings.au updated, and Terraform uses that IP
-# for the *.staging.djtip.jennings.au and *.djtip.jennings.au wildcards
+# Note: staging_ip and prod_ip are automatically fetched from the base domain
+# Terraform reads the IP from the domain's DNS record and uses it for wildcards
+# This allows automatic sync when your DDNS updates the base domain

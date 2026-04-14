@@ -15,5 +15,5 @@ variable "dev_ip" {
   type        = string
 }
 
-# Note: staging_ip and prod_ip are automatically fetched from pi.jennings.au DNS record
-# This allows the wildcard domains to stay in sync with your Cloudflare DDNS updates
+# Note: staging_ip and prod_ip are automatically fetched from the base domain's DNS record
+# This allows the wildcard domains to stay in sync with your DDNS updates
