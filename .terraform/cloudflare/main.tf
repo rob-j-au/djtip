@@ -13,51 +13,52 @@ provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-# Get the zone ID for base-domain.org
+# Get the zone ID for the domain
 data "cloudflare_zone" "djtip" {
   name = var.domain
 }
 
-# Get the current IP from the base domain's DNS record
-# This allows automatic sync with DDNS updates
+# Get the current IP from the base domain hostname (e.g., pi.jennings.au)
+# This is typically updated by DDNS on your Pi
+# The IP from this record is used for staging and production wildcards
 data "cloudflare_record" "base_domain" {
   zone_id  = data.cloudflare_zone.djtip.id
-  hostname = var.domain
+  hostname = var.base_domain_hostname
 }
 
-# Development wildcard DNS record (*.dev.base-domain.org)
+# Development wildcard DNS record (*.dev.subdomain.domain)
 resource "cloudflare_record" "dev_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
-  name    = "*.dev.djtip"
-  value   = var.dev_ip
+  name    = "*.dev.${var.subdomain}"
+  content = var.dev_ip
   type    = "A"
   ttl     = 1  # Auto
   proxied = false  # MUST be false for cert-manager DNS-01
   comment = "Development environment - Minikube wildcard"
 }
 
-# Staging wildcard DNS record (*.staging.base-domain.org)
-# Uses the IP from the base domain (updated via DDNS)
+# Staging wildcard DNS record (*.staging.subdomain.domain)
+# Uses the IP from the base domain hostname (updated via DDNS)
 resource "cloudflare_record" "staging_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
-  name    = "*.staging.djtip"
-  value   = data.cloudflare_record.base_domain.value
+  name    = "*.staging.${var.subdomain}"
+  content = data.cloudflare_record.base_domain.value
   type    = "A"
   ttl     = 1  # Auto
   proxied = false  # MUST be false for cert-manager DNS-01
-  comment = "Staging environment wildcard (auto-synced from base domain)"
+  comment = "Staging environment wildcard (auto-synced from ${var.base_domain_hostname})"
 }
 
-# Production wildcard DNS record (*.base-domain.org)
-# Uses the IP from the base domain (updated via DDNS)
+# Production wildcard DNS record (*.subdomain.domain)
+# Uses the IP from the base domain hostname (updated via DDNS)
 resource "cloudflare_record" "prod_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
-  name    = "*.djtip"
-  value   = data.cloudflare_record.base_domain.value
+  name    = "*.${var.subdomain}"
+  content = data.cloudflare_record.base_domain.value
   type    = "A"
   ttl     = 1  # Auto
   proxied = false  # MUST be false for cert-manager DNS-01
-  comment = "Production environment wildcard (auto-synced from base domain)"
+  comment = "Production environment wildcard (auto-synced from ${var.base_domain_hostname})"
 }
 
 # Optional: Create API token for cert-manager (requires higher permissions)

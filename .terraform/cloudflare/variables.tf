@@ -5,9 +5,21 @@ variable "cloudflare_api_token" {
 }
 
 variable "domain" {
-  description = "Base domain name"
+  description = "Base domain name (Cloudflare zone)"
   type        = string
   default     = "base-domain.org"
+}
+
+variable "subdomain" {
+  description = "Subdomain for the application"
+  type        = string
+  default     = "app"
+}
+
+variable "base_domain_hostname" {
+  description = "Hostname to fetch IP from (typically updated by DDNS)"
+  type        = string
+  default     = "pi.base-domain.org"
 }
 
 variable "dev_ip" {
@@ -15,5 +27,5 @@ variable "dev_ip" {
   type        = string
 }
 
-# Note: staging_ip and prod_ip are automatically fetched from the base domain's DNS record
+# Note: staging_ip and prod_ip are automatically fetched from base_domain_hostname
 # This allows the wildcard domains to stay in sync with your DDNS updates

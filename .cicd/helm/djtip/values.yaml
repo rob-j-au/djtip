@@ -59,14 +59,14 @@ ingress:
     ingress.class: haproxy
     cert-manager.io/cluster-issuer: "letsencrypt-staging"  # Use staging for dev/test
   hosts:
-    - host: djtip.minikube.local
+    - host: app.dev.djtip.jennings.au
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: djtip-tls
       hosts:
-        - djtip.minikube.local
+        - app.dev.djtip.jennings.au
 resources: {}
 # We usually recommend not to specify default resources and to leave this as a conscious
 # choice for the user. This also increases chances charts run on environments with little

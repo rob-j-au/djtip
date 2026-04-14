@@ -41,19 +41,19 @@ output "dns_records_summary" {
     
     ✅ DNS Records Created:
     
-    Development:  *.dev.base-domain.org     → ${var.dev_ip}
-    Staging:      *.staging.base-domain.org → ${data.cloudflare_record.base_domain.value} (auto-synced from ${var.domain})
-    Production:   *.base-domain.org         → ${data.cloudflare_record.base_domain.value} (auto-synced from ${var.domain})
+    Development:  *.dev.${var.subdomain}.${var.domain}     → ${var.dev_ip}
+    Staging:      *.staging.${var.subdomain}.${var.domain} → ${data.cloudflare_record.base_domain.value} (auto-synced from ${var.base_domain_hostname})
+    Production:   *.${var.subdomain}.${var.domain}         → ${data.cloudflare_record.base_domain.value} (auto-synced from ${var.base_domain_hostname})
     
     All records are set to DNS only (not proxied) for cert-manager compatibility.
     
-    🔄 Staging/Production IPs are automatically fetched from ${var.domain} DNS record
-       When your DDNS updates ${var.domain}, run 'terraform apply' to sync the wildcards
+    🔄 Staging/Production IPs are automatically fetched from ${var.base_domain_hostname} DNS record
+       When your DDNS updates ${var.base_domain_hostname}, run 'terraform apply' to sync the wildcards
     
     Test your DNS:
-      dig djtip.dev.base-domain.org
-      dig djtip.staging.base-domain.org
-      dig djtip.base-domain.org
+      dig app.dev.${var.subdomain}.${var.domain}
+      dig app.staging.${var.subdomain}.${var.domain}
+      dig app.${var.subdomain}.${var.domain}
     
     Next steps:
       1. Run: ./scripts/setup-cert-manager-wildcard.sh
