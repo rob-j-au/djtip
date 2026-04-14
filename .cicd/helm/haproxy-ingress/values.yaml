@@ -1,0 +1,47 @@
+# HAProxy Ingress Controller Configuration
+
+# Configure the kubernetes-ingress subchart
+kubernetes-ingress:
+  fullnameOverride: "haproxy-ingress"
+  nameOverride: "haproxy-ingress"
+
+  controller:
+    # Number of replicas
+    replicaCount: 2
+
+    # Service configuration
+    service:
+      type: NodePort
+      nodePorts:
+        http: 30080
+        https: 30443
+        stat: 31024
+
+    # Resource limits
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+    # Enable stats
+    stats:
+      enabled: true
+
+    # Logging
+    logging:
+      level: info
+
+  # Default backend
+  defaultBackend:
+    enabled: true
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 10m
+        memory: 20Mi
+      limits:
+        cpu: 50m
+        memory: 50Mi
