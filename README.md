@@ -244,6 +244,7 @@ djtip/
 - **[Docker Setup](docs/DOCKER.md)** - Docker and Docker Compose
 - **[HTTPS Development](docs/HTTPS_DEV.md)** - Local HTTPS with mkcert
 - **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
+- **[Observability Naming](docs/OBSERVABILITY_NAMING.md)** - Service naming conventions
 - **[Application Instrumentation](docs/INSTRUMENTATION.md)** - OpenTelemetry usage
 - **[OpenTelemetry Enhancements](docs/OTEL_ENHANCEMENTS.md)** - Rails-specific tracing
 - **[API Documentation](docs/API_DOCUMENTATION.md)** - REST API reference
@@ -253,7 +254,7 @@ djtip/
 
 Access the observability stack at:
 - **Grafana**: https://grafana.minikube.local (anonymous login enabled)
-- **Prometheus**: http://observability-kube-prometh-prometheus:9090
+- **Prometheus**: http://mon-kube-prometheus-stack-prometheus.observability:9090
 - **Metrics Endpoint**: http://localhost:3000/metrics
 
 Features:
