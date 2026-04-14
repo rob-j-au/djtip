@@ -78,7 +78,7 @@ Rails.application.configure do
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::TaggedLogging.new(Logger.new($stdout))
-    logger.formatter = config.log_formatter
+    # Don't set custom formatter - TaggedLogging requires specific formatter interface
     config.logger    = logger
   end
 
