@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: djtip-development
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    # Update this to your actual Git repository URL
+    repoURL: https://github.com/rob-j-au/djtip.git
+    targetRevision: main
+    path: .cicd/helm/djtip
+    helm:
+      valueFiles:
+        - values-development.yaml
+      # Build dependencies before deploying
+      skipCrds: false
+      # Override values here if needed
+      # parameters:
+      #   - name: image.tag
+      #     value: "v1.0.0"
+      #   - name: replicaCount
+      #     value: "2"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+    # Automated sync - comment out for manual sync
+    automated:
+      prune: true      # Delete resources that are no longer in Git
+      selfHeal: true   # Sync when cluster state differs from Git
+      allowEmpty: false
+
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Ignore differences in certain fields (optional)
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas

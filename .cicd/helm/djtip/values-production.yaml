@@ -1,0 +1,126 @@
+# Production environment values for djtip
+# Doubles the resources compared to development
+
+# Web pods - 2x development
+replicaCount: 4
+
+image:
+  repository: robj/djtip
+  pullPolicy: IfNotPresent  # Use cached images in production
+  tag: "stable"  # Use stable tag for production
+
+imagePullSecrets:
+  - name: dockerhub-secret
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  className: "haproxy"
+  annotations:
+    ingress.class: haproxy
+  hosts:
+    - host: djtip.production.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: djtip-production-tls
+      hosts:
+        - djtip.production.local
+
+# Web pod resources - 2x development
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "200m"
+  limits:
+    memory: "1Gi"
+    cpu: "1000m"
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+autoscaling:
+  enabled: true  # Enable autoscaling in production
+  minReplicas: 4
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+
+volumes: []
+volumeMounts: []
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Sidekiq worker configuration - 2x development
+worker:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+metrics:
+  enabled: true
+
+# MongoDB configuration - 2x development
+mongodb:
+  enabled: true
+  auth:
+    enabled: true  # Enable auth for production
+  architecture: standalone
+  persistence:
+    enabled: true
+    size: 20Gi
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+# Redis configuration - 2x development
+redis:
+  enabled: true
+  auth:
+    enabled: true  # Enable auth for production
+  architecture: standalone
+  master:
+    persistence:
+      enabled: true
+      size: 10Gi
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "400m"

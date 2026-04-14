@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: djtip
+  name: djtip-staging
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -15,19 +15,13 @@ spec:
     path: .cicd/helm/djtip
     helm:
       valueFiles:
-        - values.yaml
+        - values-staging.yaml
       # Build dependencies before deploying
       skipCrds: false
-      # Override values here if needed
-      # parameters:
-      #   - name: image.tag
-      #     value: "v1.0.0"
-      #   - name: replicaCount
-      #     value: "2"
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: staging
 
   syncPolicy:
     # Automated sync - comment out for manual sync
