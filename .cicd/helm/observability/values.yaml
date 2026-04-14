@@ -4,9 +4,14 @@
 kube-prometheus-stack:
   enabled: true
 
+  # Simplify naming - remove 'observability-kube-prometh-' prefix
+  fullnameOverride: ""
+  nameOverride: ""
+
   # Grafana configuration
   grafana:
     enabled: true
+    fullnameOverride: "grafana"
     # adminPassword: ""  # Not needed - using anonymous auth
 
     # Anonymous authentication enabled
@@ -22,7 +27,7 @@ kube-prometheus-stack:
       # Loki for logs
       - name: Loki
         type: loki
-        url: http://observability-loki:3100
+        url: http://loki:3100
         access: proxy
         jsonData:
           maxLines: 1000
@@ -30,7 +35,7 @@ kube-prometheus-stack:
       # Tempo for traces
       - name: Tempo
         type: tempo
-        url: http://observability-tempo:3100
+        url: http://tempo:3100
         access: proxy
         jsonData:
           httpMethod: GET
@@ -61,6 +66,7 @@ kube-prometheus-stack:
   prometheus:
     enabled: true
     prometheusSpec:
+      fullnameOverride: "prometheus"
       retention: 7d
       resources:
         requests:
@@ -86,6 +92,7 @@ kube-prometheus-stack:
   # Alertmanager
   alertmanager:
     enabled: true
+    fullnameOverride: "alertmanager"
     alertmanagerSpec:
       resources:
         requests:
@@ -106,6 +113,7 @@ kube-prometheus-stack:
 # Loki - Log aggregation
 loki:
   enabled: true
+  fullnameOverride: "loki"
 
   # Single binary mode for simplicity (local dev)
   deploymentMode: SingleBinary
@@ -148,10 +156,11 @@ loki:
 # Promtail - Log shipper (runs on every node)
 promtail:
   enabled: true
+  fullnameOverride: "promtail"
 
   config:
     clients:
-      - url: http://{{ .Release.Name }}-loki:3100/loki/api/v1/push
+      - url: http://loki:3100/loki/api/v1/push
 
     # Scrape all pod logs
     snippets:
@@ -230,6 +239,7 @@ promtail:
 # Tempo - Distributed tracing (OpenTelemetry compatible)
 tempo:
   enabled: true
+  fullnameOverride: "tempo"
 
   tempo:
     resources:

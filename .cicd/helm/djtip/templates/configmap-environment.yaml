@@ -24,7 +24,7 @@ data:
   
   # OpenTelemetry Configuration
   OTEL_SERVICE_NAME: "djtip"
-  OTEL_EXPORTER_OTLP_ENDPOINT: "http://observability-tempo.observability.svc.cluster.local:4318"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://tempo.observability.svc.cluster.local:4318"
   OTEL_TRACES_EXPORTER: "otlp"
   OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
   OTEL_TRACE_SAMPLE_RATE: "1.0"
