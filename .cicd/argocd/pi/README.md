@@ -12,13 +12,13 @@ The Pi cluster runs:
 
 ## Domains
 
-All services use the `*.k8s.pi.jennings.au` domain:
+All services use wildcard domains configured via Terraform:
 
 | Environment | URL |
 |-------------|-----|
-| **Staging** | https://djtip-staging.k8s.pi.jennings.au |
-| **Production** | https://djtip.k8s.pi.jennings.au |
-| **Grafana** | https://grafana.k8s.pi.jennings.au |
+| **Staging** | https://app.staging.yourdomain.com |
+| **Production** | https://app.yourdomain.com |
+| **Grafana** | https://grafana.yourdomain.com |
 
 ## Deployment
 
@@ -67,18 +67,19 @@ Both staging and production use **2x the resources** of development:
 
 ## DNS Configuration
 
-Configure your DNS to point these domains to your Pi's IP address:
+DNS is managed by Terraform in `.terraform/cloudflare/`:
 
-```
-djtip-staging.k8s.pi.jennings.au  A  <PI_IP_ADDRESS>
-djtip.k8s.pi.jennings.au          A  <PI_IP_ADDRESS>
-grafana.k8s.pi.jennings.au        A  <PI_IP_ADDRESS>
+```bash
+cd .terraform/cloudflare
+terraform init
+terraform apply
 ```
 
-Or use a wildcard:
-```
-*.k8s.pi.jennings.au  A  <PI_IP_ADDRESS>
-```
+This creates wildcard A records:
+- `*.staging.yourdomain.com` → Auto-fetched from base domain
+- `*.yourdomain.com` → Auto-fetched from base domain
+
+See [Terraform DNS](.terraform/cloudflare/README.md) for details.
 
 ## Monitoring
 
