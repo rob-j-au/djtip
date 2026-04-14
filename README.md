@@ -190,28 +190,28 @@ kubectl apply -f .cicd/argocd/djtip-development.yaml
 ```
 djtip/
 ├── app/
-│   ├── controllers/           # Rails controllers
-│   ├── models/               # Mongoid models
-│   │   └── concerns/         # Traceable, BusinessMetrics
-│   ├── views/                # ERB templates with daisyUI
-│   ├── uploaders/            # Shrine uploaders
-│   └── jobs/                 # Sidekiq background jobs
+│   ├── controllers/                # Rails controllers
+│   ├── models/                     # Mongoid models
+│   │   └── concerns/               # Traceable, BusinessMetrics
+│   ├── views/                      # ERB templates with daisyUI
+│   ├── uploaders/                  # Shrine uploaders
+│   └── jobs/                       # Sidekiq background jobs
 ├── config/
-│   ├── initializers/         # OpenTelemetry, Prometheus, etc.
-│   ├── mongoid.yml           # MongoDB configuration
-│   └── routes.rb             # Application routes
+│   ├── initializers/               # OpenTelemetry, Prometheus, etc.
+│   ├── mongoid.yml                 # MongoDB configuration
+│   └── routes.rb                   # Application routes
 ├── .cicd/
-│   ├── helm/                 # Helm charts
-│   │   ├── djtip/           # Application chart
-│   │   └── observability/   # Observability stack
-│   └── argocd/              # ArgoCD applications
-├── docs/                     # Documentation
-│   ├── CERT_MANAGER.md      # TLS certificates
-│   ├── ENDPOINTS.md         # Service URLs
-│   ├── DEPLOYMENT.md        # Deployment guide
-│   ├── OBSERVABILITY.md     # Monitoring stack
-│   └── STIMULUS.md          # JavaScript features
-└── spec/                     # RSpec tests
+│   ├── helm/                       # Helm charts
+│   │   ├── djtip/                  # Application chart
+│   │   └── observability/          # Observability stack
+│   └── argocd/                     # ArgoCD applications
+├── docs/                           # Documentation
+│   ├── CERT_MANAGER.md             # TLS certificates
+│   ├── ENDPOINTS.md                # Service URLs
+│   ├── DEPLOYMENT.md               # Deployment guide
+│   ├── OBSERVABILITY.md            # Monitoring stack
+│   └── STIMULUS.md                 # JavaScript features
+└── spec/                           # RSpec tests
 ```
 
 ## 📚 Documentation
