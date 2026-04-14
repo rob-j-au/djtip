@@ -65,8 +65,8 @@ kube-prometheus-stack:
   # Prometheus configuration
   prometheus:
     enabled: true
+    fullnameOverride: "prometheus"
     prometheusSpec:
-      fullnameOverride: "prometheus"
       retention: 7d
       resources:
         requests:
@@ -102,13 +102,19 @@ kube-prometheus-stack:
           memory: "256Mi"
           cpu: "200m"
 
+  # Prometheus Operator
+  prometheusOperator:
+    fullnameOverride: "prometheus-operator"
+
   # Node exporter - collects node metrics
   nodeExporter:
     enabled: true
+    fullnameOverride: "node-exporter"
 
   # Kube-state-metrics - collects Kubernetes object metrics
   kubeStateMetrics:
     enabled: true
+    fullnameOverride: "kube-state-metrics"
 
 # Loki - Log aggregation
 loki:
