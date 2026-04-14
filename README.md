@@ -125,13 +125,29 @@ See `docs/DOCKER.md` for detailed Docker instructions.
 
 ### Kubernetes Deployment
 
-```bash
-# Deploy to Minikube
-kubectl apply -f .cicd/argocd/djtip-app.yaml
+**Multi-environment setup with automated TLS:**
 
-# Access via ingress
-open https://djtip.minikube.local
+```bash
+# 1. Deploy infrastructure
+kubectl apply -f .cicd/argocd/haproxy-ingress-app.yaml  # Ingress controller
+kubectl apply -f .cicd/argocd/cert-manager-app.yaml     # Automated TLS
+kubectl apply -f .cicd/argocd/observability-app.yaml    # Monitoring
+
+# 2. Deploy application (choose environment)
+kubectl apply -f .cicd/argocd/djtip-development.yaml    # Development
+kubectl apply -f .cicd/argocd/djtip-staging.yaml        # Staging
+kubectl apply -f .cicd/argocd/djtip-production.yaml     # Production
+
+# 3. Access via ingress
+open https://djtip.minikube.local                       # Development
+open https://djtip-staging.minikube.local               # Staging
+open https://grafana.minikube.local                     # Grafana
 ```
+
+**Environments:**
+- **Development**: 2 web pods, 1 worker, auto-sync enabled
+- **Staging**: 4 web pods, 2 workers, persistence enabled, auto-sync
+- **Production**: 4 web pods, 2 workers, autoscaling, manual sync only
 
 See `docs/ARGO.md` for complete Kubernetes deployment guide.
 
@@ -207,6 +223,7 @@ The app uses MongoDB with the following databases:
 - ArgoCD (GitOps)
 - Helm (Package Management)
 - HAProxy Ingress (Load Balancing)
+- cert-manager (Automated TLS with Let's Encrypt)
 
 ### 📁 Project Structure
 
@@ -244,11 +261,13 @@ djtip/
 - **[Docker Setup](docs/DOCKER.md)** - Docker and Docker Compose
 - **[HTTPS Development](docs/HTTPS_DEV.md)** - Local HTTPS with mkcert
 - **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
-- **[Observability Naming](docs/OBSERVABILITY_NAMING.md)** - Service naming conventions
+- **[cert-manager Setup](.cicd/helm/cert-manager/README.md)** - Automated TLS certificates
+- **[Security Audit](docs/SECURITY_AUDIT.md)** - Security best practices
 - **[Application Instrumentation](docs/INSTRUMENTATION.md)** - OpenTelemetry usage
 - **[OpenTelemetry Enhancements](docs/OTEL_ENHANCEMENTS.md)** - Rails-specific tracing
 - **[API Documentation](docs/API_DOCUMENTATION.md)** - REST API reference
 - **[Deployment Complete](docs/DEPLOYMENT_COMPLETE.md)** - Deployment summary
+- **[Pi Deployment](.cicd/argocd/pi/README.md)** - Raspberry Pi Kubernetes cluster
 
 ## 🔍 Observability
 
