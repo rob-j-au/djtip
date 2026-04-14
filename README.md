@@ -191,11 +191,11 @@ djtip/
 │   │   └── observability/   # Observability stack
 │   └── argocd/              # ArgoCD applications
 ├── docs/                     # Documentation
-│   ├── ARGO.md              # Kubernetes deployment
-│   ├── DOCKER.md            # Docker guide
-│   ├── OBSERVABILITY.md     # Observability stack
-│   ├── INSTRUMENTATION.md   # OpenTelemetry guide
-│   └── OTEL_ENHANCEMENTS.md # Rails-specific tracing
+│   ├── CERT_MANAGER.md      # TLS certificates
+│   ├── ENDPOINTS.md         # Service URLs
+│   ├── DEPLOYMENT.md        # Deployment guide
+│   ├── OBSERVABILITY.md     # Monitoring stack
+│   └── STIMULUS.md          # JavaScript features
 └── spec/                     # RSpec tests
 ```
 
@@ -218,12 +218,10 @@ djtip/
 ### Development & Features
 - **[API Documentation](docs/API_DOCUMENTATION.md)** - REST API reference
 - **[Google Maps Setup](docs/GOOGLE_MAPS_SETUP.md)** - Maps integration
-- **[Stimulus Features](docs/STIMULUS_FEATURES.md)** - JavaScript features
-- **[Stimulus Testing](docs/STIMULUS_TESTING_REPORT.md)** - Testing report
+- **[Stimulus Controllers](docs/STIMULUS.md)** - Interactive JavaScript features
 
-### Security & Operations
-- **[Security Audit](docs/SECURITY_AUDIT.md)** - Security best practices
-- **[Deployment Complete](docs/DEPLOYMENT_COMPLETE.md)** - Deployment summary
+### Operations
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Complete deployment summary
 
 ## 🔍 Observability
 
