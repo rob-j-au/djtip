@@ -508,7 +508,7 @@ kubectl logs -n default -l app.kubernetes.io/name=djtip | grep OpenTelemetry
 
 **Test connectivity:**
 ```bash
-kubectl exec -n default deployment/djtip -- curl -v http://observability-tempo.observability.svc.cluster.local:4318/v1/traces
+kubectl exec -n default deployment/djtip -- curl -v http://tempo.observability.svc.cluster.local:4318/v1/traces
 ```
 
 ### No Metrics at /metrics

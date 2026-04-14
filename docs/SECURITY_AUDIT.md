@@ -189,7 +189,7 @@ git push origin --force --tags
    argocd account update-password
    
    # Grafana (if needed)
-   kubectl exec -n observability deployment/observability-grafana -- \
+   kubectl exec -n observability deployment/grafana -- \
      grafana-cli admin reset-admin-password newpassword
    ```
 
