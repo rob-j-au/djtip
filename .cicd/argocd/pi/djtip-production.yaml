@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: djtip-production
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rob-j-au/djtip.git
+    targetRevision: release
+    path: .cicd/helm/djtip
+    helm:
+      valueFiles:
+        - values-production.yaml
+      parameters:
+        - name: ingress.hosts[0].host
+          value: "djtip.k8s.pi.jennings.au"
+        - name: ingress.tls[0].hosts[0]
+          value: "djtip.k8s.pi.jennings.au"
+        - name: ingress.tls[0].secretName
+          value: "djtip-production-tls"
+      skipCrds: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production
+
+  syncPolicy:
+    # Manual sync for production - no automated changes
+    automated: null
+
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
