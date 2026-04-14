@@ -13,6 +13,8 @@ image:
 ingress:
   enabled: true
   className: "haproxy"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Use production issuer
   hosts:
     - host: djtip.production.local
       paths:

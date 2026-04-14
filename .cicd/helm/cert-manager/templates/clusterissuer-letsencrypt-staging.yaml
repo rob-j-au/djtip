@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    # Let's Encrypt staging server
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: {{ .Values.letsencrypt.email | default "admin@example.com" }}
+    
+    # Store account key in secret
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    
+    # Use HTTP-01 challenge
+    solvers:
+    - http01:
+        ingress:
+          class: haproxy

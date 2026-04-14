@@ -1,0 +1,36 @@
+# cert-manager configuration
+
+# Let's Encrypt configuration
+letsencrypt:
+  email: "robert@jennings.au"  # Change this to your email
+
+cert-manager:
+  # Install CRDs
+  installCRDs: true
+
+  # Resource limits
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  webhook:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+  cainjector:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi

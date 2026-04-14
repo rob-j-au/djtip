@@ -26,6 +26,8 @@ resources:
 ingress:
   enabled: true
   className: "haproxy"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"  # Use staging issuer
   hosts:
     - host: djtip-staging.minikube.local
       paths:

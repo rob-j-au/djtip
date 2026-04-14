@@ -57,7 +57,7 @@ ingress:
   className: "haproxy"
   annotations:
     ingress.class: haproxy
-  # kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"  # Use staging for dev/test
   hosts:
     - host: djtip.minikube.local
       paths:
