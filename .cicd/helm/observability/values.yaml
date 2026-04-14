@@ -14,12 +14,14 @@ kube-prometheus-stack:
     fullnameOverride: "grafana"
     # adminPassword: ""  # Not needed - using anonymous auth
 
-    # Disable sidecars - they have SSL cert issues with Python 3.14
+    # Use older sidecar image to avoid Python 3.14 SSL cert issues
     sidecar:
+      image:
+        tag: 2.5.0  # Uses Python 3.13, avoids SSL cert verification bug
       dashboards:
-        enabled: false
+        enabled: true
       datasources:
-        enabled: false
+        enabled: true
 
     # Anonymous authentication enabled
     grafana.ini:
@@ -128,10 +130,12 @@ loki:
   enabled: true
   fullnameOverride: "loki"
 
-  # Disable sidecar - has SSL cert issues with Python 3.14
+  # Use older sidecar image to avoid Python 3.14 SSL cert issues
   sidecar:
+    image:
+      tag: 2.5.0  # Uses Python 3.13, avoids SSL cert verification bug
     rules:
-      enabled: false
+      enabled: true
 
   # Single binary mode for simplicity (local dev)
   deploymentMode: SingleBinary
