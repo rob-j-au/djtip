@@ -123,6 +123,35 @@ worker:
       memory: "512Mi"
       cpu: "500m"
 
+# Application environment variables
+env:
+  # Rails Environment
+  railsEnv: "production"
+  rackEnv: "production"
+  railsLogToStdout: "true"
+  railsServeStaticFiles: "true"
+
+  # Puma Configuration
+  railsMaxThreads: "5"
+  railsMinThreads: "5"
+  webConcurrency: "2"
+  port: "3000"
+
+  # OpenTelemetry Configuration
+  otelServiceName: "djtip"
+  otelExporterOtlpEndpoint: "http://tempo.observability.svc.cluster.local:4318"
+  otelTracesExporter: "otlp"
+  otelExporterOtlpProtocol: "http/protobuf"
+  otelTraceSampleRate: "1.0"
+
+  # Logging Configuration
+  logLevel: "info"
+
+  # Database and Redis URLs are auto-generated from release name
+  # but can be overridden here if needed
+  # mongodbUri: ""
+  # redisUrl: ""
+
 # Metrics and observability
 metrics:
   enabled: true  # Enable Prometheus ServiceMonitor

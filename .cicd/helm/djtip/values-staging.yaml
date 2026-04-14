@@ -1,82 +1,9 @@
-# Staging environment values for djtip
-# Doubles the resources compared to development
+# Staging environment overrides
+# Inherits from values.yaml
 
-# Web pods - 2x development
+# 2x resources compared to development
 replicaCount: 4
 
-image:
-  repository: robj/djtip
-  pullPolicy: Always
-  tag: "latest"
-
-imagePullSecrets:
-  - name: dockerhub-secret
-
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  create: true
-  automount: true
-  annotations: {}
-  name: ""
-
-podAnnotations: {}
-podLabels: {}
-podSecurityContext: {}
-securityContext: {}
-
-service:
-  type: ClusterIP
-  port: 3000
-
-ingress:
-  enabled: true
-  className: "haproxy"
-  annotations:
-    ingress.class: haproxy
-  hosts:
-    - host: djtip-staging.minikube.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls:
-    - secretName: djtip-staging-tls
-      hosts:
-        - djtip-staging.minikube.local
-
-# Web pod resources - 2x development
-resources:
-  requests:
-    memory: "512Mi"
-    cpu: "200m"
-  limits:
-    memory: "1Gi"
-    cpu: "1000m"
-
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-
-volumes: []
-volumeMounts: []
-
-nodeSelector: {}
-tolerations: []
-affinity: {}
-
-# Sidekiq worker configuration - 2x development
 worker:
   replicaCount: 2
   resources:
@@ -87,17 +14,36 @@ worker:
       memory: "1Gi"
       cpu: "1000m"
 
-metrics:
-  enabled: true
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "200m"
+  limits:
+    memory: "1Gi"
+    cpu: "1000m"
 
-# MongoDB configuration - 2x development
+# Staging-specific ingress
+ingress:
+  enabled: true
+  className: "haproxy"
+  hosts:
+    - host: djtip-staging.minikube.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: djtip-staging-tls
+      hosts:
+        - djtip-staging.minikube.local
+
+# Enable persistence for staging
 mongodb:
   enabled: true
   auth:
     enabled: false
   architecture: standalone
   persistence:
-    enabled: true  # Enable persistence for staging
+    enabled: true
     size: 8Gi
   resources:
     requests:
@@ -107,7 +53,6 @@ mongodb:
       memory: "1Gi"
       cpu: "1000m"
 
-# Redis configuration - 2x development
 redis:
   enabled: true
   auth:
@@ -115,7 +60,7 @@ redis:
   architecture: standalone
   master:
     persistence:
-      enabled: true  # Enable persistence for staging
+      enabled: true
       size: 4Gi
     resources:
       requests:
@@ -124,3 +69,7 @@ redis:
       limits:
         memory: "512Mi"
         cpu: "400m"
+
+# Staging environment variables (if different from production)
+# env:
+#   logLevel: "debug"  # Example: more verbose logging in staging

@@ -6,31 +6,29 @@ metadata:
     {{- include "djtip.labels" . | nindent 4 }}
 data:
   # Rails Environment
-  RAILS_ENV: "production"
-  RAILS_LOG_TO_STDOUT: "true"
-  RAILS_SERVE_STATIC_FILES: "true"
-  
+  RAILS_ENV: {{ .Values.env.railsEnv | quote }}
+  RAILS_LOG_TO_STDOUT: {{ .Values.env.railsLogToStdout | quote }}
+  RAILS_SERVE_STATIC_FILES: {{ .Values.env.railsServeStaticFiles | quote }}
+  RACK_ENV: {{ .Values.env.rackEnv | quote }}
+
   # Puma Configuration
-  RAILS_MAX_THREADS: "5"
-  RAILS_MIN_THREADS: "5"
-  WEB_CONCURRENCY: "2"
-  PORT: "3000"
-  
+  RAILS_MAX_THREADS: {{ .Values.env.railsMaxThreads | quote }}
+  RAILS_MIN_THREADS: {{ .Values.env.railsMinThreads | quote }}
+  WEB_CONCURRENCY: {{ .Values.env.webConcurrency | quote }}
+  PORT: {{ .Values.env.port | quote }}
+
   # Database Configuration
-  MONGODB_URI: "mongodb://{{ .Release.Name }}-mongodb:27017/djtip_production"
-  
+  MONGODB_URI: {{ .Values.env.mongodbUri | default (printf "mongodb://%s-mongodb:27017/djtip_%s" .Release.Name .Values.env.railsEnv) | quote }}
+
   # Redis Configuration
-  REDIS_URL: "redis://{{ .Release.Name }}-redis-master:6379/0"
-  
+  REDIS_URL: {{ .Values.env.redisUrl | default (printf "redis://%s-redis-master:6379/0" .Release.Name) | quote }}
+
   # OpenTelemetry Configuration
-  OTEL_SERVICE_NAME: "djtip"
-  OTEL_EXPORTER_OTLP_ENDPOINT: "http://tempo.observability.svc.cluster.local:4318"
-  OTEL_TRACES_EXPORTER: "otlp"
-  OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
-  OTEL_TRACE_SAMPLE_RATE: "1.0"
-  
+  OTEL_SERVICE_NAME: {{ .Values.env.otelServiceName | quote }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.env.otelExporterOtlpEndpoint | quote }}
+  OTEL_TRACES_EXPORTER: {{ .Values.env.otelTracesExporter | quote }}
+  OTEL_EXPORTER_OTLP_PROTOCOL: {{ .Values.env.otelExporterOtlpProtocol | quote }}
+  OTEL_TRACE_SAMPLE_RATE: {{ .Values.env.otelTraceSampleRate | quote }}
+
   # Logging Configuration
-  LOG_LEVEL: "info"
-  
-  # Application Configuration
-  RACK_ENV: "production"
+  LOG_LEVEL: {{ .Values.env.logLevel | quote }}

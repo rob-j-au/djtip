@@ -1,40 +1,18 @@
-# Production environment values for djtip
-# Doubles the resources compared to development
+# Production environment overrides
+# Inherits from values.yaml
 
-# Web pods - 2x development
+# 2x resources compared to development
 replicaCount: 4
 
+# Production-specific image settings
 image:
-  repository: robj/djtip
   pullPolicy: IfNotPresent  # Use cached images in production
   tag: "stable"  # Use stable tag for production
 
-imagePullSecrets:
-  - name: dockerhub-secret
-
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  create: true
-  automount: true
-  annotations: {}
-  name: ""
-
-podAnnotations: {}
-podLabels: {}
-podSecurityContext: {}
-securityContext: {}
-
-service:
-  type: ClusterIP
-  port: 3000
-
+# Production-specific ingress
 ingress:
   enabled: true
   className: "haproxy"
-  annotations:
-    ingress.class: haproxy
   hosts:
     - host: djtip.production.local
       paths:
@@ -54,27 +32,12 @@ resources:
     memory: "1Gi"
     cpu: "1000m"
 
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
-
+# Enable autoscaling in production
 autoscaling:
-  enabled: true  # Enable autoscaling in production
+  enabled: true
   minReplicas: 4
   maxReplicas: 20
   targetCPUUtilizationPercentage: 70
-
-volumes: []
-volumeMounts: []
-
-nodeSelector: {}
-tolerations: []
-affinity: {}
 
 # Sidekiq worker configuration - 2x development
 worker:
