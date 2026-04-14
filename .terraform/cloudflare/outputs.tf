@@ -1,5 +1,5 @@
 output "zone_id" {
-  description = "Cloudflare Zone ID for djtip.jennings.au"
+  description = "Cloudflare Zone ID for base-domain.org"
   value       = data.cloudflare_zone.djtip.id
 }
 
@@ -41,9 +41,9 @@ output "dns_records_summary" {
     
     ✅ DNS Records Created:
     
-    Development:  *.dev.djtip.jennings.au     → ${var.dev_ip}
-    Staging:      *.staging.djtip.jennings.au → ${data.cloudflare_record.base_domain.value} (auto-synced from ${var.domain})
-    Production:   *.djtip.jennings.au         → ${data.cloudflare_record.base_domain.value} (auto-synced from ${var.domain})
+    Development:  *.dev.base-domain.org     → ${var.dev_ip}
+    Staging:      *.staging.base-domain.org → ${data.cloudflare_record.base_domain.value} (auto-synced from ${var.domain})
+    Production:   *.base-domain.org         → ${data.cloudflare_record.base_domain.value} (auto-synced from ${var.domain})
     
     All records are set to DNS only (not proxied) for cert-manager compatibility.
     
@@ -51,9 +51,9 @@ output "dns_records_summary" {
        When your DDNS updates ${var.domain}, run 'terraform apply' to sync the wildcards
     
     Test your DNS:
-      dig djtip.dev.djtip.jennings.au
-      dig djtip.staging.djtip.jennings.au
-      dig djtip.djtip.jennings.au
+      dig djtip.dev.base-domain.org
+      dig djtip.staging.base-domain.org
+      dig djtip.base-domain.org
     
     Next steps:
       1. Run: ./scripts/setup-cert-manager-wildcard.sh

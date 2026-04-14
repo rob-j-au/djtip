@@ -7,7 +7,7 @@ variable "cloudflare_api_token" {
 variable "domain" {
   description = "Base domain name"
   type        = string
-  default     = "djtip.jennings.au"
+  default     = "base-domain.org"
 }
 
 variable "dev_ip" {

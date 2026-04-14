@@ -5,9 +5,9 @@ Unified cert-manager setup using wildcard certificates and DNS-01 challenges for
 ## Overview
 
 This setup uses **one approach for all environments**:
-- **Development**: `*.dev.djtip.jennings.au` → Local Minikube IP
-- **Staging**: `*.staging.djtip.jennings.au` → Pi cluster IP
-- **Production**: `*.djtip.jennings.au` → Pi cluster IP
+- **Development**: `*.dev.base-domain.org` → Local Minikube IP
+- **Staging**: `*.staging.base-domain.org` → Pi cluster IP
+- **Production**: `*.base-domain.org` → Pi cluster IP
 
 All certificates are issued by Let's Encrypt using Cloudflare DNS-01 challenges.
 
@@ -16,21 +16,21 @@ All certificates are issued by Let's Encrypt using Cloudflare DNS-01 challenges.
 ```
 Environment    Wildcard Domain                  IP Address        Certificate
 -----------    -------------------------------- ----------------- -----------
-Development    *.dev.djtip.jennings.au         192.168.49.2      Let's Encrypt
-Staging        *.staging.djtip.jennings.au     <pi-ip>           Let's Encrypt
-Production     *.djtip.jennings.au             <pi-ip>           Let's Encrypt
+Development    *.dev.base-domain.org         192.168.49.2      Let's Encrypt
+Staging        *.staging.base-domain.org     <pi-ip>           Let's Encrypt
+Production     *.base-domain.org             <pi-ip>           Let's Encrypt
 ```
 
 **Services use consistent naming:**
-- Development: `djtip.dev.djtip.jennings.au`, `grafana.dev.djtip.jennings.au`
-- Staging: `djtip.staging.djtip.jennings.au`, `grafana.staging.djtip.jennings.au`
-- Production: `djtip.djtip.jennings.au`, `grafana.djtip.jennings.au`
+- Development: `djtip.dev.base-domain.org`, `grafana.dev.base-domain.org`
+- Staging: `djtip.staging.base-domain.org`, `grafana.staging.base-domain.org`
+- Production: `djtip.base-domain.org`, `grafana.base-domain.org`
 
 ---
 
 ## Prerequisites
 
-1. **Cloudflare account** with `djtip.jennings.au` domain
+1. **Cloudflare account** with `base-domain.org` domain
 2. **Cloudflare API token** with DNS edit permissions
 3. **cert-manager** installed in your cluster
 
@@ -70,7 +70,7 @@ TTL: Auto
 2. Click **Create Token**
 3. Use **Edit zone DNS** template
 4. Permissions: `Zone → DNS → Edit`
-5. Zone Resources: `Include → Specific zone → djtip.jennings.au`
+5. Zone Resources: `Include → Specific zone → base-domain.org`
 6. Click **Continue to summary** → **Create Token**
 7. **Copy the token** (you won't see it again)
 
@@ -186,8 +186,8 @@ spec:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
   dnsNames:
-    - "*.dev.djtip.jennings.au"
-    - "dev.djtip.jennings.au"
+    - "*.dev.base-domain.org"
+    - "dev.base-domain.org"
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
@@ -207,8 +207,8 @@ spec:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
   dnsNames:
-    - "*.staging.djtip.jennings.au"
-    - "staging.djtip.jennings.au"
+    - "*.staging.base-domain.org"
+    - "staging.base-domain.org"
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
@@ -228,8 +228,8 @@ spec:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
   dnsNames:
-    - "*.djtip.jennings.au"
-    - "djtip.jennings.au"
+    - "*.base-domain.org"
+    - "base-domain.org"
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
@@ -274,14 +274,14 @@ ingress:
   enabled: true
   className: "haproxy"
   hosts:
-    - host: djtip.dev.djtip.jennings.au
+    - host: djtip.dev.base-domain.org
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: wildcard-dev-tls
       hosts:
-        - djtip.dev.djtip.jennings.au
+        - djtip.dev.base-domain.org
 ```
 
 ### Staging (values-staging.yaml)
@@ -291,14 +291,14 @@ ingress:
   enabled: true
   className: "haproxy"
   hosts:
-    - host: djtip.staging.djtip.jennings.au
+    - host: djtip.staging.base-domain.org
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: wildcard-staging-tls
       hosts:
-        - djtip.staging.djtip.jennings.au
+        - djtip.staging.base-domain.org
 ```
 
 ### Production (values-production.yaml)
@@ -308,14 +308,14 @@ ingress:
   enabled: true
   className: "haproxy"
   hosts:
-    - host: djtip.djtip.jennings.au
+    - host: djtip.base-domain.org
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: wildcard-prod-tls
       hosts:
-        - djtip.djtip.jennings.au
+        - djtip.base-domain.org
 ```
 
 ### Observability (values.yaml)
@@ -327,13 +327,13 @@ kube-prometheus-stack:
       enabled: true
       ingressClassName: haproxy
       hosts:
-        - grafana.dev.djtip.jennings.au        # Development
-        # - grafana.staging.djtip.jennings.au  # Staging
-        # - grafana.djtip.jennings.au          # Production
+        - grafana.dev.base-domain.org        # Development
+        # - grafana.staging.base-domain.org  # Staging
+        # - grafana.base-domain.org          # Production
       tls:
         - secretName: wildcard-dev-tls         # Match environment
           hosts:
-            - grafana.dev.djtip.jennings.au
+            - grafana.dev.base-domain.org
 ```
 
 ---
@@ -392,20 +392,20 @@ kubectl describe ingress djtip-development -n default
 
 **Development:**
 ```bash
-open https://djtip.dev.djtip.jennings.au
-open https://grafana.dev.djtip.jennings.au
+open https://djtip.dev.base-domain.org
+open https://grafana.dev.base-domain.org
 ```
 
 **Staging:**
 ```bash
-open https://djtip.staging.djtip.jennings.au
-open https://grafana.staging.djtip.jennings.au
+open https://djtip.staging.base-domain.org
+open https://grafana.staging.base-domain.org
 ```
 
 **Production:**
 ```bash
-open https://djtip.djtip.jennings.au
-open https://grafana.djtip.jennings.au
+open https://djtip.base-domain.org
+open https://grafana.base-domain.org
 ```
 
 You should see:
@@ -468,13 +468,13 @@ echo "🔍 Monitor progress:"
 echo "  kubectl get certificates -n cert-manager -w"
 echo ""
 echo "🌐 Your domains:"
-echo "  Development:  https://djtip.dev.djtip.jennings.au"
-echo "  Staging:      https://djtip.staging.djtip.jennings.au"
-echo "  Production:   https://djtip.djtip.jennings.au"
+echo "  Development:  https://djtip.dev.base-domain.org"
+echo "  Staging:      https://djtip.staging.base-domain.org"
+echo "  Production:   https://djtip.base-domain.org"
 echo ""
-echo "  Grafana Dev:  https://grafana.dev.djtip.jennings.au"
-echo "  Grafana Stg:  https://grafana.staging.djtip.jennings.au"
-echo "  Grafana Prod: https://grafana.djtip.jennings.au"
+echo "  Grafana Dev:  https://grafana.dev.base-domain.org"
+echo "  Grafana Stg:  https://grafana.staging.base-domain.org"
+echo "  Grafana Prod: https://grafana.base-domain.org"
 ```
 
 Make it executable:
@@ -534,7 +534,7 @@ kubectl logs -n cert-manager deployment/cert-manager --tail=100
 **4. DNS not resolving:**
 - Verify DNS records in Cloudflare
 - Check Proxy status is OFF (grey cloud)
-- Test DNS: `dig djtip.dev.djtip.jennings.au`
+- Test DNS: `dig djtip.dev.base-domain.org`
 
 ---
 
@@ -545,7 +545,7 @@ kubectl logs -n cert-manager deployment/cert-manager --tail=100
 ✅ **Real Let's Encrypt certs** - Trusted by all browsers
 ✅ **Works with private IPs** - DNS-01 doesn't need HTTP access
 ✅ **Automatic renewal** - cert-manager handles it (30 days before expiry)
-✅ **Consistent naming** - `service.env.djtip.jennings.au` pattern
+✅ **Consistent naming** - `service.env.base-domain.org` pattern
 ✅ **Simple ingress config** - Just specify host and secret name
 ✅ **Team-friendly** - Everyone gets trusted certificates
 
@@ -554,18 +554,18 @@ kubectl logs -n cert-manager deployment/cert-manager --tail=100
 ## Domain Structure
 
 ```
-djtip.jennings.au
-├── *.dev.djtip.jennings.au          (Development - Minikube)
-│   ├── djtip.dev.djtip.jennings.au
-│   └── grafana.dev.djtip.jennings.au
+base-domain.org
+├── *.dev.base-domain.org          (Development - Minikube)
+│   ├── djtip.dev.base-domain.org
+│   └── grafana.dev.base-domain.org
 │
-├── *.staging.djtip.jennings.au      (Staging - Pi)
-│   ├── djtip.staging.djtip.jennings.au
-│   └── grafana.staging.djtip.jennings.au
+├── *.staging.base-domain.org      (Staging - Pi)
+│   ├── djtip.staging.base-domain.org
+│   └── grafana.staging.base-domain.org
 │
-└── *.djtip.jennings.au              (Production - Pi)
-    ├── djtip.djtip.jennings.au
-    └── grafana.djtip.jennings.au
+└── *.base-domain.org              (Production - Pi)
+    ├── djtip.base-domain.org
+    └── grafana.base-domain.org
 ```
 
 ---

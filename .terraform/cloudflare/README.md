@@ -5,9 +5,9 @@ Automates the creation of wildcard DNS records in Cloudflare for cert-manager.
 ## What This Does
 
 Creates 3 wildcard DNS A records:
-- `*.dev.djtip.jennings.au` → Your Minikube IP (manual)
-- `*.staging.djtip.jennings.au` → **Auto-fetched from base domain**
-- `*.djtip.jennings.au` → **Auto-fetched from base domain**
+- `*.dev.base-domain.org` → Your Minikube IP (manual)
+- `*.staging.base-domain.org` → **Auto-fetched from base domain**
+- `*.base-domain.org` → **Auto-fetched from base domain**
 
 All records are set to **DNS only** (not proxied) for cert-manager DNS-01 challenges.
 
@@ -21,7 +21,7 @@ The staging and production wildcards automatically use the IP from your base dom
 
 ## Prerequisites
 
-1. **Cloudflare account** with `djtip.jennings.au` domain
+1. **Cloudflare account** with `base-domain.org` domain
 2. **Cloudflare API token** with DNS edit permissions
 3. **Terraform** installed (`brew install terraform`)
 
@@ -58,7 +58,7 @@ nano terraform.tfvars
 **terraform.tfvars:**
 ```hcl
 cloudflare_api_token = "your-actual-cloudflare-api-token-here"
-domain               = "djtip.jennings.au"
+domain               = "base-domain.org"
 dev_ip              = "192.168.49.2"      # Your Minikube IP
 
 # Note: staging and production IPs are auto-fetched from pi.jennings.au
@@ -97,19 +97,19 @@ dns_records_summary = <<EOT
 
 ✅ DNS Records Created:
 
-Development:  *.dev.djtip.jennings.au     → 192.168.49.2
-Staging:      *.staging.djtip.jennings.au → 203.0.113.42 (auto-synced from djtip.jennings.au)
-Production:   *.djtip.jennings.au         → 203.0.113.42 (auto-synced from djtip.jennings.au)
+Development:  *.dev.base-domain.org     → 192.168.49.2
+Staging:      *.staging.base-domain.org → 203.0.113.42 (auto-synced from base-domain.org)
+Production:   *.base-domain.org         → 203.0.113.42 (auto-synced from base-domain.org)
 
 All records are set to DNS only (not proxied) for cert-manager compatibility.
 
-🔄 Staging/Production IPs are automatically fetched from djtip.jennings.au DNS record
-   When your DDNS updates djtip.jennings.au, run 'terraform apply' to sync the wildcards
+🔄 Staging/Production IPs are automatically fetched from base-domain.org DNS record
+   When your DDNS updates base-domain.org, run 'terraform apply' to sync the wildcards
 
 Test your DNS:
-  dig djtip.dev.djtip.jennings.au
-  dig djtip.staging.djtip.jennings.au
-  dig djtip.djtip.jennings.au
+  dig djtip.dev.base-domain.org
+  dig djtip.staging.base-domain.org
+  dig djtip.base-domain.org
 
 Next steps:
   1. Run: ./scripts/setup-cert-manager-wildcard.sh
@@ -121,13 +121,13 @@ EOT
 
 ```bash
 # Test development
-dig djtip.dev.djtip.jennings.au
+dig djtip.dev.base-domain.org
 
 # Test staging
-dig djtip.staging.djtip.jennings.au
+dig djtip.staging.base-domain.org
 
 # Test production
-dig djtip.djtip.jennings.au
+dig djtip.base-domain.org
 ```
 
 ## Update IPs
@@ -176,14 +176,14 @@ terraform destroy
 2. Click **Create Token**
 3. Use **Edit zone DNS** template
 4. Permissions: `Zone → DNS → Edit`
-5. Zone Resources: `Include → Specific zone → djtip.jennings.au`
+5. Zone Resources: `Include → Specific zone → base-domain.org`
 6. Create and copy token
 
 ### Token Permissions Required:
 
 ```
 Zone → DNS → Edit
-Zone: djtip.jennings.au
+Zone: base-domain.org
 ```
 
 ## Troubleshooting

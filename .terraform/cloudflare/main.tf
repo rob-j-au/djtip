@@ -13,7 +13,7 @@ provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-# Get the zone ID for djtip.jennings.au
+# Get the zone ID for base-domain.org
 data "cloudflare_zone" "djtip" {
   name = var.domain
 }
@@ -25,7 +25,7 @@ data "cloudflare_record" "base_domain" {
   hostname = var.domain
 }
 
-# Development wildcard DNS record (*.dev.djtip.jennings.au)
+# Development wildcard DNS record (*.dev.base-domain.org)
 resource "cloudflare_record" "dev_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
   name    = "*.dev.djtip"
@@ -36,7 +36,7 @@ resource "cloudflare_record" "dev_wildcard" {
   comment = "Development environment - Minikube wildcard"
 }
 
-# Staging wildcard DNS record (*.staging.djtip.jennings.au)
+# Staging wildcard DNS record (*.staging.base-domain.org)
 # Uses the IP from the base domain (updated via DDNS)
 resource "cloudflare_record" "staging_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
@@ -48,7 +48,7 @@ resource "cloudflare_record" "staging_wildcard" {
   comment = "Staging environment wildcard (auto-synced from base domain)"
 }
 
-# Production wildcard DNS record (*.djtip.jennings.au)
+# Production wildcard DNS record (*.base-domain.org)
 # Uses the IP from the base domain (updated via DDNS)
 resource "cloudflare_record" "prod_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
