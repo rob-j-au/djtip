@@ -10,18 +10,11 @@ spec:
 
   source:
     repoURL: https://github.com/rob-j-au/djtip.git
-    targetRevision: release
+    targetRevision: main
     path: .cicd/helm/djtip
     helm:
       valueFiles:
         - values-production.yaml
-      parameters:
-        - name: ingress.hosts[0].host
-          value: "djtip.k8s.pi.jennings.au"
-        - name: ingress.tls[0].hosts[0]
-          value: "djtip.k8s.pi.jennings.au"
-        - name: ingress.tls[0].secretName
-          value: "djtip-production-tls"
       skipCrds: false
 
   destination:
