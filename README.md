@@ -125,31 +125,33 @@ See `docs/DOCKER.md` for detailed Docker instructions.
 
 ### Kubernetes Deployment
 
-**Multi-environment setup with automated TLS:**
+**Quick setup with automated TLS:**
 
 ```bash
-# 1. Deploy infrastructure
-kubectl apply -f .cicd/argocd/haproxy-ingress-app.yaml  # Ingress controller
-kubectl apply -f .cicd/argocd/cert-manager-app.yaml     # Automated TLS
-kubectl apply -f .cicd/argocd/observability-app.yaml    # Monitoring
+# 1. Setup DNS and TLS certificates
+cd .terraform/cloudflare && terraform init && terraform apply
+export CLOUDFLARE_API_TOKEN="your-token"
+./scripts/setup-cert-manager-wildcard.sh
 
-# 2. Deploy application (choose environment)
-kubectl apply -f .cicd/argocd/djtip-development.yaml    # Development
-kubectl apply -f .cicd/argocd/djtip-staging.yaml        # Staging
-kubectl apply -f .cicd/argocd/djtip-production.yaml     # Production
+# 2. Deploy infrastructure
+kubectl apply -f .cicd/argocd/haproxy-ingress-app.yaml
+kubectl apply -f .cicd/argocd/observability-app.yaml
 
-# 3. Access via ingress
-open https://djtip.minikube.local                       # Development
-open https://djtip-staging.minikube.local               # Staging
-open https://grafana.minikube.local                     # Grafana
+# 3. Deploy application
+kubectl apply -f .cicd/argocd/djtip-development.yaml
+
+# Done! Access at https://app.dev.yourdomain.com
 ```
 
 **Environments:**
-- **Development**: 2 web pods, 1 worker, auto-sync enabled
-- **Staging**: 4 web pods, 2 workers, persistence enabled, auto-sync
-- **Production**: 4 web pods, 2 workers, autoscaling, manual sync only
+- **Development**: `app.dev.yourdomain.com` - 2 pods, auto-sync
+- **Staging**: `app.staging.yourdomain.com` - 4 pods, auto-sync
+- **Production**: `app.yourdomain.com` - 4 pods, manual sync
 
-See `docs/ARGO.md` for complete Kubernetes deployment guide.
+📖 **Guides:**
+- [Complete Setup](docs/CERT_MANAGER.md) - TLS certificates with cert-manager
+- [ArgoCD Deployment](docs/ARGO.md) - Full Kubernetes guide
+- [Terraform DNS](.terraform/cloudflare/README.md) - DNS automation
 
 ## Usage
 

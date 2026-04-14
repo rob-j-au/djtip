@@ -1,128 +1,68 @@
-# cert-manager Setup with Wildcard Certificates
+# cert-manager with Wildcard Certificates
 
-Unified cert-manager setup using wildcard certificates and DNS-01 challenges for all environments.
+Automated TLS certificates using cert-manager and Cloudflare DNS-01 challenges.
+
+## Quick Start
+
+```bash
+# 1. Setup DNS with Terraform
+cd .terraform/cloudflare && terraform init && terraform apply
+
+# 2. Setup cert-manager
+export CLOUDFLARE_API_TOKEN="your-token"
+cd ../.. && ./scripts/setup-cert-manager-wildcard.sh
+
+# Done! Certificates ready in 2 minutes ✅
+```
+
+---
 
 ## Overview
 
-This setup uses **one approach for all environments**:
-- **Development**: `*.dev.base-domain.org` → Local Minikube IP
-- **Staging**: `*.staging.base-domain.org` → Pi cluster IP
-- **Production**: `*.base-domain.org` → Pi cluster IP
+**One unified approach for all environments:**
 
-All certificates are issued by Let's Encrypt using Cloudflare DNS-01 challenges.
-
-## Architecture
-
-```
-Environment    Wildcard Domain                  IP Address        Certificate
------------    -------------------------------- ----------------- -----------
-Development    *.dev.base-domain.org         192.168.49.2      Let's Encrypt
-Staging        *.staging.base-domain.org     <pi-ip>           Let's Encrypt
-Production     *.base-domain.org             <pi-ip>           Let's Encrypt
-```
-
-**Services use consistent naming:**
-- Development: `djtip.dev.base-domain.org`, `grafana.dev.base-domain.org`
-- Staging: `djtip.staging.base-domain.org`, `grafana.staging.base-domain.org`
-- Production: `djtip.base-domain.org`, `grafana.base-domain.org`
+| Environment | Wildcard Domain | IP Source | Certificate |
+|-------------|-----------------|-----------|-------------|
+| Development | `*.dev.yourdomain.com` | Minikube | Let's Encrypt |
+| Staging | `*.staging.yourdomain.com` | Auto from base domain | Let's Encrypt |
+| Production | `*.yourdomain.com` | Auto from base domain | Let's Encrypt |
 
 ---
 
-## Prerequisites
+## Complete Setup
 
-1. **Cloudflare account** with `base-domain.org` domain
-2. **Cloudflare API token** with DNS edit permissions
-3. **cert-manager** installed in your cluster
+### 1. Create DNS Records (Terraform)
 
----
-
-## Step 1: Cloudflare DNS Setup
-
-### Create DNS Records
-
-**In Cloudflare Dashboard:**
-
-```
-Type: A
-Name: *.dev.djtip
-Content: 192.168.49.2  (your Minikube IP)
-Proxy: OFF (DNS only - grey cloud)
-TTL: Auto
-
-Type: A
-Name: *.staging.djtip
-Content: <your-pi-ip>
-Proxy: OFF (DNS only - grey cloud)
-TTL: Auto
-
-Type: A
-Name: *.djtip
-Content: <your-pi-ip>
-Proxy: OFF (DNS only - grey cloud)
-TTL: Auto
+```bash
+cd .terraform/cloudflare
+cp terraform.tfvars.example terraform.tfvars
+nano terraform.tfvars  # Add your token and domain
+terraform init
+terraform apply
 ```
 
-**⚠️ IMPORTANT:** Proxy status must be **OFF** (grey cloud, not orange)
+**Creates:**
+- `*.dev.yourdomain.com` → Minikube IP
+- `*.staging.yourdomain.com` → Auto from yourdomain.com
+- `*.yourdomain.com` → Auto from yourdomain.com
 
-### Create Cloudflare API Token
+### 2. Install cert-manager
 
-1. Go to: https://dash.cloudflare.com/profile/api-tokens
-2. Click **Create Token**
-3. Use **Edit zone DNS** template
-4. Permissions: `Zone → DNS → Edit`
-5. Zone Resources: `Include → Specific zone → base-domain.org`
-6. Click **Continue to summary** → **Create Token**
-7. **Copy the token** (you won't see it again)
-
----
-
-## Step 2: Install cert-manager
-
-cert-manager is already configured in `.cicd/helm/cert-manager/`.
-
-### Deploy cert-manager
-
-**Minikube:**
 ```bash
 kubectl apply -f .cicd/argocd/cert-manager-app.yaml
+kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=cert-manager -n cert-manager --timeout=300s
 ```
 
-**Pi:**
-```bash
-kubectl apply -f .cicd/argocd/pi/cert-manager.yaml
-```
-
-### Verify Installation
+### 3. Create Cloudflare Secret
 
 ```bash
-kubectl get pods -n cert-manager
-```
-
-Expected output:
-```
-NAME                                       READY   STATUS    RESTARTS   AGE
-cert-manager-xxxxxxxxx-xxxxx               1/1     Running   0          1m
-cert-manager-cainjector-xxxxxxxxx-xxxxx    1/1     Running   0          1m
-cert-manager-webhook-xxxxxxxxx-xxxxx       1/1     Running   0          1m
-```
-
----
-
-## Step 3: Configure Cloudflare DNS-01
-
-### Create Cloudflare API Token Secret
-
-```bash
-# Set your token
-export CLOUDFLARE_API_TOKEN="your-token-here"
-
-# Create secret in cert-manager namespace
+export CLOUDFLARE_API_TOKEN="your-token"
 kubectl create secret generic cloudflare-api-token \
   --from-literal=api-token=$CLOUDFLARE_API_TOKEN \
   -n cert-manager
 ```
 
-### Create DNS-01 ClusterIssuer
+### 4. Create ClusterIssuer
 
 Create `.cicd/helm/cert-manager/templates/clusterissuer-cloudflare.yaml`:
 
@@ -134,51 +74,40 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: robert@jennings.au
+    email: your-email@example.com
     privateKeySecretRef:
       name: letsencrypt-cloudflare
     solvers:
     - dns01:
         cloudflare:
-          email: robert@jennings.au
+          email: your-cloudflare-email@example.com
           apiTokenSecretRef:
             name: cloudflare-api-token
             key: api-token
 ```
 
-Apply it:
+Apply:
 ```bash
 kubectl apply -f .cicd/helm/cert-manager/templates/clusterissuer-cloudflare.yaml
 ```
 
-Verify:
-```bash
-kubectl get clusterissuer letsencrypt-cloudflare
-```
-
----
-
-## Step 4: Create Wildcard Certificates
-
-### Install Reflector (to copy certs to all namespaces)
+### 5. Install Reflector
 
 ```bash
 helm repo add emberstack https://emberstack.github.io/helm-charts
-helm repo update
 helm install reflector emberstack/reflector -n cert-manager
 ```
 
-### Create Wildcard Certificates
+### 6. Create Wildcard Certificates
 
 Create `.cicd/helm/cert-manager/templates/certificate-wildcards.yaml`:
 
 ```yaml
 ---
-# Development wildcard
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: wildcard-dev-djtip
+  name: wildcard-dev
   namespace: cert-manager
 spec:
   secretName: wildcard-dev-tls
@@ -186,20 +115,18 @@ spec:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
   dnsNames:
-    - "*.dev.base-domain.org"
-    - "dev.base-domain.org"
+    - "*.dev.yourdomain.com"
+    - "dev.yourdomain.com"
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
       reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "default,observability"
-
 ---
-# Staging wildcard
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: wildcard-staging-djtip
+  name: wildcard-staging
   namespace: cert-manager
 spec:
   secretName: wildcard-staging-tls
@@ -207,20 +134,18 @@ spec:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
   dnsNames:
-    - "*.staging.base-domain.org"
-    - "staging.base-domain.org"
+    - "*.staging.yourdomain.com"
+    - "staging.yourdomain.com"
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
       reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "staging,observability"
-
 ---
-# Production wildcard
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: wildcard-prod-djtip
+  name: wildcard-prod
   namespace: cert-manager
 spec:
   secretName: wildcard-prod-tls
@@ -228,8 +153,8 @@ spec:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
   dnsNames:
-    - "*.base-domain.org"
-    - "base-domain.org"
+    - "*.yourdomain.com"
+    - "yourdomain.com"
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
@@ -237,255 +162,68 @@ spec:
       reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "production,observability"
 ```
 
-Apply:
+Apply and monitor:
 ```bash
 kubectl apply -f .cicd/helm/cert-manager/templates/certificate-wildcards.yaml
+kubectl get certificates -n cert-manager -w  # Wait for READY=True
 ```
 
-### Monitor Certificate Issuance
+### 7. Update Helm Values
 
-```bash
-# Watch certificates
-kubectl get certificates -n cert-manager -w
-
-# Check certificate details
-kubectl describe certificate wildcard-dev-djtip -n cert-manager
-
-# Check if secrets are created
-kubectl get secrets -A | grep wildcard
-```
-
-Certificate issuance takes 1-2 minutes. You should see:
-```
-NAME                    READY   SECRET               AGE
-wildcard-dev-djtip      True    wildcard-dev-tls     2m
-wildcard-staging-djtip  True    wildcard-staging-tls 2m
-wildcard-prod-djtip     True    wildcard-prod-tls    2m
-```
-
----
-
-## Step 5: Update Helm Values
-
-### Development (values-development.yaml)
-
+**Development** (`.cicd/helm/djtip/values-development.yaml`):
 ```yaml
 ingress:
   enabled: true
   className: "haproxy"
   hosts:
-    - host: djtip.dev.base-domain.org
+    - host: app.dev.yourdomain.com
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: wildcard-dev-tls
       hosts:
-        - djtip.dev.base-domain.org
+        - app.dev.yourdomain.com
 ```
 
-### Staging (values-staging.yaml)
-
+**Staging** (`.cicd/helm/djtip/values-staging.yaml`):
 ```yaml
 ingress:
-  enabled: true
-  className: "haproxy"
-  hosts:
-    - host: djtip.staging.base-domain.org
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
   tls:
     - secretName: wildcard-staging-tls
       hosts:
-        - djtip.staging.base-domain.org
+        - app.staging.yourdomain.com
 ```
 
-### Production (values-production.yaml)
-
+**Production** (`.cicd/helm/djtip/values-production.yaml`):
 ```yaml
 ingress:
-  enabled: true
-  className: "haproxy"
-  hosts:
-    - host: djtip.base-domain.org
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
   tls:
     - secretName: wildcard-prod-tls
       hosts:
-        - djtip.base-domain.org
+        - app.yourdomain.com
 ```
 
-### Observability (values.yaml)
-
-```yaml
-kube-prometheus-stack:
-  grafana:
-    ingress:
-      enabled: true
-      ingressClassName: haproxy
-      hosts:
-        - grafana.dev.base-domain.org        # Development
-        # - grafana.staging.base-domain.org  # Staging
-        # - grafana.base-domain.org          # Production
-      tls:
-        - secretName: wildcard-dev-tls         # Match environment
-          hosts:
-            - grafana.dev.base-domain.org
-```
-
----
-
-## Step 6: Deploy Applications
-
-### Minikube (Development)
-
+Commit:
 ```bash
-# Deploy applications
+git add .cicd/helm/
+git commit -m "Update ingress to use wildcard TLS"
+git push
+```
+
+### 8. Deploy Applications
+
+ArgoCD auto-syncs or manually:
+```bash
 kubectl apply -f .cicd/argocd/djtip-development.yaml
-kubectl apply -f .cicd/argocd/observability-app.yaml
-
-# Wait for sync
-kubectl get applications -n argocd -w
 ```
 
-### Pi (Staging & Production)
+### 9. Verify
 
 ```bash
-# Deploy applications
-kubectl apply -f .cicd/argocd/pi/djtip-staging.yaml
-kubectl apply -f .cicd/argocd/pi/djtip-production.yaml
-kubectl apply -f .cicd/argocd/pi/observability.yaml
-```
-
----
-
-## Step 7: Verify
-
-### Check Certificates
-
-```bash
-# All certificates
-kubectl get certificates -A
-
-# Certificate details
-kubectl describe certificate wildcard-dev-djtip -n cert-manager
-
-# Secrets in namespaces
-kubectl get secrets wildcard-dev-tls -n default
-kubectl get secrets wildcard-dev-tls -n observability
-```
-
-### Check Ingresses
-
-```bash
-# All ingresses
-kubectl get ingress -A
-
-# Ingress details
-kubectl describe ingress djtip-development -n default
-```
-
-### Test Access
-
-**Development:**
-```bash
-open https://djtip.dev.base-domain.org
-open https://grafana.dev.base-domain.org
-```
-
-**Staging:**
-```bash
-open https://djtip.staging.base-domain.org
-open https://grafana.staging.base-domain.org
-```
-
-**Production:**
-```bash
-open https://djtip.base-domain.org
-open https://grafana.base-domain.org
-```
-
-You should see:
-- ✅ Valid certificate (no browser warnings)
-- ✅ Issued by Let's Encrypt
-- ✅ Covers wildcard domain
-
----
-
-## Automation Script
-
-Create `scripts/setup-cert-manager-wildcard.sh`:
-
-```bash
-#!/bin/bash
-set -e
-
-echo "🔐 Setting up cert-manager with Cloudflare DNS-01 wildcards"
-
-# Check for Cloudflare API token
-if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-  echo "❌ Please set CLOUDFLARE_API_TOKEN environment variable"
-  echo ""
-  echo "Get it from: https://dash.cloudflare.com/profile/api-tokens"
-  echo "Permissions needed: Zone → DNS → Edit"
-  echo ""
-  echo "Then run:"
-  echo "  export CLOUDFLARE_API_TOKEN='your-token-here'"
-  echo "  $0"
-  exit 1
-fi
-
-# Create Cloudflare secret
-echo "🔑 Creating Cloudflare API token secret..."
-kubectl create secret generic cloudflare-api-token \
-  --from-literal=api-token=$CLOUDFLARE_API_TOKEN \
-  -n cert-manager \
-  --dry-run=client -o yaml | kubectl apply -f -
-
-# Install Reflector
-echo "🔄 Installing Reflector..."
-helm repo add emberstack https://emberstack.github.io/helm-charts 2>/dev/null || true
-helm repo update
-helm upgrade --install reflector emberstack/reflector -n cert-manager
-
-# Apply ClusterIssuer
-echo "🌐 Creating Cloudflare ClusterIssuer..."
-kubectl apply -f .cicd/helm/cert-manager/templates/clusterissuer-cloudflare.yaml
-
-# Apply wildcard certificates
-echo "📜 Creating wildcard certificates..."
-kubectl apply -f .cicd/helm/cert-manager/templates/certificate-wildcards.yaml
-
-echo ""
-echo "✅ Setup complete!"
-echo ""
-echo "📋 Certificates will be issued in 1-2 minutes"
-echo ""
-echo "🔍 Monitor progress:"
-echo "  kubectl get certificates -n cert-manager -w"
-echo ""
-echo "🌐 Your domains:"
-echo "  Development:  https://djtip.dev.base-domain.org"
-echo "  Staging:      https://djtip.staging.base-domain.org"
-echo "  Production:   https://djtip.base-domain.org"
-echo ""
-echo "  Grafana Dev:  https://grafana.dev.base-domain.org"
-echo "  Grafana Stg:  https://grafana.staging.base-domain.org"
-echo "  Grafana Prod: https://grafana.base-domain.org"
-```
-
-Make it executable:
-```bash
-chmod +x scripts/setup-cert-manager-wildcard.sh
-```
-
-Run it:
-```bash
-export CLOUDFLARE_API_TOKEN="your-token-here"
-./scripts/setup-cert-manager-wildcard.sh
+kubectl get certificates -n cert-manager
+kubectl get secrets -A | grep wildcard
+curl -I https://app.dev.yourdomain.com
 ```
 
 ---
@@ -495,107 +233,38 @@ export CLOUDFLARE_API_TOKEN="your-token-here"
 ### Certificate Not Issuing
 
 ```bash
-# Check certificate status
-kubectl describe certificate wildcard-dev-djtip -n cert-manager
-
-# Check certificate request
-kubectl get certificaterequest -n cert-manager
-kubectl describe certificaterequest <name> -n cert-manager
-
-# Check order
-kubectl get order -n cert-manager
-kubectl describe order <name> -n cert-manager
-
-# Check challenge
-kubectl get challenge -n cert-manager
-kubectl describe challenge <name> -n cert-manager
-
-# Check cert-manager logs
+kubectl describe certificate wildcard-dev -n cert-manager
 kubectl logs -n cert-manager deployment/cert-manager --tail=100
+kubectl get challenge -n cert-manager
 ```
 
-### Common Issues
+**Common issues:**
+- Invalid API token
+- DNS not resolving
+- Cloudflare proxy enabled (must be OFF)
 
-**1. Challenge failing:**
-- Verify Cloudflare API token has DNS edit permissions
-- Check token is not expired
-- Verify domain is in Cloudflare
+### Secret Not in Namespace
 
-**2. Secret not appearing in namespace:**
-- Check Reflector is installed: `kubectl get pods -n cert-manager | grep reflector`
-- Check certificate has reflection annotations
-- Check namespace exists
-
-**3. Ingress not using certificate:**
-- Verify secret name matches in ingress
-- Check secret exists in correct namespace
-- Restart ingress controller: `kubectl rollout restart deployment haproxy-ingress -n haproxy-controller`
-
-**4. DNS not resolving:**
-- Verify DNS records in Cloudflare
-- Check Proxy status is OFF (grey cloud)
-- Test DNS: `dig djtip.dev.base-domain.org`
-
----
-
-## Benefits of This Approach
-
-✅ **One approach for all environments** - Same configuration style everywhere
-✅ **Wildcard certificates** - One cert covers all subdomains
-✅ **Real Let's Encrypt certs** - Trusted by all browsers
-✅ **Works with private IPs** - DNS-01 doesn't need HTTP access
-✅ **Automatic renewal** - cert-manager handles it (30 days before expiry)
-✅ **Consistent naming** - `service.env.base-domain.org` pattern
-✅ **Simple ingress config** - Just specify host and secret name
-✅ **Team-friendly** - Everyone gets trusted certificates
-
----
-
-## Domain Structure
-
-```
-base-domain.org
-├── *.dev.base-domain.org          (Development - Minikube)
-│   ├── djtip.dev.base-domain.org
-│   └── grafana.dev.base-domain.org
-│
-├── *.staging.base-domain.org      (Staging - Pi)
-│   ├── djtip.staging.base-domain.org
-│   └── grafana.staging.base-domain.org
-│
-└── *.base-domain.org              (Production - Pi)
-    ├── djtip.base-domain.org
-    └── grafana.base-domain.org
+```bash
+kubectl get pods -n cert-manager | grep reflector
+kubectl get certificate wildcard-dev -n cert-manager -o yaml | grep reflection
 ```
 
 ---
 
-## Certificate Lifecycle
+## Benefits
 
-1. **Certificate created** - cert-manager detects Certificate resource
-2. **DNS-01 challenge initiated** - cert-manager creates TXT record via Cloudflare API
-3. **Let's Encrypt verifies** - Checks TXT record exists
-4. **Certificate issued** - Stored in secret
-5. **Reflector copies** - Secret copied to all specified namespaces
-6. **Ingress uses cert** - HAProxy serves HTTPS with certificate
-7. **Auto-renewal** - cert-manager renews 30 days before expiry
-
----
-
-## Security Notes
-
-- 🔒 **Cloudflare API token** - Store securely, limit permissions to DNS only
-- 🔒 **Let's Encrypt rate limits** - 50 certificates per domain per week
-- 🔒 **Private keys** - Stored in Kubernetes secrets, encrypted at rest
-- 🔒 **Certificate transparency** - All Let's Encrypt certs are logged publicly
-- ✅ **Production-grade** - Same setup used by major companies
+✅ One wildcard cert per environment
+✅ Automatic renewal (30 days before expiry)
+✅ Works with private IPs (DNS-01)
+✅ Reflector auto-copies secrets
+✅ Terraform manages DNS
+✅ Auto-sync with DDNS
 
 ---
 
-## Additional Resources
+## Resources
 
-- [cert-manager Documentation](https://cert-manager.io/docs/)
+- [Terraform Configuration](.terraform/cloudflare/README.md)
+- [cert-manager Docs](https://cert-manager.io/docs/)
 - [Cloudflare API Tokens](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)
-- [Let's Encrypt Documentation](https://letsencrypt.org/docs/)
-- [DNS-01 Challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge)
-- [Reflector Documentation](https://github.com/emberstack/kubernetes-reflector)
