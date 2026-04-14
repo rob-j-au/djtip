@@ -128,6 +128,11 @@ loki:
   enabled: true
   fullnameOverride: "loki"
 
+  # Disable sidecar - has SSL cert issues with Python 3.14
+  sidecar:
+    rules:
+      enabled: false
+
   # Single binary mode for simplicity (local dev)
   deploymentMode: SingleBinary
 
