@@ -73,13 +73,13 @@ Complete reference of all service endpoints for local development and Kubernetes
 
 | Service | URL | Port | Description |
 |---------|-----|------|-------------|
-| **Prometheus UI** | http://observability-kube-prometh-prometheus.observability.svc.cluster.local:9090 | 9090 | Prometheus web UI |
-| **Prometheus API** | http://observability-kube-prometh-prometheus.observability.svc.cluster.local:9090/api/v1 | 9090 | Prometheus API |
-| **Prometheus Metrics** | http://observability-kube-prometh-prometheus.observability.svc.cluster.local:9090/metrics | 9090 | Prometheus self-metrics |
+| **Prometheus UI** | http://mon-kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090 | 9090 | Prometheus web UI |
+| **Prometheus API** | http://mon-kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/api/v1 | 9090 | Prometheus API |
+| **Prometheus Metrics** | http://mon-kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/metrics | 9090 | Prometheus self-metrics |
 
 **Port Forward to Access:**
 ```bash
-kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 9090:9090
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090
 # Then access: http://localhost:9090
 ```
 
@@ -87,13 +87,13 @@ kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 
 
 | Service | URL | Port | Description |
 |---------|-----|------|-------------|
-| **Loki API** | http://observability-loki.observability.svc.cluster.local:3100 | 3100 | Loki log ingestion/query |
-| **Loki Ready** | http://observability-loki.observability.svc.cluster.local:3100/ready | 3100 | Readiness check |
-| **Loki Metrics** | http://observability-loki.observability.svc.cluster.local:3100/metrics | 3100 | Loki metrics |
+| **Loki API** | http://loki.observability.svc.cluster.local:3100 | 3100 | Loki log ingestion/query |
+| **Loki Ready** | http://loki.observability.svc.cluster.local:3100/ready | 3100 | Readiness check |
+| **Loki Metrics** | http://loki.observability.svc.cluster.local:3100/metrics | 3100 | Loki metrics |
 
 **Port Forward to Access:**
 ```bash
-kubectl port-forward -n observability svc/observability-loki 3100:3100
+kubectl port-forward -n observability svc/loki 3100:3100
 # Then access: http://localhost:3100
 ```
 
@@ -101,15 +101,15 @@ kubectl port-forward -n observability svc/observability-loki 3100:3100
 
 | Service | URL | Port | Description |
 |---------|-----|------|-------------|
-| **Tempo OTLP gRPC** | http://observability-tempo.observability.svc.cluster.local:4317 | 4317 | OpenTelemetry gRPC receiver |
-| **Tempo OTLP HTTP** | http://observability-tempo.observability.svc.cluster.local:4318 | 4318 | OpenTelemetry HTTP receiver |
-| **Tempo Query** | http://observability-tempo.observability.svc.cluster.local:3100 | 3100 | Tempo query API |
-| **Tempo Jaeger** | http://observability-tempo.observability.svc.cluster.local:14268 | 14268 | Jaeger receiver |
-| **Tempo Zipkin** | http://observability-tempo.observability.svc.cluster.local:9411 | 9411 | Zipkin receiver |
+| **Tempo OTLP gRPC** | http://tempo.observability.svc.cluster.local:4317 | 4317 | OpenTelemetry gRPC receiver |
+| **Tempo OTLP HTTP** | http://tempo.observability.svc.cluster.local:4318 | 4318 | OpenTelemetry HTTP receiver |
+| **Tempo Query** | http://tempo.observability.svc.cluster.local:3100 | 3100 | Tempo query API |
+| **Tempo Jaeger** | http://tempo.observability.svc.cluster.local:14268 | 14268 | Jaeger receiver |
+| **Tempo Zipkin** | http://tempo.observability.svc.cluster.local:9411 | 9411 | Zipkin receiver |
 
 **Port Forward to Access:**
 ```bash
-kubectl port-forward -n observability svc/observability-tempo 3100:3100
+kubectl port-forward -n observability svc/tempo 3100:3100
 # Then access: http://localhost:3100
 ```
 
@@ -117,12 +117,12 @@ kubectl port-forward -n observability svc/observability-tempo 3100:3100
 
 | Service | URL | Port | Description |
 |---------|-----|------|-------------|
-| **Alertmanager UI** | http://observability-kube-prometh-alertmanager.observability.svc.cluster.local:9093 | 9093 | Alertmanager web UI |
-| **Alertmanager API** | http://observability-kube-prometh-alertmanager.observability.svc.cluster.local:9093/api/v2 | 9093 | Alertmanager API |
+| **Alertmanager UI** | http://mon-kube-prometheus-stack-alertmanager.observability.svc.cluster.local:9093 | 9093 | Alertmanager web UI |
+| **Alertmanager API** | http://mon-kube-prometheus-stack-alertmanager.observability.svc.cluster.local:9093/api/v2 | 9093 | Alertmanager API |
 
 **Port Forward to Access:**
 ```bash
-kubectl port-forward -n observability svc/observability-kube-prometh-alertmanager 9093:9093
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-alertmanager 9093:9093
 # Then access: http://localhost:9093
 ```
 
@@ -161,12 +161,12 @@ argocd login localhost:8080 --username admin --password <password>
 
 | Service | Internal URL | Port | Description |
 |---------|--------------|------|-------------|
-| **Prometheus** | http://observability-kube-prometh-prometheus.observability.svc.cluster.local:9090 | 9090 | Prometheus |
-| **Grafana** | http://observability-grafana.observability.svc.cluster.local:80 | 80 | Grafana |
-| **Loki** | http://observability-loki.observability.svc.cluster.local:3100 | 3100 | Loki |
-| **Tempo** | http://observability-tempo.observability.svc.cluster.local:3100 | 3100 | Tempo query |
-| **Tempo OTLP** | http://observability-tempo.observability.svc.cluster.local:4318 | 4318 | Tempo OTLP HTTP |
-| **Promtail** | http://observability-promtail.observability.svc.cluster.local:3101 | 3101 | Promtail |
+| **Prometheus** | http://mon-kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090 | 9090 | Prometheus |
+| **Grafana** | http://grafana.observability.svc.cluster.local:80 | 80 | Grafana |
+| **Loki** | http://loki.observability.svc.cluster.local:3100 | 3100 | Loki |
+| **Tempo** | http://tempo.observability.svc.cluster.local:3100 | 3100 | Tempo query |
+| **Tempo OTLP** | http://tempo.observability.svc.cluster.local:4318 | 4318 | Tempo OTLP HTTP |
+| **Promtail** | http://promtail.observability.svc.cluster.local:3101 | 3101 | Promtail |
 
 ---
 
@@ -192,24 +192,24 @@ kubectl port-forward -n default svc/djtip-redis-master 6379:6379
 #### Observability
 ```bash
 # Grafana (alternative to ingress)
-kubectl port-forward -n observability svc/observability-grafana 3001:80
+kubectl port-forward -n observability svc/grafana 3001:80
 # Access: http://localhost:3001
 
 # Prometheus
-kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 9090:9090
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090
 # Access: http://localhost:9090
 
 # Loki
-kubectl port-forward -n observability svc/observability-loki 3100:3100
+kubectl port-forward -n observability svc/loki 3100:3100
 # Access: http://localhost:3100
 
 # Tempo
-kubectl port-forward -n observability svc/observability-tempo 3100:3100 4318:4318
+kubectl port-forward -n observability svc/tempo 3100:3100 4318:4318
 # Query: http://localhost:3100
 # OTLP: http://localhost:4318
 
 # Alertmanager
-kubectl port-forward -n observability svc/observability-kube-prometh-alertmanager 9093:9093
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-alertmanager 9093:9093
 # Access: http://localhost:9093
 ```
 
@@ -232,10 +232,10 @@ Create a script to forward multiple services at once:
 kubectl port-forward -n default svc/djtip 3000:80 &
 
 # Observability
-kubectl port-forward -n observability svc/observability-grafana 3001:80 &
-kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 9090:9090 &
-kubectl port-forward -n observability svc/observability-loki 3100:3100 &
-kubectl port-forward -n observability svc/observability-tempo 3200:3100 &
+kubectl port-forward -n observability svc/grafana 3001:80 &
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090 &
+kubectl port-forward -n observability svc/loki 3100:3100 &
+kubectl port-forward -n observability svc/tempo 3200:3100 &
 
 # ArgoCD
 kubectl port-forward svc/argocd-server -n argocd 8080:443 &
@@ -270,11 +270,11 @@ kubectl get svc --all-namespaces
 ```bash
 # Get endpoints for a specific service
 kubectl get endpoints -n default djtip
-kubectl get endpoints -n observability observability-grafana
+kubectl get endpoints -n observability grafana
 
 # Describe service to see all details
 kubectl describe svc -n default djtip
-kubectl describe svc -n observability observability-grafana
+kubectl describe svc -n observability grafana
 ```
 
 ### DNS Names
@@ -285,12 +285,12 @@ All services are accessible via DNS within the cluster:
 
 **Examples:**
 - `djtip.default.svc.cluster.local`
-- `observability-grafana.observability.svc.cluster.local`
-- `observability-tempo.observability.svc.cluster.local`
+- `grafana.observability.svc.cluster.local`
+- `tempo.observability.svc.cluster.local`
 
 **Short forms (within same namespace):**
 - `djtip` (from default namespace)
-- `observability-grafana` (from observability namespace)
+- `grafana` (from observability namespace)
 
 ---
 
@@ -306,7 +306,7 @@ kubectl get ingress --all-namespaces
 kubectl get ingress -n default djtip
 
 # Grafana ingress
-kubectl get ingress -n observability observability-grafana
+kubectl get ingress -n observability grafana
 ```
 
 ### Ingress Hosts
@@ -314,7 +314,7 @@ kubectl get ingress -n observability observability-grafana
 | Host | Service | Namespace | TLS |
 |------|---------|-----------|-----|
 | djtip.minikube.local | djtip | default | ✅ Yes |
-| grafana.minikube.local | observability-grafana | observability | ✅ Yes |
+| grafana.minikube.local | grafana | observability | ✅ Yes |
 
 ### Access Ingress Services
 
@@ -355,11 +355,11 @@ curl https://djtip.minikube.local/up
 curl https://grafana.minikube.local/api/health
 
 # Prometheus health
-kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 9090:9090
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090
 curl http://localhost:9090/-/healthy
 
 # Loki health
-kubectl port-forward -n observability svc/observability-loki 3100:3100
+kubectl port-forward -n observability svc/loki 3100:3100
 curl http://localhost:3100/ready
 ```
 
@@ -413,11 +413,11 @@ curl -I https://djtip.minikube.local
 curl -I https://grafana.minikube.local
 
 # Test Prometheus (via port-forward)
-kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 9090:9090 &
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090 &
 curl http://localhost:9090/-/healthy
 
 # Test Tempo OTLP endpoint
-kubectl port-forward -n observability svc/observability-tempo 4318:4318 &
+kubectl port-forward -n observability svc/tempo 4318:4318 &
 curl http://localhost:4318/v1/traces
 ```
 

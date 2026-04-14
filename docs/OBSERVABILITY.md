@@ -75,14 +75,14 @@ The observability stack provides:
 ### Prometheus
 ```bash
 # Port-forward to access Prometheus UI
-kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 9090:9090
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090
 ```
 Then: http://localhost:9090
 
 ### Alertmanager
 ```bash
 # Port-forward to access Alertmanager UI
-kubectl port-forward -n observability svc/observability-kube-prometh-alertmanager 9093:9093
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-alertmanager 9093:9093
 ```
 Then: http://localhost:9093
 
@@ -93,17 +93,17 @@ Then: http://localhost:9093
 Grafana comes with three datasources automatically configured:
 
 1. **Prometheus** (default)
-   - URL: `http://observability-kube-prometh-prometheus:9090`
+   - URL: `http://mon-kube-prometheus-stack-prometheus:9090`
    - Type: Metrics
    - Use for: System metrics, application metrics
 
 2. **Loki**
-   - URL: `http://observability-loki:3100`
+   - URL: `http://loki:3100`
    - Type: Logs
    - Use for: Pod logs, application logs
 
 3. **Tempo**
-   - URL: `http://observability-tempo:3100`
+   - URL: `http://tempo:3100`
    - Type: Traces
    - Use for: Distributed tracing, request flows
 
@@ -240,7 +240,7 @@ OpenTelemetry::SDK.configure do |c|
   c.add_span_processor(
     OpenTelemetry::SDK::Trace::Export::BatchSpanProcessor.new(
       OpenTelemetry::Exporter::OTLP::Exporter.new(
-        endpoint: ENV.fetch('OTEL_EXPORTER_OTLP_ENDPOINT', 'http://observability-tempo:4318')
+        endpoint: ENV.fetch('OTEL_EXPORTER_OTLP_ENDPOINT', 'http://tempo:4318')
       )
     )
   )
@@ -253,7 +253,7 @@ Add environment variable to deployment:
 # .cicd/helm/djtip/templates/deployment.yaml
 env:
   - name: OTEL_EXPORTER_OTLP_ENDPOINT
-    value: http://observability-tempo.observability.svc.cluster.local:4318
+    value: http://tempo.observability.svc.cluster.local:4318
 ```
 
 ## Querying Logs with LogQL
@@ -444,7 +444,7 @@ kubectl get pods -n observability -l app.kubernetes.io/name=promtail
 kubectl logs -n observability -l app.kubernetes.io/name=promtail
 
 # Test Loki directly
-kubectl port-forward -n observability svc/observability-loki 3100:3100
+kubectl port-forward -n observability svc/loki 3100:3100
 curl http://localhost:3100/ready
 ```
 
@@ -455,7 +455,7 @@ curl http://localhost:3100/ready
 kubectl get servicemonitor -n default
 
 # Check Prometheus targets
-kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 9090:9090
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090
 # Open http://localhost:9090/targets
 ```
 
@@ -531,7 +531,7 @@ kubectl get pods -n observability
 open https://grafana.minikube.local
 
 # Port-forward Prometheus
-kubectl port-forward -n observability svc/observability-kube-prometh-prometheus 9090:9090
+kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090
 
 # View Loki logs
 kubectl logs -n observability -l app.kubernetes.io/name=loki -f
