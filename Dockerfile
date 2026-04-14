@@ -62,6 +62,10 @@ RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 # ============================================================================
 FROM base
 
+# Runtime argument to determine if this is a worker or web server
+ARG WORKER=false
+ENV WORKER=${WORKER}
+
 # Copy installed gems from build stage
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 
@@ -78,8 +82,12 @@ USER 1000:1000
 # Entrypoint prepares the database
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Expose port 3000
+# Expose port 3000 (only used by web server)
 EXPOSE 3000
 
-# Start the server by default
-CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
+# Start either Sidekiq worker or Rails server based on WORKER env var
+CMD if [ "$WORKER" = "true" ]; then \
+      bundle exec sidekiq; \
+    else \
+      ./bin/rails server -b 0.0.0.0; \
+    fi
