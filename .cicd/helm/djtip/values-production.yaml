@@ -14,16 +14,16 @@ ingress:
   enabled: true
   className: "haproxy"
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Use production issuer
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"  # Use DNS-01 for production
   hosts:
-    - host: djtip.production.local
+    - host: app.djtip.jennings.au
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: djtip-production-tls
       hosts:
-        - djtip.production.local
+        - app.djtip.jennings.au
 
 # Web pod resources - 2x development
 resources:

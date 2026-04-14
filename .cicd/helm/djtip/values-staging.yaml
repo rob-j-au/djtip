@@ -27,16 +27,16 @@ ingress:
   enabled: true
   className: "haproxy"
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"  # Use staging issuer
+    cert-manager.io/cluster-issuer: "letsencrypt-staging-dns01"  # Use DNS-01 for staging
   hosts:
-    - host: djtip-staging.minikube.local
+    - host: app.staging.djtip.jennings.au
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: djtip-staging-tls
       hosts:
-        - djtip-staging.minikube.local
+        - app.staging.djtip.jennings.au
 
 # Enable persistence for staging
 mongodb:
