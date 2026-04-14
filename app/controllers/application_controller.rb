@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   
   # OpenTelemetry enhancements
-  # before_action :add_trace_context_to_logs  # Disabled due to Rails TaggedLogging compatibility
   before_action :add_user_context_to_trace
   around_action :trace_request_with_context
 
@@ -20,16 +19,6 @@ class ApplicationController < ActionController::Base
   end
   
   private
-  
-  # Add trace ID to Rails logs for correlation with traces
-  def add_trace_context_to_logs
-    trace_id = current_trace_id
-    return unless trace_id
-    
-    # Set as thread-local for use in models/jobs
-    # Note: logger.tagged() disabled due to Rails TaggedLogging compatibility issues
-    Thread.current[:trace_id] = trace_id
-  end
   
   # Add user context to current trace span
   def add_user_context_to_trace
@@ -50,15 +39,17 @@ class ApplicationController < ActionController::Base
   def trace_request_with_context
     tracer = OpenTelemetry.tracer_provider.tracer('djtip', '1.0.0')
     
+    attributes = {
+      'http.route' => "#{controller_name}##{action_name}",
+      'http.target' => request.fullpath,
+      'http.method' => request.method,
+      'http.client_ip' => request.remote_ip
+    }
+    attributes['http.user_agent'] = request.user_agent if request.user_agent.present?
+    
     tracer.in_span(
       "#{controller_name}##{action_name}",
-      attributes: {
-        'http.route' => "#{controller_name}##{action_name}",
-        'http.target' => request.fullpath,
-        'http.method' => request.method,
-        'http.user_agent' => request.user_agent,
-        'http.client_ip' => request.remote_ip
-      },
+      attributes: attributes,
       kind: :server
     ) do |span|
       begin
@@ -82,15 +73,5 @@ class ApplicationController < ActionController::Base
         raise
       end
     end
-  end
-  
-  # Get current trace ID for logging
-  def current_trace_id
-    span_context = OpenTelemetry::Trace.current_span.context
-    return nil unless span_context.valid?
-    
-    span_context.hex_trace_id
-  rescue
-    nil
   end
 end
