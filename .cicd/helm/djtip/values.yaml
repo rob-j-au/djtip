@@ -57,7 +57,7 @@ ingress:
   className: "haproxy"
   annotations:
     ingress.class: haproxy
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"  # Use staging for dev/test
+    cert-manager.io/cluster-issuer: "letsencrypt-staging-dns01"  # Use DNS-01 for all environments
   hosts:
     - host: app.dev.djtip.jennings.au
       paths:
