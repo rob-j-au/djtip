@@ -258,10 +258,9 @@ djtip/
 
 ## 📚 Documentation
 
-- **[Development Endpoints](docs/DEV_ENDPOINTS.md)** - All service URLs and ports
+- **[Service Endpoints](docs/ENDPOINTS.md)** - URLs for all environments
 - **[ArgoCD & Kubernetes](docs/ARGO.md)** - Complete deployment guide
 - **[Docker Setup](docs/DOCKER.md)** - Docker and Docker Compose
-- **[HTTPS Development](docs/HTTPS_DEV.md)** - Local HTTPS with mkcert
 - **[cert-manager Setup](docs/CERT_MANAGER.md)** - Wildcard TLS with Cloudflare DNS-01
 - **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
 - **[Security Audit](docs/SECURITY_AUDIT.md)** - Security best practices

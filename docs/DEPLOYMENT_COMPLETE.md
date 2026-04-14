@@ -201,7 +201,7 @@ Application overhead:
 
 - **`docs/OBSERVABILITY.md`** - Complete observability stack guide
 - **`docs/INSTRUMENTATION.md`** - Application instrumentation guide
-- **`docs/HTTPS_DEV.md`** - HTTPS setup for local development
+- **`docs/CERT_MANAGER.md`** - TLS certificates with cert-manager
 
 ## Comparison with NewRelic
 
