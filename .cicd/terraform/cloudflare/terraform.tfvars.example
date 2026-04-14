@@ -1,0 +1,19 @@
+# Cloudflare API Token
+# Get from: https://dash.cloudflare.com/profile/api-tokens
+# Permissions: Zone → DNS → Edit
+# Zone: djtip.jennings.au
+cloudflare_api_token = "your-cloudflare-api-token-here"
+
+# Domain (usually don't need to change)
+domain = "djtip.jennings.au"
+
+# Development IP (Minikube)
+# Get with: minikube ip
+dev_ip = "192.168.49.2"
+
+# Staging IP (Pi cluster)
+# Get with: ssh pi "hostname -I | awk '{print \$1}'"
+staging_ip = "192.168.1.100"
+
+# Production IP (Pi cluster - usually same as staging)
+prod_ip = "192.168.1.100"

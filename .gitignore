@@ -127,3 +127,11 @@ Thumbs.db
 .cicd/helm/djtip/Chart.lock
 .cicd/helm/observability/charts/*.tgz
 .cicd/helm/observability/Chart.lock
+
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform/
+.terraform.lock.hcl
