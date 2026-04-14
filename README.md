@@ -45,28 +45,6 @@ DJ Tip is a full-stack web application that allows event organizers to manage DJ
 - **Loki Log Aggregation**: Centralized logging
 - **Tempo Distributed Tracing**: Request flow visualization
 
-## Models
-
-### Event
-- `title` (String) - Event name
-- `description` (String) - Event description
-- `date` (DateTime) - Event date and time
-- `location` (String) - Event location
-- **Relationships**: `has_many :users`, `has_many :performers`
-
-### User
-- `name` (String) - User's full name
-- `email` (String) - User's email address
-- `phone` (String) - User's phone number
-- **Relationships**: `belongs_to :event` (optional)
-
-### Performer
-- `name` (String) - Performer's name
-- `bio` (String) - Performer's biography
-- `genre` (String) - Music genre
-- `contact` (String) - Contact information
-- **Relationships**: `belongs_to :event` (optional)
-
 ## 🚀 Quick Start
 
 ### Local Development
@@ -160,41 +138,6 @@ kubectl apply -f .cicd/argocd/djtip-development.yaml
 3. **Add Performers**: Add performers and assign them to events
 4. **Manage Relationships**: View events to see associated users and performers
 
-## Development
-
-### Running Tests
-
-The project includes RSpec tests for models, controllers, and API endpoints.
-
-1. **Make sure MongoDB test instance is running**
-
-2. **Run the entire test suite:**
-   ```bash
-   bundle exec rspec
-   ```
-
-3. **Run specific test files:**
-   ```bash
-   bundle exec rspec spec/requests/api/v1/
-   ```
-
-4. **Run tests with specific format:**
-   ```bash
-   bundle exec rspec --format documentation
-   ```
-
-5. **Run tests and generate coverage report:**
-   ```bash
-   COVERAGE=true bundle exec rspec
-   ```
-
-### Database Configuration
-
-The app uses MongoDB with the following databases:
-- Development: `djtip_development`
-- Test: `djtip_test`
-- Production: Uses `MONGODB_URI` environment variable
-
 ### 🛠 Tech Stack
 
 **Backend:**
@@ -258,45 +201,53 @@ djtip/
 
 ## 📚 Documentation
 
+### Setup & Deployment
 - **[Service Endpoints](docs/ENDPOINTS.md)** - URLs for all environments
+- **[cert-manager Setup](docs/CERT_MANAGER.md)** - Wildcard TLS with Cloudflare DNS-01
 - **[ArgoCD & Kubernetes](docs/ARGO.md)** - Complete deployment guide
 - **[Docker Setup](docs/DOCKER.md)** - Docker and Docker Compose
-- **[cert-manager Setup](docs/CERT_MANAGER.md)** - Wildcard TLS with Cloudflare DNS-01
-- **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
-- **[Security Audit](docs/SECURITY_AUDIT.md)** - Security best practices
-- **[Application Instrumentation](docs/INSTRUMENTATION.md)** - OpenTelemetry usage
-- **[OpenTelemetry Enhancements](docs/OTEL_ENHANCEMENTS.md)** - Rails-specific tracing
-- **[API Documentation](docs/API_DOCUMENTATION.md)** - REST API reference
-- **[Deployment Complete](docs/DEPLOYMENT_COMPLETE.md)** - Deployment summary
 - **[Pi Deployment](.cicd/argocd/pi/README.md)** - Raspberry Pi Kubernetes cluster
+- **[Terraform DNS](.terraform/cloudflare/README.md)** - DNS automation
+
+### Observability & Monitoring
+- **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
+- **[Application Instrumentation](docs/INSTRUMENTATION.md)** - OpenTelemetry setup
+- **[OpenTelemetry Enhancements](docs/OTEL_ENHANCEMENTS.md)** - Rails-specific tracing
+- **[Observability Naming](docs/OBSERVABILITY_NAMING.md)** - Naming conventions
+
+### Development & Features
+- **[API Documentation](docs/API_DOCUMENTATION.md)** - REST API reference
+- **[Google Maps Setup](docs/GOOGLE_MAPS_SETUP.md)** - Maps integration
+- **[Stimulus Features](docs/STIMULUS_FEATURES.md)** - JavaScript features
+- **[Stimulus Testing](docs/STIMULUS_TESTING_REPORT.md)** - Testing report
+
+### Security & Operations
+- **[Security Audit](docs/SECURITY_AUDIT.md)** - Security best practices
+- **[Deployment Complete](docs/DEPLOYMENT_COMPLETE.md)** - Deployment summary
 
 ## 🔍 Observability
 
-Access the observability stack at:
-- **Grafana**: https://grafana.minikube.local (anonymous login enabled)
-- **Prometheus**: http://mon-kube-prometheus-stack-prometheus.observability:9090
-- **Metrics Endpoint**: http://localhost:3000/metrics
+**Production-grade monitoring and tracing:**
 
-Features:
-- ✅ Distributed tracing with OpenTelemetry
-- ✅ Automatic log-trace correlation
-- ✅ User context in all traces
-- ✅ Slow query detection (>100ms)
-- ✅ Business metrics tracking
-- ✅ Enhanced Sidekiq job tracing
+- ✅ **Distributed tracing** with OpenTelemetry
+- ✅ **Automatic log-trace correlation** - Link logs to traces
+- ✅ **User context in traces** - Track user actions
+- ✅ **Slow query detection** - Automatic alerts (>100ms)
+- ✅ **Business metrics** - Custom metrics tracking
+- ✅ **Enhanced Sidekiq tracing** - Background job visibility
+
+**Access:**
+- **Local**: http://localhost:3000/metrics
+- **Kubernetes**: https://grafana.{env}.yourdomain.com
+
+See [Observability Stack](docs/OBSERVABILITY.md) for complete guide.
 
 ## 🧪 Testing
 
 ```bash
-# Run all tests
-bundle exec rspec
-
-# Run with coverage
-COVERAGE=true bundle exec rspec
-
-# Run specific tests
-bundle exec rspec spec/models/
-bundle exec rspec spec/requests/api/
+bundle exec rspec                    # Run all tests
+COVERAGE=true bundle exec rspec      # With coverage report
+bundle exec rspec spec/models/       # Specific tests
 ```
 
 ## 🤝 Contributing
