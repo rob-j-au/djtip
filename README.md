@@ -260,6 +260,7 @@ djtip/
 - **[ArgoCD & Kubernetes](docs/ARGO.md)** - Complete deployment guide
 - **[Docker Setup](docs/DOCKER.md)** - Docker and Docker Compose
 - **[HTTPS Development](docs/HTTPS_DEV.md)** - Local HTTPS with mkcert
+- **[Local TLS Setup](docs/LOCAL_TLS_SETUP.md)** - TLS certificates for minikube.local domains
 - **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
 - **[cert-manager Setup](.cicd/helm/cert-manager/README.md)** - Automated TLS certificates
 - **[Security Audit](docs/SECURITY_AUDIT.md)** - Security best practices
