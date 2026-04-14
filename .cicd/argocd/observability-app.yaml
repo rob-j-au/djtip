@@ -13,6 +13,7 @@ spec:
     targetRevision: main
     path: .cicd/helm/observability
     helm:
+      releaseName: obs
       valueFiles:
         - values.yaml
 
