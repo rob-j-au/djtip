@@ -16,7 +16,7 @@ if ! command -v terraform &> /dev/null; then
 fi
 
 # Navigate to terraform directory
-cd .cicd/terraform/cloudflare
+cd .terraform/cloudflare
 
 # Check if terraform.tfvars exists
 if [ ! -f terraform.tfvars ]; then

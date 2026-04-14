@@ -46,7 +46,7 @@ ssh pi "hostname -I | awk '{print \$1}'"
 ### 3. Create terraform.tfvars
 
 ```bash
-cd .cicd/terraform/cloudflare
+cd .terraform/cloudflare
 
 # Copy example file
 cp terraform.tfvars.example terraform.tfvars
@@ -153,7 +153,7 @@ terraform destroy
 ## Files
 
 ```
-.cicd/terraform/cloudflare/
+.terraform/cloudflare/
 ├── main.tf                      # Main Terraform configuration
 ├── variables.tf                 # Variable definitions
 ├── outputs.tf                   # Output definitions
