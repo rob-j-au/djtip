@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   
   # OpenTelemetry enhancements
-  before_action :add_trace_context_to_logs
+  # before_action :add_trace_context_to_logs  # Disabled due to Rails TaggedLogging compatibility
   before_action :add_user_context_to_trace
   around_action :trace_request_with_context
 
