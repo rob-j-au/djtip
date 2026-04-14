@@ -13,7 +13,9 @@ The djtip application is fully instrumented with:
 ## What Gets Automatically Traced
 
 ### HTTP Requests
+
 Every HTTP request is automatically traced with:
+
 - Request method and path
 - Response status code
 - Duration
@@ -22,14 +24,18 @@ Every HTTP request is automatically traced with:
 - User agent
 
 ### Database Queries
+
 All MongoDB queries are traced with:
+
 - Query type (find, insert, update, delete)
 - Collection name
 - Query duration
 - Document count
 
 ### Background Jobs
+
 All Sidekiq jobs are traced with:
+
 - Job class name
 - Queue name
 - Arguments (sanitized)
@@ -37,14 +43,18 @@ All Sidekiq jobs are traced with:
 - Success/failure status
 
 ### External HTTP Calls
+
 All outbound HTTP requests are traced:
+
 - Target URL
 - HTTP method
 - Response status
 - Duration
 
 ### Redis Operations
+
 All Redis commands are traced:
+
 - Command name
 - Key (sanitized)
 - Duration
@@ -52,39 +62,48 @@ All Redis commands are traced:
 ## Viewing Traces in Grafana
 
 ### 1. Access Grafana
-Open https://grafana.minikube.local (no login required)
+
+Open <https://grafana.minikube.local> (no login required)
 
 ### 2. Go to Explore
+
 Click the **Explore** icon (compass) in the left sidebar
 
 ### 3. Select Tempo Datasource
+
 Choose **Tempo** from the datasource dropdown
 
 ### 4. Search for Traces
 
 **By Service:**
+
 ```
 Service: djtip
 ```
 
 **By Duration:**
+
 ```
 Min Duration: 100ms
 Max Duration: 5s
 ```
 
 **By Status:**
+
 ```
 Status: error
 ```
 
 **By Span Name:**
+
 ```
 Span Name: GET /events
 ```
 
 ### 5. Analyze Trace
+
 Click on any trace to see:
+
 - **Waterfall view** - Timeline of all spans
 - **Span details** - Attributes, events, errors
 - **Service map** - Dependencies between services
@@ -162,11 +181,13 @@ end
 #### HTTP Metrics
 
 **Request Count:**
+
 ```promql
 http_requests_total{method="GET", path="/events", status="2"}
 ```
 
 **Request Duration (95th percentile):**
+
 ```promql
 histogram_quantile(0.95, 
   rate(http_request_duration_seconds_bucket[5m])
@@ -174,6 +195,7 @@ histogram_quantile(0.95,
 ```
 
 **Error Rate:**
+
 ```promql
 rate(http_requests_total{status="5"}[5m])
 ```
@@ -181,11 +203,13 @@ rate(http_requests_total{status="5"}[5m])
 #### Database Metrics
 
 **Query Duration:**
+
 ```promql
 db_query_duration_seconds{operation="find"}
 ```
 
 **Slow Queries (>100ms):**
+
 ```promql
 db_query_duration_seconds > 0.1
 ```
@@ -193,11 +217,13 @@ db_query_duration_seconds > 0.1
 #### Background Job Metrics
 
 **Job Count:**
+
 ```promql
 sidekiq_jobs_total{queue="default", status="success"}
 ```
 
 **Job Duration:**
+
 ```promql
 sidekiq_job_duration_seconds{job_class="TipNotificationJob"}
 ```
@@ -205,16 +231,19 @@ sidekiq_job_duration_seconds{job_class="TipNotificationJob"}
 #### Business Metrics
 
 **Tips Created:**
+
 ```promql
 rate(tips_created_total[1h])
 ```
 
 **Events Created:**
+
 ```promql
 rate(events_created_total[1h])
 ```
 
 **Users Created:**
+
 ```promql
 rate(users_created_total[1h])
 ```
@@ -286,6 +315,7 @@ curl http://localhost:3000/metrics
 ```
 
 Output example:
+
 ```
 # HELP http_requests_total Total HTTP requests
 # TYPE http_requests_total counter
@@ -302,24 +332,27 @@ http_request_duration_seconds_bucket{method="GET",path="/events",le="0.01"} 250.
 
 ### Creating a Custom Dashboard
 
-1. Open Grafana: https://grafana.minikube.local
+1. Open Grafana: <https://grafana.minikube.local>
 2. Click **+** → **Dashboard**
 3. Click **Add visualization**
 4. Select **Prometheus** datasource
 5. Add queries:
 
 **Request Rate:**
+
 ```promql
 sum(rate(http_requests_total[5m])) by (path)
 ```
 
 **Error Rate:**
+
 ```promql
 sum(rate(http_requests_total{status="5"}[5m])) / 
 sum(rate(http_requests_total[5m]))
 ```
 
 **Response Time (p95):**
+
 ```promql
 histogram_quantile(0.95, 
   sum(rate(http_request_duration_seconds_bucket[5m])) by (le, path)
@@ -355,6 +388,7 @@ end
 ```
 
 Now logs will include trace IDs:
+
 ```
 [a1b2c3d4e5f6] Started GET "/events" for 127.0.0.1
 [a1b2c3d4e5f6] Processing by EventsController#index
@@ -363,6 +397,7 @@ Now logs will include trace IDs:
 ### Viewing Logs from Traces
 
 In Grafana Explore:
+
 1. Select a trace
 2. Click **Logs** tab
 3. See all logs with matching trace ID
@@ -372,12 +407,14 @@ In Grafana Explore:
 ### Identifying Slow Requests
 
 **In Grafana (Tempo):**
+
 1. Go to Explore → Tempo
 2. Set **Min Duration: 1s**
 3. View slowest requests
 4. Analyze span waterfall to find bottlenecks
 
 **In Grafana (Prometheus):**
+
 ```promql
 # Requests slower than 1 second
 http_request_duration_seconds > 1
@@ -392,6 +429,7 @@ Look for traces with many database spans:
 3. If >10 queries for a single request → likely N+1
 
 **Fix with eager loading:**
+
 ```ruby
 # Before (N+1)
 @events = Event.all
@@ -405,16 +443,19 @@ Look for traces with many database spans:
 ### Monitoring Background Jobs
 
 **Failed jobs:**
+
 ```promql
 sidekiq_jobs_total{status="failed"}
 ```
 
 **Slow jobs:**
+
 ```promql
 sidekiq_job_duration_seconds > 30
 ```
 
 **Queue depth:**
+
 ```promql
 sidekiq_queue_depth{queue="default"}
 ```
@@ -502,11 +543,13 @@ c.sampler = SmartSampler.new
 ### No Traces Appearing
 
 **Check OTLP endpoint:**
+
 ```bash
 kubectl logs -n default -l app.kubernetes.io/name=djtip | grep OpenTelemetry
 ```
 
 **Test connectivity:**
+
 ```bash
 kubectl exec -n default deployment/djtip -- curl -v http://tempo.observability.svc.cluster.local:4318/v1/traces
 ```
@@ -514,11 +557,13 @@ kubectl exec -n default deployment/djtip -- curl -v http://tempo.observability.s
 ### No Metrics at /metrics
 
 **Check Prometheus initialization:**
+
 ```bash
 kubectl logs -n default -l app.kubernetes.io/name=djtip | grep Prometheus
 ```
 
 **Test endpoint:**
+
 ```bash
 kubectl port-forward -n default svc/djtip 3000:3000
 curl http://localhost:3000/metrics
@@ -560,6 +605,7 @@ add_trace_attributes(
 ### 2. Don't Trace Everything
 
 Skip tracing for:
+
 - Health checks
 - Metrics endpoints
 - Static assets
@@ -586,6 +632,7 @@ add_trace_attributes('user.id' => current_user.id)
 ### 4. Use Consistent Naming
 
 Follow naming conventions:
+
 - `http.*` for HTTP attributes
 - `db.*` for database attributes
 - `user.*` for user attributes

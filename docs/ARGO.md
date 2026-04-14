@@ -3,6 +3,7 @@
 This guide covers the installation, configuration, and usage of ArgoCD for continuous deployment of the DJ Tip application on Minikube.
 
 ## Table of Contents
+
 - [Installation](#installation)
 - [Accessing ArgoCD UI](#accessing-argocd-ui)
 - [Initial Setup](#initial-setup)
@@ -15,6 +16,7 @@ This guide covers the installation, configuration, and usage of ArgoCD for conti
 ## Installation
 
 ### Prerequisites
+
 - Minikube running
 - kubectl configured
 - ArgoCD CLI installed (optional but recommended)
@@ -22,21 +24,25 @@ This guide covers the installation, configuration, and usage of ArgoCD for conti
 ### Install ArgoCD on Minikube
 
 1. **Create ArgoCD namespace:**
+
 ```bash
 kubectl create namespace argocd
 ```
 
 2. **Install ArgoCD:**
+
 ```bash
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
 3. **Wait for pods to be ready:**
+
 ```bash
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
 ```
 
 4. **Verify installation:**
+
 ```bash
 kubectl get pods -n argocd
 ```
@@ -50,12 +56,14 @@ All pods should be in `Running` state.
 ### Method 1: Port Forwarding (Recommended for Local)
 
 1. **Start port forwarding:**
+
 ```bash
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 
 2. **Access the UI:**
-- Open browser: https://localhost:8080
+
+- Open browser: <https://localhost:8080>
 - Accept the self-signed certificate warning
 
 ### Method 2: Minikube Service
@@ -67,6 +75,7 @@ minikube service argocd-server -n argocd
 ### Method 3: NodePort (Alternative)
 
 Patch the service to use NodePort:
+
 ```bash
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
 minikube service argocd-server -n argocd --url
@@ -83,17 +92,20 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ```
 
 ### Login Credentials
+
 - **Username:** `admin`
 - **Password:** Use the password from the command above
 
 ### Change Admin Password (Recommended)
 
 Via UI:
+
 1. Login to ArgoCD UI
 2. Go to User Info (top right)
 3. Click "Update Password"
 
 Via CLI:
+
 ```bash
 # Get password
 PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
@@ -108,11 +120,13 @@ argocd account update-password
 ### Install ArgoCD CLI (if not installed)
 
 **macOS:**
+
 ```bash
 brew install argocd
 ```
 
 **Linux:**
+
 ```bash
 curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
 chmod +x /usr/local/bin/argocd
@@ -160,6 +174,7 @@ argocd app create djtip \
 ### Option 3: Using Kubernetes Manifest
 
 Create `argocd-app.yaml`:
+
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -190,6 +205,7 @@ spec:
 ```
 
 Apply it:
+
 ```bash
 kubectl apply -f argocd-app.yaml
 ```
@@ -201,11 +217,13 @@ kubectl apply -f argocd-app.yaml
 ### View Application Status
 
 **CLI:**
+
 ```bash
 argocd app get djtip
 ```
 
 **kubectl:**
+
 ```bash
 kubectl get application djtip -n argocd
 ```
@@ -213,11 +231,13 @@ kubectl get application djtip -n argocd
 ### Sync Application
 
 **CLI:**
+
 ```bash
 argocd app sync djtip
 ```
 
 **UI:**
+
 - Click on the application
 - Click "Sync" button
 
@@ -230,17 +250,20 @@ argocd app logs djtip
 ### Delete Application
 
 **CLI:**
+
 ```bash
 argocd app delete djtip
 ```
 
 **UI:**
+
 - Click on the application
 - Click "Delete" button
 
 ### Rollback to Previous Version
 
 **CLI:**
+
 ```bash
 # List history
 argocd app history djtip
@@ -252,6 +275,7 @@ argocd app rollback djtip <revision-number>
 ### Update Helm Values
 
 Edit your `values.yaml` in the repository and commit:
+
 ```bash
 # Edit .cicd/helm/djtip/values.yaml
 git add .cicd/helm/djtip/values.yaml
@@ -314,6 +338,7 @@ argocd app set djtip --sync-policy none
 ### Deploy to Different Environments
 
 **Development:**
+
 ```bash
 argocd app create djtip-dev \
   --repo https://github.com/rob-j-au/djtip.git \
@@ -323,6 +348,7 @@ argocd app create djtip-dev \
 ```
 
 **Production:**
+
 ```bash
 argocd app create djtip-prod \
   --repo https://github.com/rob-j-au/djtip.git \
@@ -517,7 +543,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 ### Current Installation Details
 
 - **Namespace:** `argocd`
-- **UI URL:** https://localhost:8080 (with port-forward)
+- **UI URL:** <https://localhost:8080> (with port-forward)
 - **Username:** `admin`
 - **Password:** Get from secret: `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
 - **Cluster:** Minikube (local)

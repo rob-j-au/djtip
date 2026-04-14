@@ -26,6 +26,7 @@ The API returns consistent error responses:
 ```
 
 Common HTTP status codes:
+
 - `200` - Success
 - `201` - Created
 - `204` - No Content (for successful deletions)
@@ -37,9 +38,11 @@ Common HTTP status codes:
 ### Events
 
 #### GET /api/v1/events
+
 Returns all events with associated users and performers.
 
 **Response:**
+
 ```json
 [
   {
@@ -70,12 +73,15 @@ Returns all events with associated users and performers.
 ```
 
 #### GET /api/v1/events/:id
+
 Returns a specific event with associated users and performers.
 
 #### POST /api/v1/events
+
 Creates a new event.
 
 **Request Body:**
+
 ```json
 {
   "event": {
@@ -88,17 +94,21 @@ Creates a new event.
 ```
 
 #### PUT /api/v1/events/:id
+
 Updates an existing event.
 
 #### DELETE /api/v1/events/:id
+
 Deletes an event and all associated users and performers.
 
 ### Users
 
 #### GET /api/v1/users
+
 Returns all users (excluding performers) with associated events.
 
 **Response:**
+
 ```json
 [
   {
@@ -130,12 +140,15 @@ Returns all users (excluding performers) with associated events.
 ```
 
 #### GET /api/v1/users/:id
+
 Returns a specific user with associated events.
 
 #### POST /api/v1/users
+
 Creates a new user and associates them with events.
 
 **Request Body:**
+
 ```json
 {
   "user": {
@@ -150,9 +163,11 @@ Creates a new user and associates them with events.
 ```
 
 #### PUT /api/v1/users/:id
+
 Updates an existing user.
 
 #### DELETE /api/v1/users/:id
+
 Deletes a user.
 
 ### Performers
@@ -160,9 +175,11 @@ Deletes a user.
 **Note:** Performers inherit from Users using Single Table Inheritance (STI). They have all User attributes plus performer-specific fields.
 
 #### GET /api/v1/performers
+
 Returns all performers with associated events.
 
 **Response:**
+
 ```json
 [
   {
@@ -194,12 +211,15 @@ Returns all performers with associated events.
 ```
 
 #### GET /api/v1/performers/:id
+
 Returns a specific performer with associated events.
 
 #### POST /api/v1/performers
+
 Creates a new performer and associates them with events.
 
 **Request Body:**
+
 ```json
 {
   "performer": {
@@ -216,17 +236,21 @@ Creates a new performer and associates them with events.
 ```
 
 #### PUT /api/v1/performers/:id
+
 Updates an existing performer.
 
 #### DELETE /api/v1/performers/:id
+
 Deletes a performer.
 
 ### Tips
 
 #### GET /api/v1/events/:event_id/tips
+
 Returns all tips for a specific event.
 
 **Response:**
+
 ```json
 [
   {
@@ -251,12 +275,15 @@ Returns all tips for a specific event.
 ```
 
 #### GET /api/v1/events/:event_id/tips/:id
+
 Returns a specific tip.
 
 #### POST /api/v1/events/:event_id/tips
+
 Creates a new tip for an event.
 
 **Request Body:**
+
 ```json
 {
   "tip": {
@@ -268,30 +295,36 @@ Creates a new tip for an event.
 ```
 
 #### PUT /api/v1/events/:event_id/tips/:id
+
 Updates an existing tip.
 
 #### DELETE /api/v1/events/:event_id/tips/:id
+
 Deletes a tip.
 
 ## Data Model Relationships
 
 ### User Model
+
 - **Inheritance**: Performer inherits from User (Single Table Inheritance)
 - **Events**: Many-to-many relationship (`has_and_belongs_to_many :events`)
 - **Tips**: One-to-many relationship (`has_many :tips`)
 - **Scope**: `User.non_performers` returns only regular users (excludes performers)
 
 ### Event Model
+
 - **Users**: Many-to-many relationship (`has_and_belongs_to_many :users`)
 - **Tips**: One-to-many relationship (`has_many :tips`)
 - **Performers**: Custom method that returns users with `_type: 'Performer'`
 
 ### Performer Model
+
 - **Inheritance**: Inherits from User model
 - **Additional Fields**: `bio`, `genre`, `contact`
 - **Events**: Inherited many-to-many relationship from User
 
 ### Tip Model
+
 - **User**: Belongs to a user (`belongs_to :user`)
 - **Event**: Belongs to an event (`belongs_to :event`)
 - **Fields**: `amount`, `message`
@@ -299,6 +332,7 @@ Deletes a tip.
 ## Example Usage
 
 ### Create an Event
+
 ```bash
 curl -X POST http://localhost:3000/api/v1/events \
   -H "Content-Type: application/json" \
@@ -313,6 +347,7 @@ curl -X POST http://localhost:3000/api/v1/events \
 ```
 
 ### Add a User to Multiple Events
+
 ```bash
 curl -X POST http://localhost:3000/api/v1/users \
   -H "Content-Type: application/json" \
@@ -329,6 +364,7 @@ curl -X POST http://localhost:3000/api/v1/users \
 ```
 
 ### Add a Performer to Multiple Events
+
 ```bash
 curl -X POST http://localhost:3000/api/v1/performers \
   -H "Content-Type: application/json" \
@@ -347,11 +383,13 @@ curl -X POST http://localhost:3000/api/v1/performers \
 ```
 
 ### Get Event with All Users and Performers
+
 ```bash
 curl http://localhost:3000/api/v1/events/EVENT_ID_HERE
 ```
 
 ### Create a Tip for an Event
+
 ```bash
 curl -X POST http://localhost:3000/api/v1/events/EVENT_ID/tips \
   -H "Content-Type: application/json" \
@@ -373,6 +411,7 @@ bundle exec rspec spec/requests/api/
 ```
 
 The test suite includes:
+
 - CRUD operations for all resources (Users, Events, Performers, Tips)
 - Many-to-many relationship testing
 - Single Table Inheritance (STI) testing

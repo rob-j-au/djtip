@@ -42,6 +42,7 @@ These components retain the "mon-" prefix due to kube-prometheus-stack chart des
 The kube-prometheus-stack Helm chart uses the **release name** as a prefix for certain components. This is hardcoded in the chart and cannot be fully overridden with `fullnameOverride`.
 
 We chose "mon" (short for "monitoring") as the release name because:
+
 - ✅ Short and meaningful
 - ✅ Easier to type than "observability"
 - ✅ Still descriptive
@@ -108,6 +109,7 @@ kubectl get pods -n observability
 ```
 
 Output shows clean names:
+
 ```
 NAME                                    READY   STATUS
 grafana-*                               3/3     Running
@@ -158,6 +160,7 @@ The naming is configured in:
 ## Benefits
 
 ### Before Simplification
+
 ```
 observability-grafana-6c8c445584-trb9s
 observability-loki-0
@@ -169,6 +172,7 @@ observability-prometheus-node-exporter-fbf8v
 ```
 
 ### After Simplification
+
 ```
 grafana-69bb9d9949-6wq2n
 loki-0
@@ -180,6 +184,7 @@ mon-prometheus-node-exporter-xk6x7
 ```
 
 ### Improvements
+
 - ✅ Removed redundant "observability-" prefix (already in namespace)
 - ✅ Shortened "observability-kube-prometh-" to "mon-"
 - ✅ Clean service names for most-used services (Grafana, Loki, Tempo)
@@ -195,6 +200,7 @@ If the kube-prometheus-stack chart adds better support for `fullnameOverride` in
 3. Keep the current naming for consistency
 
 For now, this naming scheme provides the best balance of:
+
 - **Readability** - Easy to identify components
 - **Maintainability** - Uses standard Helm charts
 - **Practicality** - Works with chart limitations

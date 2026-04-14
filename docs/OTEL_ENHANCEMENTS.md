@@ -17,14 +17,18 @@ Beyond the basic auto-instrumentation, we've added several Rails-specific enhanc
 ## 1. Trace-Log Correlation
 
 ### What It Does
+
 Every log line now includes the trace ID, making it easy to find all logs for a specific request.
 
 ### Implementation
+
 - `config/initializers/logging.rb` - Custom log formatter
 - `app/controllers/application_controller.rb` - Adds trace ID to logs
 
 ### Usage
+
 Logs automatically include trace IDs:
+
 ```
 [a1b2c3d4e5f6789] Started GET "/events" for 127.0.0.1
 [a1b2c3d4e5f6789] Processing by EventsController#index
@@ -32,6 +36,7 @@ Logs automatically include trace IDs:
 ```
 
 ### In Grafana
+
 1. Copy trace ID from a trace
 2. Go to Explore → Loki
 3. Query: `{app="djtip"} |= "a1b2c3d4e5f6789"`
@@ -40,18 +45,23 @@ Logs automatically include trace IDs:
 ## 2. User Context Tracking
 
 ### What It Does
+
 Automatically adds user information to every trace when a user is logged in.
 
 ### Implementation
+
 - `ApplicationController#add_user_context_to_trace`
 
 ### Attributes Added
+
 - `enduser.id` - User ID
 - `enduser.email` - User email
 - `enduser.name` - User name (if available)
 
 ### In Grafana
+
 Search for traces by user:
+
 ```
 Service: djtip
 Tags: enduser.id=12345
@@ -60,12 +70,15 @@ Tags: enduser.id=12345
 ## 3. Enhanced Error Tracking
 
 ### What It Does
+
 Captures rich error context including stack traces, error types, and request details.
 
 ### Implementation
+
 - `ApplicationController#trace_request_with_context`
 
 ### Error Attributes
+
 - `error.type` - Exception class name
 - `error.message` - Error message
 - `error.stack` - First 5 lines of backtrace
@@ -73,7 +86,9 @@ Captures rich error context including stack traces, error types, and request det
 - Full exception recorded via `span.record_exception(e)`
 
 ### In Grafana
+
 Find all errors:
+
 ```
 Service: djtip
 Status: error
@@ -82,9 +97,11 @@ Status: error
 ## 4. Model Tracing with Traceable Concern
 
 ### What It Does
+
 Makes it easy to add tracing to model methods.
 
 ### Implementation
+
 Include the `Traceable` concern in your model:
 
 ```ruby
@@ -120,6 +137,7 @@ end
 ```
 
 ### Benefits
+
 - Zero boilerplate for tracing model methods
 - Automatic error tracking
 - Model context (class name, record ID) added automatically
@@ -127,9 +145,11 @@ end
 ## 5. Business Metrics Tracking
 
 ### What It Does
+
 Track business events in both traces (as span events) and Prometheus (as metrics).
 
 ### Implementation
+
 Include the `BusinessMetrics` concern:
 
 ```ruby
@@ -160,15 +180,19 @@ end
 ```
 
 ### Benefits
+
 - Business events visible in traces
 - Automatic Prometheus metrics creation
 - Consistent tracking across traces and metrics
 
 ### In Grafana
+
 **View events in trace:**
+
 - Events appear as span events in the trace timeline
 
 **Query metrics:**
+
 ```promql
 # Tips created per hour
 rate(tip_created_total[1h])
@@ -180,26 +204,33 @@ tip_created_total{amount_range="large"}
 ## 6. Slow Query Detection
 
 ### What It Does
+
 Automatically detects and logs MongoDB queries that take longer than 100ms.
 
 ### Implementation
+
 - `config/initializers/mongodb_tracing.rb`
 
 ### Features
+
 - Logs slow queries with duration and collection name
 - Adds slow query events to current trace span
 - Updates Prometheus metrics for query duration
 
 ### Example Log
+
 ```
 WARN: Slow MongoDB query detected: find on events.tips took 150.23ms
 ```
 
 ### In Grafana
+
 **Find slow queries in traces:**
+
 - Look for `slow_query` events in trace spans
 
 **Query metrics:**
+
 ```promql
 # Queries slower than 100ms
 db_query_duration_seconds > 0.1
@@ -211,12 +242,15 @@ histogram_quantile(0.95, rate(db_query_duration_seconds_bucket[5m]))
 ## 7. Enhanced Sidekiq Tracing
 
 ### What It Does
+
 Adds comprehensive context to background job traces.
 
 ### Implementation
+
 - `config/initializers/sidekiq_tracing.rb`
 
 ### Attributes Added
+
 - `messaging.system` - "sidekiq"
 - `messaging.destination` - Queue name
 - `messaging.message_id` - Job ID
@@ -227,13 +261,16 @@ Adds comprehensive context to background job traces.
 - `job.status` - "success" or "failed"
 
 ### In Grafana
+
 **Find all jobs:**
+
 ```
 Service: djtip
 Span Name: *Job.perform
 ```
 
 **Find failed jobs:**
+
 ```
 Service: djtip
 Span Name: *Job.perform
@@ -241,6 +278,7 @@ Status: error
 ```
 
 **Find slow jobs:**
+
 ```
 Service: djtip
 Span Name: *Job.perform
@@ -351,13 +389,16 @@ All enhancements are designed to have minimal performance impact:
 ## Best Practices
 
 ### 1. Don't Over-Trace
+
 Only trace methods that:
+
 - Are business-critical
 - Are frequently slow
 - Have complex logic
 - Are hard to debug
 
 ### 2. Use Meaningful Span Names
+
 ```ruby
 # Good
 trace_method :process_payment, span_name: 'payment.stripe.charge'
@@ -367,6 +408,7 @@ trace_method :do_stuff, span_name: 'stuff'
 ```
 
 ### 3. Add Relevant Attributes
+
 ```ruby
 # Good - useful for filtering/debugging
 add_trace_attributes({
@@ -383,6 +425,7 @@ add_trace_attributes({
 ```
 
 ### 4. Track Business Events Consistently
+
 ```ruby
 # Good - consistent naming
 track_business_event('tip.created', ...)
@@ -396,6 +439,7 @@ track_business_event('remove_tip', ...)
 ```
 
 ### 5. Use Appropriate Metric Labels
+
 ```ruby
 # Good - low cardinality
 labels: { amount_range: 'large', status: 'completed' }
@@ -407,6 +451,7 @@ labels: { amount: amount, user_id: user_id }
 ## Troubleshooting
 
 ### Trace IDs Not Appearing in Logs
+
 ```bash
 # Check if logging initializer loaded
 kubectl logs -n default -l app.kubernetes.io/name=djtip | grep "Trace ID logging enabled"
@@ -416,12 +461,14 @@ kubectl logs -n default -l app.kubernetes.io/name=djtip | grep "OpenTelemetry"
 ```
 
 ### User Context Not in Traces
+
 ```bash
 # Verify Devise is working
 # Check if current_user is available in controller
 ```
 
 ### Business Metrics Not Appearing
+
 ```bash
 # Check if Prometheus initializer loaded
 kubectl logs -n default -l app.kubernetes.io/name=djtip | grep "Prometheus"

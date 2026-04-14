@@ -18,12 +18,13 @@ DJ Tip is a full-stack web application that allows event organizers to manage DJ
 
 ## 🔐 Admin Access
 
-**Email:** admin@djtip.com  
+**Email:** <admin@djtip.com>  
 **Password:** password123
 
 ## ✨ Features
 
 ### Core Functionality
+
 - **Event Management**: Create and manage DJ events with dates, locations, and details
 - **User Management**: User registration, authentication, and profile management
 - **Tip Tracking**: Track and manage tips for DJs/performers
@@ -31,6 +32,7 @@ DJ Tip is a full-stack web application that allows event organizers to manage DJ
 - **Geocoding**: Location-based features with Geocoder gem
 
 ### UI/UX
+
 - **daisyUI 5 Components**: Modern, accessible component library
 - **Tailwind CSS**: Utility-first styling with custom theme
 - **Responsive Design**: Mobile-first, works on all devices
@@ -38,6 +40,7 @@ DJ Tip is a full-stack web application that allows event organizers to manage DJ
 - **Stimulus Controllers**: Interactive JavaScript features
 
 ### DevOps & Observability
+
 - **Kubernetes Deployment**: Helm charts with ArgoCD GitOps
 - **OpenTelemetry Tracing**: Distributed tracing for all requests
 - **Prometheus Metrics**: Application and business metrics
@@ -50,6 +53,7 @@ DJ Tip is a full-stack web application that allows event organizers to manage DJ
 ### Local Development
 
 #### Prerequisites
+
 - Ruby 3.4.1
 - MongoDB 7.0+
 - Redis 7.0+
@@ -58,17 +62,20 @@ DJ Tip is a full-stack web application that allows event organizers to manage DJ
 #### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/rob-j-au/djtip.git
    cd djtip
    ```
 
 2. **Install dependencies:**
+
    ```bash
    bundle install
    ```
 
 3. **Start services:**
+
    ```bash
    # MongoDB
    brew services start mongodb-community
@@ -78,11 +85,13 @@ DJ Tip is a full-stack web application that allows event organizers to manage DJ
    ```
 
 4. **Setup database:**
+
    ```bash
    rails db:seed
    ```
 
 5. **Start the Rails server:**
+
    ```bash
    bin/dev
    ```
@@ -122,11 +131,13 @@ kubectl apply -f .cicd/argocd/djtip-development.yaml
 ```
 
 **Environments:**
+
 - **Development**: `app.dev.yourdomain.com` - 2 pods, auto-sync
 - **Staging**: `app.staging.yourdomain.com` - 4 pods, auto-sync
 - **Production**: `app.yourdomain.com` - 4 pods, manual sync
 
 📖 **Guides:**
+
 - [Complete Setup](docs/CERT_MANAGER.md) - TLS certificates with cert-manager
 - [ArgoCD Deployment](docs/ARGO.md) - Full Kubernetes guide
 - [Terraform DNS](.terraform/cloudflare/README.md) - DNS automation
@@ -141,6 +152,7 @@ kubectl apply -f .cicd/argocd/djtip-development.yaml
 ### 🛠 Tech Stack
 
 **Backend:**
+
 - Rails 8.1.3
 - Ruby 3.4.1
 - Mongoid 9.0 (MongoDB ODM)
@@ -149,6 +161,7 @@ kubectl apply -f .cicd/argocd/djtip-development.yaml
 - Shrine (File Uploads)
 
 **Frontend:**
+
 - daisyUI 5 (Component Library)
 - Tailwind CSS 4 (Styling)
 - Stimulus (JavaScript)
@@ -156,6 +169,7 @@ kubectl apply -f .cicd/argocd/djtip-development.yaml
 - Importmap (JavaScript Modules)
 
 **Observability:**
+
 - OpenTelemetry (Distributed Tracing)
 - Prometheus (Metrics)
 - Grafana (Visualization)
@@ -163,6 +177,7 @@ kubectl apply -f .cicd/argocd/djtip-development.yaml
 - Tempo (Trace Storage)
 
 **Infrastructure:**
+
 - Docker (Containerization)
 - Kubernetes (Orchestration)
 - ArgoCD (GitOps)
@@ -202,6 +217,7 @@ djtip/
 ## 📚 Documentation
 
 ### Setup & Deployment
+
 - **[Service Endpoints](docs/ENDPOINTS.md)** - URLs for all environments
 - **[cert-manager Setup](docs/CERT_MANAGER.md)** - Wildcard TLS with Cloudflare DNS-01
 - **[ArgoCD & Kubernetes](docs/ARGO.md)** - Complete deployment guide
@@ -210,17 +226,20 @@ djtip/
 - **[Terraform DNS](.terraform/cloudflare/README.md)** - DNS automation
 
 ### Observability & Monitoring
+
 - **[Observability Stack](docs/OBSERVABILITY.md)** - Prometheus, Grafana, Loki, Tempo
 - **[Application Instrumentation](docs/INSTRUMENTATION.md)** - OpenTelemetry setup
 - **[OpenTelemetry Enhancements](docs/OTEL_ENHANCEMENTS.md)** - Rails-specific tracing
 - **[Observability Naming](docs/OBSERVABILITY_NAMING.md)** - Naming conventions
 
 ### Development & Features
+
 - **[API Documentation](docs/API_DOCUMENTATION.md)** - REST API reference
 - **[Google Maps Setup](docs/GOOGLE_MAPS_SETUP.md)** - Maps integration
 - **[Stimulus Controllers](docs/STIMULUS.md)** - Interactive JavaScript features
 
 ### Operations
+
 - **[Deployment Guide](docs/DEPLOYMENT.md)** - Complete deployment summary
 
 ## 🔍 Observability
@@ -235,8 +254,9 @@ djtip/
 - ✅ **Enhanced Sidekiq tracing** - Background job visibility
 
 **Access:**
-- **Local**: http://localhost:3000/metrics
-- **Kubernetes**: https://grafana.{env}.yourdomain.com
+
+- **Local**: <http://localhost:3000/metrics>
+- **Kubernetes**: <https://grafana.{env}.yourdomain.com>
 
 See [Observability Stack](docs/OBSERVABILITY.md) for complete guide.
 

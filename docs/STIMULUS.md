@@ -24,12 +24,14 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 **File:** `app/javascript/controllers/search_filter_controller.js`
 
 **Features:**
+
 - Auto-submit with debouncing (500ms)
 - Loading states during search
 - Clear all filters button
 - Works with text inputs and selects
 
 **Usage:**
+
 ```erb
 <%= form_with url: admin_users_path, method: :get,
     data: { 
@@ -58,12 +60,14 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 **File:** `app/javascript/controllers/form_validation_controller.js`
 
 **Features:**
+
 - Real-time validation on blur/input
 - Email, phone, URL, number validation
 - Visual feedback with error messages
 - Prevents invalid form submission
 
 **Usage:**
+
 ```erb
 <%= form_with model: @user, 
     data: { controller: "form-validation" } do |f| %>
@@ -90,12 +94,14 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 **File:** `app/javascript/controllers/confirmation_dialog_controller.js`
 
 **Features:**
+
 - Modal dialogs for destructive actions
 - Customizable messages and buttons
 - Turbo integration
 - Keyboard navigation (ESC to cancel)
 
 **Usage:**
+
 ```erb
 <%= button_to "Delete", admin_user_path(@user), 
     method: :delete,
@@ -117,12 +123,14 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 **File:** `app/javascript/controllers/clipboard_controller.js`
 
 **Features:**
+
 - Modern Clipboard API with fallback
 - Visual feedback on copy
 - Toast notifications
 - Copy from text value or element content
 
 **Usage:**
+
 ```erb
 <button data-controller="clipboard"
         data-clipboard-text-value="<%= @user.email %>"
@@ -140,6 +148,7 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 **File:** `app/javascript/controllers/auto_save_controller.js`
 
 **Features:**
+
 - Automatic saving at intervals (default 30s)
 - Change detection (only saves if modified)
 - Status indicators (unsaved, saving, saved, error)
@@ -147,6 +156,7 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 - Manual save trigger
 
 **Usage:**
+
 ```erb
 <%= form_with model: @user,
     data: {
@@ -174,6 +184,7 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 **File:** `app/javascript/controllers/table_actions_controller.js`
 
 **Features:**
+
 - Row selection (individual and bulk)
 - Select all toggle
 - Visual feedback for selected rows
@@ -181,6 +192,7 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 - Selection counter
 
 **Usage:**
+
 ```erb
 <div data-controller="table-actions">
   <table class="table">
@@ -220,11 +232,13 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 **File:** `app/javascript/controllers/alert_controller.js`
 
 **Features:**
+
 - One-click dismissal
 - Fade animations
 - Flash message integration
 
 **Usage:**
+
 ```erb
 <div data-controller="alert" class="alert alert-success">
   <span>Success message!</span>
@@ -242,11 +256,13 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 **File:** `app/javascript/controllers/mobile_menu_controller.js`
 
 **Features:**
+
 - Toggle mobile navigation
 - Responsive design
 - Touch-friendly
 
 **Usage:**
+
 ```erb
 <div data-controller="mobile-menu">
   <button data-action="click->mobile-menu#toggle"
@@ -278,6 +294,7 @@ Interactive features powered by Stimulus controllers for the djtip admin interfa
 ✅ Mobile Menu - Responsive navigation operational  
 
 **Test locations:**
+
 - `/admin/users` - Search, table actions, confirmations
 - `/admin/users/new` - Form validation, auto-save
 - All admin pages - Alerts, mobile menu, clipboard

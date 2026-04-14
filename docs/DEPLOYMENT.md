@@ -10,7 +10,7 @@ The complete observability stack with OpenTelemetry and Prometheus has been succ
 
 1. **Prometheus + Grafana Stack** (`kube-prometheus-stack`)
    - Prometheus for metrics collection and storage
-   - Grafana for visualization (https://grafana.minikube.local)
+   - Grafana for visualization (<https://grafana.minikube.local>)
    - Alertmanager for alert routing
    - Node Exporter for node-level metrics
    - Kube State Metrics for Kubernetes object metrics
@@ -71,13 +71,16 @@ The complete observability stack with OpenTelemetry and Prometheus has been succ
 ## How to Access
 
 ### Grafana Dashboard
+
 ```bash
 open https://grafana.minikube.local
 ```
+
 - **No login required** - Anonymous access with Admin role
 - Pre-configured datasources: Prometheus, Loki, Tempo
 
 ### View Traces
+
 1. Open Grafana
 2. Click **Explore** (compass icon)
 3. Select **Tempo** datasource
@@ -85,6 +88,7 @@ open https://grafana.minikube.local
 5. View request traces with full waterfall view
 
 ### View Logs
+
 1. Open Grafana
 2. Click **Explore**
 3. Select **Loki** datasource
@@ -92,10 +96,12 @@ open https://grafana.minikube.local
 5. See all application logs with Kubernetes metadata
 
 ### View Metrics
+
 1. Open Grafana
 2. Click **Explore**
 3. Select **Prometheus** datasource
 4. Query examples:
+
    ```promql
    # Request rate
    rate(http_requests_total[5m])
@@ -110,11 +116,13 @@ open https://grafana.minikube.local
 ## Verification
 
 ### Check OpenTelemetry Status
+
 ```bash
 kubectl logs -n default -l app.kubernetes.io/name=djtip | grep "Instrumentation:"
 ```
 
 Expected output: Multiple lines showing successful installation of instrumentations:
+
 - OpenTelemetry::Instrumentation::Rails
 - OpenTelemetry::Instrumentation::Rack
 - OpenTelemetry::Instrumentation::Mongo
@@ -123,6 +131,7 @@ Expected output: Multiple lines showing successful installation of instrumentati
 - etc.
 
 ### Check Metrics Endpoint
+
 ```bash
 kubectl port-forward -n default svc/djtip 3000:3000
 curl http://localhost:3000/metrics
@@ -131,6 +140,7 @@ curl http://localhost:3000/metrics
 Expected output: Prometheus metrics in text format
 
 ### Generate Test Traffic
+
 ```bash
 # Generate 10 requests
 for i in {1..10}; do 
@@ -141,8 +151,9 @@ done
 ```
 
 ### View Traces in Grafana
+
 1. Wait 30 seconds for traces to be exported
-2. Open https://grafana.minikube.local
+2. Open <https://grafana.minikube.local>
 3. Go to Explore → Tempo
 4. Search for service: `djtip`
 5. You should see traces from the test requests!
@@ -150,6 +161,7 @@ done
 ## What You Get (NewRelic-Style Features)
 
 ### ✅ Application Performance Monitoring (APM)
+
 - **Request tracing** - See every HTTP request with full details
 - **Waterfall view** - Visualize request flow through your app
 - **Database query tracking** - See all MongoDB queries with duration
@@ -157,21 +169,25 @@ done
 - **Background job tracking** - Monitor Sidekiq jobs
 
 ### ✅ Error Tracking
+
 - **Automatic error capture** - All exceptions are recorded in traces
 - **Error context** - See full stack trace and request context
 - **Error rate metrics** - Track error rates over time
 
 ### ✅ Performance Analysis
+
 - **Slow request detection** - Find requests taking >1s
 - **N+1 query detection** - Identify database performance issues
 - **Bottleneck identification** - See which part of your code is slow
 
 ### ✅ Metrics & Dashboards
+
 - **Pre-built dashboards** - Kubernetes cluster, node, and pod metrics
 - **Custom metrics** - Track business KPIs (tips created, events, etc.)
 - **Alerting** - Set up alerts for high error rates, slow requests, etc.
 
 ### ✅ Log Aggregation
+
 - **Centralized logs** - All pod logs in one place
 - **Structured querying** - Search logs by namespace, pod, container, etc.
 - **Log correlation** - Link logs to traces (with trace ID)
@@ -194,6 +210,7 @@ Current observability stack resource usage:
 | **Total** | **9** | **~800m** | **~1.8Gi** | **~3.2Gi** | **~4.3Gi** |
 
 Application overhead:
+
 - OpenTelemetry: ~10-20MB memory, <5% CPU
 - Prometheus client: ~5MB memory, <1% CPU
 
@@ -223,12 +240,15 @@ Application overhead:
 ## Next Steps
 
 ### 1. Explore Grafana
+
 - Browse pre-built dashboards
 - Create custom dashboards for your app
 - Set up alerts for critical metrics
 
 ### 2. Add Custom Instrumentation
+
 See `docs/INSTRUMENTATION.md` for examples:
+
 ```ruby
 # Add custom spans
 trace_span('payment.process') do
@@ -243,7 +263,9 @@ add_trace_attributes(
 ```
 
 ### 3. Set Up Alerting
+
 Create PrometheusRule for alerts:
+
 ```yaml
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -258,6 +280,7 @@ spec:
 ```
 
 ### 4. Optimize Performance
+
 - Use traces to find slow requests
 - Identify N+1 queries
 - Optimize database queries
@@ -266,6 +289,7 @@ spec:
 ## Troubleshooting
 
 ### No Traces in Grafana
+
 ```bash
 # Check OpenTelemetry is sending traces
 kubectl logs -n default -l app.kubernetes.io/name=djtip | grep OTLP
@@ -278,6 +302,7 @@ curl https://djtip.minikube.local/
 ```
 
 ### No Metrics at /metrics
+
 ```bash
 # Check Prometheus initializer loaded
 kubectl logs -n default -l app.kubernetes.io/name=djtip | grep Prometheus
@@ -288,6 +313,7 @@ curl http://localhost:3000/metrics
 ```
 
 ### Grafana Not Accessible
+
 ```bash
 # Check Grafana pod
 kubectl get pods -n observability -l app.kubernetes.io/name=grafana
@@ -302,7 +328,7 @@ kubectl get svc -n haproxy-controller
 ## Success Criteria ✅
 
 - [x] Prometheus collecting metrics from djtip app
-- [x] Grafana accessible at https://grafana.minikube.local
+- [x] Grafana accessible at <https://grafana.minikube.local>
 - [x] Loki collecting logs from all pods
 - [x] Tempo receiving traces from djtip app
 - [x] OpenTelemetry auto-instrumentation working
@@ -315,6 +341,7 @@ kubectl get svc -n haproxy-controller
 You now have a **production-grade, NewRelic-style observability stack** running completely open-source and free! 🎉
 
 The stack provides:
+
 - ✅ Full distributed tracing (OpenTelemetry)
 - ✅ Comprehensive metrics (Prometheus)
 - ✅ Centralized logging (Loki)

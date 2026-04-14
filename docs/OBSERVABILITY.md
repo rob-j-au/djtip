@@ -17,6 +17,7 @@ The observability stack provides:
 ### Prometheus Stack (kube-prometheus-stack)
 
 **What it includes:**
+
 - **Prometheus** - Metrics collection and storage
 - **Grafana** - Visualization and dashboards
 - **Alertmanager** - Alert routing and management
@@ -25,6 +26,7 @@ The observability stack provides:
 - **Prometheus Operator** - Manages Prometheus instances
 
 **Metrics collected:**
+
 - CPU, memory, disk, network usage
 - Kubernetes pod/deployment/service metrics
 - Application custom metrics (via ServiceMonitor)
@@ -35,6 +37,7 @@ The observability stack provides:
 **Log aggregation system** - Like Prometheus, but for logs
 
 **Features:**
+
 - Automatic log collection from all pods
 - Label-based log querying
 - Integration with Grafana
@@ -45,6 +48,7 @@ The observability stack provides:
 **Log shipping agent** - Runs on every node
 
 **What it does:**
+
 - Discovers all pods automatically
 - Reads container logs
 - Adds Kubernetes labels
@@ -55,11 +59,13 @@ The observability stack provides:
 **Distributed tracing** - OpenTelemetry compatible
 
 **Protocols supported:**
+
 - OpenTelemetry (OTLP) - gRPC (4317) and HTTP (4318)
 - Jaeger - gRPC (14250) and HTTP (14268)
 - Zipkin - HTTP (9411)
 
 **Use cases:**
+
 - Request tracing across microservices
 - Performance bottleneck identification
 - Dependency mapping
@@ -68,23 +74,28 @@ The observability stack provides:
 ## Access URLs
 
 ### Grafana
-- **HTTPS**: https://grafana.minikube.local
-- **HTTP**: http://grafana.minikube.local
+
+- **HTTPS**: <https://grafana.minikube.local>
+- **HTTP**: <http://grafana.minikube.local>
 - **Login**: Anonymous (Admin role) - No password required!
 
 ### Prometheus
+
 ```bash
 # Port-forward to access Prometheus UI
 kubectl port-forward -n observability svc/mon-kube-prometheus-stack-prometheus 9090:9090
 ```
-Then: http://localhost:9090
+
+Then: <http://localhost:9090>
 
 ### Alertmanager
+
 ```bash
 # Port-forward to access Alertmanager UI
 kubectl port-forward -n observability svc/mon-kube-prometheus-stack-alertmanager 9093:9093
 ```
-Then: http://localhost:9093
+
+Then: <http://localhost:9093>
 
 ## Grafana Configuration
 
@@ -110,6 +121,7 @@ Grafana comes with three datasources automatically configured:
 ### Anonymous Access
 
 Grafana is configured with anonymous authentication:
+
 - **Enabled**: Yes
 - **Role**: Admin (full access)
 - **No login required** - Just open the URL!
@@ -120,7 +132,7 @@ Grafana is configured with anonymous authentication:
 
 ### Viewing Logs in Grafana
 
-1. Open https://grafana.minikube.local
+1. Open <https://grafana.minikube.local>
 2. Click **Explore** (compass icon)
 3. Select **Loki** datasource
 4. Use LogQL queries:
@@ -144,7 +156,7 @@ Grafana is configured with anonymous authentication:
 
 ### Viewing Metrics in Grafana
 
-1. Open https://grafana.minikube.local
+1. Open <https://grafana.minikube.local>
 2. Go to **Dashboards**
 3. Pre-installed dashboards:
    - **Kubernetes / Compute Resources / Cluster**
@@ -170,7 +182,7 @@ kube_pod_container_status_restarts_total
 
 ### Viewing Traces in Grafana
 
-1. Open https://grafana.minikube.local
+1. Open <https://grafana.minikube.local>
 2. Click **Explore**
 3. Select **Tempo** datasource
 4. Search by:
@@ -416,6 +428,7 @@ Current observability stack resource usage:
 | **Total** | **~600m** | **~1.5Gi** | **~3Gi** | **~4Gi** |
 
 Plus per-node:
+
 - Node Exporter: ~50m CPU, ~50Mi memory
 - Promtail: ~100m CPU, ~128Mi memory
 

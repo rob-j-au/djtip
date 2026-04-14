@@ -12,16 +12,19 @@ This guide covers building and deploying the DJ Tip Rails application using Dock
 The Dockerfile implements best practices for layer caching and production deployment:
 
 ### Multi-Stage Build
+
 - **Build stage**: Compiles gems, precompiles assets, and prepares bootsnap cache
 - **Final stage**: Contains only runtime dependencies and compiled artifacts
 
 ### Layer Caching Optimization
+
 1. **Base dependencies** (rarely change) - cached efficiently
 2. **Gemfile/Gemfile.lock** (change occasionally) - separate layer
 3. **Application code** (changes frequently) - copied last
 4. **Asset precompilation** - only runs when code or assets change
 
 ### Security & Performance
+
 - Runs as non-root user (UID 1000)
 - Uses jemalloc for better memory management
 - Minimal final image size (only production dependencies)
@@ -30,16 +33,19 @@ The Dockerfile implements best practices for layer caching and production deploy
 ## Building the Image
 
 ### Basic Build
+
 ```bash
 docker build -t djtip:latest .
 ```
 
 ### Build with Custom Ruby Version
+
 ```bash
 docker build --build-arg RUBY_VERSION=3.4.1 -t djtip:latest .
 ```
 
 ### Build for Production
+
 ```bash
 docker build -t robj/djtip:latest .
 docker push robj/djtip:latest
@@ -48,28 +54,33 @@ docker push robj/djtip:latest
 ## Running with Docker Compose
 
 ### 1. Create Environment File
+
 ```bash
 cp .env.example .env
 # Edit .env and add your credentials
 ```
 
 Required environment variables:
+
 - `RAILS_MASTER_KEY` - Your Rails master key from `config/master.key`
 - `GOOGLE_MAPS_API_KEY` - Google Maps API key
 - `IPINFO_API_KEY` - (Optional) IPInfo API key
 
 ### 2. Start All Services
+
 ```bash
 docker-compose up -d
 ```
 
 This starts:
+
 - MongoDB database
 - Redis cache
 - Rails web server (port 3000)
 - Sidekiq background worker
 
 ### 3. View Logs
+
 ```bash
 # All services
 docker-compose logs -f
@@ -80,11 +91,13 @@ docker-compose logs -f sidekiq
 ```
 
 ### 4. Stop Services
+
 ```bash
 docker-compose down
 ```
 
 ### 5. Stop and Remove Volumes
+
 ```bash
 docker-compose down -v
 ```
@@ -92,6 +105,7 @@ docker-compose down -v
 ## Running Standalone Container
 
 ### With External MongoDB and Redis
+
 ```bash
 docker run -d \
   --name djtip-web \
@@ -107,11 +121,13 @@ docker run -d \
 ## Database Setup
 
 The entrypoint script automatically runs `rails db:prepare` which:
+
 - Creates the database if it doesn't exist
 - Runs pending migrations
 - Seeds the database (if needed)
 
 ### Manual Database Commands
+
 ```bash
 # Run migrations
 docker-compose exec web rails db:migrate
@@ -131,7 +147,9 @@ docker-compose exec web rails db:reset
 The Helm chart in `.cicd/helm/djtip/` is configured to use this Docker image.
 
 ### Update Image Tag
+
 Edit `.cicd/helm/djtip/values.yaml`:
+
 ```yaml
 image:
   repository: robj/djtip
@@ -139,6 +157,7 @@ image:
 ```
 
 ### Deploy to Kubernetes
+
 ```bash
 helm upgrade --install djtip .cicd/helm/djtip \
   --set image.tag=latest \
@@ -149,6 +168,7 @@ helm upgrade --install djtip .cicd/helm/djtip \
 ## Troubleshooting
 
 ### Container Won't Start
+
 ```bash
 # Check logs
 docker logs djtip-web
@@ -158,19 +178,24 @@ docker-compose exec web nc -zv mongodb 27017
 ```
 
 ### Asset Precompilation Fails
+
 ```bash
 # Rebuild without cache
 docker build --no-cache -t djtip:latest .
 ```
 
 ### Permission Issues
+
 The application runs as user `rails` (UID 1000). Ensure mounted volumes have correct permissions:
+
 ```bash
 chown -R 1000:1000 storage/ tmp/ log/
 ```
 
 ### Memory Issues
+
 The Dockerfile uses jemalloc for better memory management. If you experience issues:
+
 ```bash
 # Disable jemalloc
 docker run -e LD_PRELOAD= djtip:latest
@@ -179,6 +204,7 @@ docker run -e LD_PRELOAD= djtip:latest
 ## Development vs Production
 
 This Dockerfile is optimized for **production**. For development:
+
 - Use `docker-compose.dev.yml` (if available)
 - Mount source code as volume for live reloading
 - Use `RAILS_ENV=development`
@@ -186,6 +212,7 @@ This Dockerfile is optimized for **production**. For development:
 ## Image Size Optimization
 
 Current optimizations:
+
 - Multi-stage build (removes build dependencies)
 - Slim base image
 - Cleaned gem cache
@@ -196,6 +223,7 @@ Typical image size: ~500-800 MB
 ## CI/CD Integration
 
 ### GitHub Actions Example
+
 ```yaml
 - name: Build and push Docker image
   run: |
@@ -204,6 +232,7 @@ Typical image size: ~500-800 MB
 ```
 
 ### Update Helm Chart
+
 ```bash
 # Update values.yaml with new image digest
 kubectl set image deployment/djtip djtip=robj/djtip:$NEW_TAG

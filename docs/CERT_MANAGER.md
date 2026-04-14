@@ -42,6 +42,7 @@ terraform apply
 ```
 
 **Creates:**
+
 - `*.dev.yourdomain.com` → Minikube IP
 - `*.staging.yourdomain.com` → Auto from yourdomain.com
 - `*.yourdomain.com` → Auto from yourdomain.com
@@ -87,6 +88,7 @@ spec:
 ```
 
 Apply:
+
 ```bash
 kubectl apply -f .cicd/helm/cert-manager/templates/clusterissuer-cloudflare.yaml
 ```
@@ -163,6 +165,7 @@ spec:
 ```
 
 Apply and monitor:
+
 ```bash
 kubectl apply -f .cicd/helm/cert-manager/templates/certificate-wildcards.yaml
 kubectl get certificates -n cert-manager -w  # Wait for READY=True
@@ -171,6 +174,7 @@ kubectl get certificates -n cert-manager -w  # Wait for READY=True
 ### 7. Update Helm Values
 
 **Development** (`.cicd/helm/djtip/values-development.yaml`):
+
 ```yaml
 ingress:
   enabled: true
@@ -187,6 +191,7 @@ ingress:
 ```
 
 **Staging** (`.cicd/helm/djtip/values-staging.yaml`):
+
 ```yaml
 ingress:
   tls:
@@ -196,6 +201,7 @@ ingress:
 ```
 
 **Production** (`.cicd/helm/djtip/values-production.yaml`):
+
 ```yaml
 ingress:
   tls:
@@ -205,6 +211,7 @@ ingress:
 ```
 
 Commit:
+
 ```bash
 git add .cicd/helm/
 git commit -m "Update ingress to use wildcard TLS"
@@ -214,6 +221,7 @@ git push
 ### 8. Deploy Applications
 
 ArgoCD auto-syncs or manually:
+
 ```bash
 kubectl apply -f .cicd/argocd/djtip-development.yaml
 ```
@@ -239,6 +247,7 @@ kubectl get challenge -n cert-manager
 ```
 
 **Common issues:**
+
 - Invalid API token
 - DNS not resolving
 - Cloudflare proxy enabled (must be OFF)
