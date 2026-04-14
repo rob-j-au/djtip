@@ -3,6 +3,8 @@
 
 # Development-specific ingress
 ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging-dns01"
   hosts:
     - host: app.dev.djtip.jennings.au
       paths:
