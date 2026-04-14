@@ -130,12 +130,10 @@ loki:
   enabled: true
   fullnameOverride: "loki"
 
-  # Use older sidecar image to avoid Python 3.14 SSL cert issues
+  # Disable sidecar - even 2.5.0 has Python 3.14 SSL cert issues
   sidecar:
-    image:
-      tag: 2.5.0  # Uses Python 3.13, avoids SSL cert verification bug
     rules:
-      enabled: true
+      enabled: false
 
   # Single binary mode for simplicity (local dev)
   deploymentMode: SingleBinary
