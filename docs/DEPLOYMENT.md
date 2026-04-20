@@ -52,22 +52,6 @@ The complete observability stack with OpenTelemetry and Prometheus has been succ
    - Exposed at `/metrics` endpoint
    - Auto-discovered by Prometheus via ServiceMonitor
 
-## Commits Made
-
-1. **Update Gemfile.lock with OpenTelemetry and Prometheus gems**
-   - Added opentelemetry-sdk, opentelemetry-exporter-otlp, opentelemetry-instrumentation-all
-   - Added prometheus-client for metrics collection
-
-2. **Fix OpenTelemetry resource attributes to use strings**
-   - Fixed configuration error with attribute types
-
-3. **Remove sampler configuration from OpenTelemetry initializer**
-   - Simplified configuration to use environment variables
-
-4. **Simplify OpenTelemetry configuration to use environment variables**
-   - Final working configuration using ENV variables
-   - Follows OpenTelemetry SDK best practices
-
 ## How to Access
 
 ### Grafana Dashboard
