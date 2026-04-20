@@ -185,7 +185,31 @@ kubectl apply -f .cicd/argocd/djtip-development.yaml
 - HAProxy Ingress (Load Balancing)
 - cert-manager (Automated TLS with Let's Encrypt)
 
-### 📁 Project Structure
+### � API
+
+**RESTful API with modern standards:**
+
+- **JSON:API Specification** - Standardized JSON response format
+- **API Versioning** - Version-controlled endpoints (v1)
+- **Token Authentication** - Secure API access with bearer tokens
+- **Rate Limiting** - Request throttling and abuse prevention
+- **CORS Support** - Cross-origin resource sharing
+- **OpenAPI/Swagger** - Interactive API documentation
+- **Pagination** - Efficient data retrieval with cursor-based pagination
+- **Filtering & Sorting** - Flexible query parameters
+- **Error Handling** - Consistent error responses with proper HTTP status codes
+
+**API Endpoints:**
+
+- `GET /api/v1/events` - List events
+- `POST /api/v1/events` - Create event
+- `GET /api/v1/events/:id` - Show event
+- `PATCH /api/v1/events/:id` - Update event
+- `DELETE /api/v1/events/:id` - Delete event
+
+See [API Documentation](docs/API_DOCUMENTATION.md) for complete reference.
+
+### � Project Structure
 
 ```
 djtip/
@@ -262,10 +286,40 @@ See [Observability Stack](docs/OBSERVABILITY.md) for complete guide.
 
 ## 🧪 Testing
 
+**Test-Driven Development (TDD):**
+
+This project follows TDD principles with comprehensive test coverage:
+
+- **Unit Tests** - Model validations, business logic, and concerns
+- **Controller Tests** - Request/response handling and authentication
+- **Integration Tests** - End-to-end user workflows
+- **API Integration Tests** - RESTful API endpoints with JSON:API compliance
+- **Feature Tests** - Full-stack testing with Capybara
+- **Job Tests** - Background job processing with Sidekiq
+
+**Test Suite:**
+
 ```bash
 bundle exec rspec                    # Run all tests
 COVERAGE=true bundle exec rspec      # With coverage report
-bundle exec rspec spec/models/       # Specific tests
+bundle exec rspec spec/models/       # Model tests
+bundle exec rspec spec/requests/     # API integration tests
+bundle exec rspec spec/features/     # Feature tests
+```
+
+**API Integration Testing:**
+
+API tests verify JSON:API compliance, authentication, authorization, and proper HTTP status codes:
+
+```ruby
+# Example API integration test
+RSpec.describe "Events API", type: :request do
+  it "returns paginated events in JSON:API format" do
+    get "/api/v1/events", headers: auth_headers
+    expect(response).to have_http_status(:ok)
+    expect(response.content_type).to match(/application\/vnd\.api\+json/)
+  end
+end
 ```
 
 ## 🤝 Contributing
