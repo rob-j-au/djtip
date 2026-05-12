@@ -8,18 +8,18 @@ worker:
   replicaCount: 1
   resources:
     requests:
-      memory: "256Mi"  # Reduced based on actual usage
+      memory: "150Mi"  # Actual usage: 127Mi
       cpu: "100m"
     limits:
-      memory: "512Mi"
+      memory: "256Mi"
       cpu: "500m"
 
 resources:
   requests:
-    memory: "256Mi"  # Reduced based on actual usage
+    memory: "200Mi"  # Actual usage: 253Mi
     cpu: "100m"
   limits:
-    memory: "512Mi"
+    memory: "384Mi"
     cpu: "500m"
 
 # Staging-specific ingress
@@ -49,10 +49,10 @@ mongodb:
     size: 8Gi
   resources:
     requests:
-      memory: "350Mi"  # Actual usage: 318Mi
+      memory: "150Mi"  # Actual usage: 127Mi
       cpu: "100m"
     limits:
-      memory: "512Mi"
+      memory: "256Mi"
       cpu: "500m"
 
 redis:
