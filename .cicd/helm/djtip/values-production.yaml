@@ -59,7 +59,7 @@ metrics:
 mongodb:
   enabled: true
   auth:
-    enabled: true  # Enable auth for production
+    enabled: false  # Disable auth to match staging/dev
   architecture: standalone
   persistence:
     enabled: true
