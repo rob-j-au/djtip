@@ -49,10 +49,10 @@ mongodb:
     size: 8Gi
   resources:
     requests:
-      memory: "150Mi"  # Actual usage: 127Mi
+      memory: "256Mi"  # Increased from 150Mi - was causing OOMKills
       cpu: "100m"
     limits:
-      memory: "256Mi"
+      memory: "512Mi"
       cpu: "500m"
 
 redis:
