@@ -27,7 +27,7 @@ ingress:
   enabled: true
   className: "haproxy"
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging-dns01"  # Use DNS-01 for staging
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"  # Use production Let's Encrypt
   hosts:
     - host: app.staging.djtip.jennings.au
       paths:
