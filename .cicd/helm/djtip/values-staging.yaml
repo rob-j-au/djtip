@@ -1,26 +1,26 @@
 # Staging environment overrides
 # Inherits from values.yaml
 
-# 2x resources compared to development
-replicaCount: 4
+# Single replica to conserve Pi memory
+replicaCount: 1
 
 worker:
-  replicaCount: 2
+  replicaCount: 1
   resources:
     requests:
-      memory: "512Mi"
-      cpu: "200m"
+      memory: "256Mi"  # Reduced based on actual usage
+      cpu: "100m"
     limits:
-      memory: "1Gi"
-      cpu: "1000m"
+      memory: "512Mi"
+      cpu: "500m"
 
 resources:
   requests:
-    memory: "512Mi"
-    cpu: "200m"
+    memory: "256Mi"  # Reduced based on actual usage
+    cpu: "100m"
   limits:
-    memory: "1Gi"
-    cpu: "1000m"
+    memory: "512Mi"
+    cpu: "500m"
 
 # Staging-specific ingress
 ingress:
@@ -49,11 +49,11 @@ mongodb:
     size: 8Gi
   resources:
     requests:
-      memory: "512Mi"
-      cpu: "200m"
+      memory: "350Mi"  # Actual usage: 318Mi
+      cpu: "100m"
     limits:
-      memory: "1Gi"
-      cpu: "1000m"
+      memory: "512Mi"
+      cpu: "500m"
 
 redis:
   enabled: true
@@ -66,11 +66,11 @@ redis:
       size: 4Gi
     resources:
       requests:
-        memory: "256Mi"
-        cpu: "100m"
+        memory: "64Mi"  # Actual usage: 10Mi
+        cpu: "50m"
       limits:
-        memory: "512Mi"
-        cpu: "400m"
+        memory: "128Mi"
+        cpu: "200m"
 
 # Staging environment variables (if different from production)
 # env:
