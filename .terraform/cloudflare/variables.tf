@@ -27,5 +27,10 @@ variable "dev_ip" {
   type        = string
 }
 
-# Note: staging_ip and prod_ip are automatically fetched from base_domain_hostname
-# This allows the wildcard domains to stay in sync with your DDNS updates
+variable "vultr_vps_ip" {
+  description = "Vultr VPS IP address (forwards to Pi via Tailscale)"
+  type        = string
+}
+
+# Note: staging_ip and prod_ip use vultr_vps_ip which forwards to Pi via Tailscale
+# The VPS has iptables rules to forward ports 80/443 to Pi's Tailscale IP

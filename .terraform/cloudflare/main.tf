@@ -38,27 +38,27 @@ resource "cloudflare_record" "dev_wildcard" {
 }
 
 # Staging wildcard DNS record (*.staging.subdomain.domain)
-# Uses the IP from the base domain hostname (updated via DDNS)
+# Points to Vultr VPS which forwards to Pi via Tailscale
 resource "cloudflare_record" "staging_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
   name    = "*.staging.${var.subdomain}"
-  content = data.cloudflare_record.base_domain.value
+  content = var.vultr_vps_ip
   type    = "A"
   ttl     = 1  # Auto
   proxied = false  # MUST be false for cert-manager DNS-01
-  comment = "Staging environment wildcard (auto-synced from ${var.base_domain_hostname})"
+  comment = "Staging environment wildcard (Vultr VPS forwards to Pi via Tailscale)"
 }
 
 # Production wildcard DNS record (*.subdomain.domain)
-# Uses the IP from the base domain hostname (updated via DDNS)
+# Points to Vultr VPS which forwards to Pi via Tailscale
 resource "cloudflare_record" "prod_wildcard" {
   zone_id = data.cloudflare_zone.djtip.id
   name    = "*.${var.subdomain}"
-  content = data.cloudflare_record.base_domain.value
+  content = var.vultr_vps_ip
   type    = "A"
   ttl     = 1  # Auto
   proxied = false  # MUST be false for cert-manager DNS-01
-  comment = "Production environment wildcard (auto-synced from ${var.base_domain_hostname})"
+  comment = "Production environment wildcard (Vultr VPS forwards to Pi via Tailscale)"
 }
 
 # Optional: Create API token for cert-manager (requires higher permissions)
