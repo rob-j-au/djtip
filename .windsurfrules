@@ -48,3 +48,8 @@ rvm use 3.4.1 --default
 - Always ensure you're using the correct Ruby version before running commands
 - RVM will automatically switch to Ruby 3.4.1 when entering the project directory if configured
 - For Docker deployments, the Dockerfile handles Ruby version management
+
+
+### Pi SSH
+
+Use 'ssh pi-tailscale'

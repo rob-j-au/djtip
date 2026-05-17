@@ -305,8 +305,8 @@ kubectl get pods -n observability -l app.kubernetes.io/name=grafana
 # Check ingress
 kubectl get ingress -n observability
 
-# Check HAProxy Ingress
-kubectl get svc -n haproxy-controller
+# Check Traefik Ingress
+kubectl get svc -n kube-system traefik
 ```
 
 ## Success Criteria ✅

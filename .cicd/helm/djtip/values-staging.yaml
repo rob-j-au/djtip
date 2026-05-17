@@ -25,9 +25,10 @@ resources:
 # Staging-specific ingress
 ingress:
   enabled: true
-  className: "haproxy"
+  className: "traefik"
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"  # Use production Let's Encrypt
+    traefik.ingress.kubernetes.io/router.tls: "true"
   hosts:
     - host: app.staging.djtip.jennings.au
       paths:

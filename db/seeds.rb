@@ -1,297 +1,297 @@
 # frozen_string_literal: true
 
-# Database Seeds for djtip Application
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+# Database seeds generated from production data
+# Generated at: 2026-05-17 10:33:44 UTC
 
-puts '🌱 Starting database seeding...'
-
-# Clear existing data (optional - uncomment if you want to reset)
-# puts "Clearing existing data..."
-# User.destroy_all
-# Event.destroy_all
-# Performer.destroy_all
-# Tip.destroy_all
-
-# Create Events first (needed for user associations)
-puts 'Creating events...'
-
-events = [
-  {
-    title: 'Bad Dog',
-    description: 'An outdoor electronic music festival featuring top DJs from around the world.',
-    location: 'Sydney Olympic Park',
-    date: 3.weeks.from_now
-  },
-  {
-    title: 'Kooky',
-    description: 'Intimate underground techno experience in a warehouse setting.',
-    location: 'Secret Warehouse Location',
-    date: 2.weeks.from_now
-  },
-  {
-    title: 'Loose Ends',
-    description: 'Chill house music with stunning city views.',
-    location: 'Sky Terrace Bar',
-    date: 1.week.from_now
-  },
-  {
-    title: 'Park Beats',
-    description: 'Heavy bass and dubstep for the hardcore electronic fans.',
-    location: 'Metro Theatre',
-    date: 4.days.from_now
-  }
-]
-
-created_events = []
-events.each do |event_data|
-  event = Event.find_or_create_by(title: event_data[:title]) do |e|
-    e.description = event_data[:description]
-    e.location = event_data[:location]
-    e.date = event_data[:date]
-  end
-  created_events << event
-  if event.persisted? && event.created_at == event.updated_at
-    puts "  ✅ Created event: #{event.title}"
-  else
-    puts "  ⏭️  Event already exists: #{event.title}"
-  end
+# Users
+User.find_or_create_by(email: 'admin@djtip.com') do |u|
+  u.name = 'Rob Jennings'
+  u.phone = '+61 2 9876 5432'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
 end
 
-# Create 5 Users with realistic data
-puts "\nCreating users..."
-
-users_data = [
-  {
-    name: 'Admin User',
-    email: 'admin@djtip.com',
-    password: 'password123',
-    password_confirmation: 'password123',
-    admin: true,
-    phone: '+61 2 9876 5432'
-  },
-  {
-    name: 'Lisa Javs',
-    email: 'lis@javs.org',
-    password: 'password123',
-    password_confirmation: 'password123',
-    admin: false,
-    phone: '+61 404 123 456'
-  },
-  {
-    name: 'Aaron Manhattan',
-    email: 'manhattan@drag.net',
-    password: 'password123',
-    password_confirmation: 'password123',
-    admin: false,
-    phone: '+61 404 234 567'
-  },
-  {
-    name: 'Betty Grumble',
-    email: 'betty@grumble.net',
-    password: 'password123',
-    password_confirmation: 'password123',
-    admin: false,
-    phone: '+61 404 345 678'
-  },
-  {
-    name: 'Tim Owe',
-    email: 'tim@owe.org',
-    password: 'password123',
-    password_confirmation: 'password123',
-    admin: false,
-    phone: '+61 404 456 789'
-  },
-  {
-    name: 'Sarah Chen',
-    email: 'sarah@chen.com',
-    password: 'password123',
-    password_confirmation: 'password123',
-    admin: false,
-    phone: '+61 404 567 890'
-  },
-  {
-    name: 'Marcus Rodriguez',
-    email: 'marcus@rodriguez.net',
-    password: 'password123',
-    password_confirmation: 'password123',
-    admin: false,
-    phone: '+61 404 678 901'
-  },
-  {
-    name: 'Emma Thompson',
-    email: 'emma@thompson.org',
-    password: 'password123',
-    password_confirmation: 'password123',
-    admin: false,
-    phone: '+61 404 789 012'
-  }
-]
-
-created_users = []
-users_data.each do |user_data|
-  user = User.find_or_create_by(email: user_data[:email]) do |u|
-    u.name = user_data[:name]
-    u.password = user_data[:password]
-    u.password_confirmation = user_data[:password_confirmation]
-    u.admin = user_data[:admin]
-    u.phone = user_data[:phone]
-  end
-
-  # Attach the female dancer emoji image to all users
-  image_path = Rails.root.join('app', 'assets', 'images', 'female_dancer.png')
-  if File.exist?(image_path) && !user.image_data?
-    # Use Shrine's attacher to properly store image and generate derivatives
-    file = File.open(image_path)
-    user.image_attacher.assign(file)
-    user.image_attacher.promote
-    user.image_attacher.create_derivatives
-    user.save!
-    file.close
-    puts "  🖼️  Attached profile image to #{user.name}"
-  end
-
-  created_users << user
-  if user.persisted? && user.created_at == user.updated_at
-    puts "  ✅ Created user: #{user.name} (#{user.admin? ? 'Admin' : 'Regular'})"
-  else
-    puts "  ⏭️  User already exists: #{user.name} (#{user.email})"
-  end
+User.find_or_create_by(email: 'lis@javs.org') do |u|
+  u.name = 'Lisa Javs'
+  u.phone = '+61 404 123 456'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
 end
 
-# Associate users with events (many-to-many relationship)
-puts "\nAssociating users with events..."
-
-# Admin user attends all events
-admin_user = created_users.first
-admin_user.events = created_events
-puts "  ✅ Admin user associated with all #{created_events.count} events"
-
-# Regular users attend random events
-created_users[1..].each do |user|
-  # Each user attends 1-3 random events
-  num_events = rand(1..3)
-  user_events = created_events.sample(num_events)
-  user.events = user_events
-  puts "  ✅ #{user.name} associated with #{user_events.count} events"
+User.find_or_create_by(email: 'manhattan@drag.net') do |u|
+  u.name = 'Aaron Manhattan'
+  u.phone = '+61 404 234 567'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
 end
 
-# Create Performers
-puts "\nCreating performers..."
-
-performers_data = [
-  {
-    name: 'Ben Drayton',
-    email: 'ben@djtip.com',
-    bio: 'Electronic music producer and DJ specializing in progressive house and techno.',
-    genre: 'Progressive House, Techno',
-    event: created_events[0]
-  },
-  {
-    name: 'Jonny Seymour',
-    email: 'jonny@djtip.com',
-    bio: 'Underground bass music specialist with 10+ years experience.',
-    genre: 'Dubstep, Bass',
-    event: created_events[1]
-  },
-  {
-    name: 'Gemma',
-    email: 'kooky@droppings.org',
-    bio: 'Chill house and ambient music curator for relaxing vibes.',
-    genre: 'Chill House, Ambient',
-    event: created_events[2]
-  },
-  {
-    name: 'Matt Costain',
-    email: 'matt@costain.org',
-    bio: 'High-energy electronic music for the dance floor.',
-    genre: 'Electro, Big Room',
-    event: created_events[3]
-  }
-]
-
-created_performers = []
-performers_data.each do |performer_data|
-  performer = Performer.find_or_create_by(email: performer_data[:email]) do |p|
-    p.name = performer_data[:name]
-    p.password = 'password123'
-    p.password_confirmation = 'password123'
-    p.bio = performer_data[:bio]
-    p.genre = performer_data[:genre]
-  end
-
-  # Attach the female dancer emoji image to all performers
-  image_path = Rails.root.join('app', 'assets', 'images', 'female_dancer.png')
-  if File.exist?(image_path) && !performer.image_data?
-    # Use Shrine's attacher to properly store image and generate derivatives
-    file = File.open(image_path)
-    performer.image_attacher.assign(file)
-    performer.image_attacher.promote
-    performer.image_attacher.create_derivatives
-    performer.save!
-    file.close
-    puts "  🖼️  Attached profile image to #{performer.name}"
-  end
-
-  # Associate performer with event using inherited User events association
-  event = performer_data[:event]
-  performer.events << event if event && !performer.events.include?(event)
-
-  created_performers << performer
-  if performer.persisted? && performer.created_at == performer.updated_at
-    puts "  ✅ Created performer: #{performer.name}"
-  else
-    puts "  ⏭️  Performer already exists: #{performer.name}"
-  end
+User.find_or_create_by(email: 'betty@grumble.net') do |u|
+  u.name = 'Betty Grumble'
+  u.phone = '+61 404 345 678'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
 end
 
-# Create some sample tips
-puts "\nCreating sample tips..."
-
-tip_messages = [
-  'Amazing set! Keep it up! 🎵',
-  'Best night ever! Thank you!',
-  'Incredible music selection 🔥',
-  'You made my night! 💫',
-  'Fantastic vibes, loved every minute!',
-  'Outstanding performance! 👏',
-  'Music was perfect for the mood 🎶',
-  'Thanks for an unforgettable experience!',
-  'Your energy was contagious! ⚡',
-  'Brilliant mixing skills! 🎧'
-]
-
-# Create tips from users to events
-created_users[1..].each do |user|
-  # Each user gives 1-2 tips to events they're attending
-  user.events.each do |event|
-    next if rand > 0.7 # 70% chance of tipping per event
-
-    # Skip if tip already exists for this user/event combination
-    existing_tip = Tip.where(user: user, event: event).first
-    if existing_tip
-      puts "  ⏭️  Tip already exists: #{user.name} -> #{event.title}"
-      next
-    end
-
-    tip = Tip.create!(
-      user: user,
-      event: event,
-      amount: [5, 10, 15, 20, 25, 50].sample,
-      message: tip_messages.sample
-    )
-    puts "  ✅ #{user.name} tipped $#{tip.amount} to #{event.title}"
-  end
+User.find_or_create_by(email: 'tim@owe.org') do |u|
+  u.name = 'Tim Owe'
+  u.phone = '+61 404 456 789'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
 end
 
-# Summary
-puts "\n🎉 Database seeding completed successfully!"
-puts "\nSummary:"
-puts "  👥 Users: #{User.count} (#{User.where(admin: true).count} admin, #{User.where(admin: false).count} regular)"
-puts "  🎪 Events: #{Event.count}"
-puts "  🎵 Performers: #{Performer.count}"
-puts "  💰 Tips: #{Tip.count} (Total: $#{Tip.sum(:amount)})"
-puts "\nLogin credentials:"
-puts '  Admin: admin@djtip.com / password123'
-puts '  Users: [name]@email.com / password123'
-puts "\n✨ Ready to rock! Visit http://localhost:3000/admin to get started."
+User.find_or_create_by(email: 'sarah@chen.com') do |u|
+  u.name = 'Sarah Chen'
+  u.phone = '+61 404 567 890'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+User.find_or_create_by(email: 'marcus@rodriguez.net') do |u|
+  u.name = 'Marcus Rodriguez'
+  u.phone = '+61 404 678 901'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+User.find_or_create_by(email: 'emma@thompson.org') do |u|
+  u.name = 'Emma Thompson'
+  u.phone = '+61 404 789 012'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+User.find_or_create_by(email: 'ben@djtip.com') do |u|
+  u.name = 'Ben Drayton'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+User.find_or_create_by(email: 'kooky@droppings.org') do |u|
+  u.name = 'Gemma'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+User.find_or_create_by(email: 'matt@costain.org') do |u|
+  u.name = 'Matt Costain'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+User.find_or_create_by(email: 'donato@dozzy.org') do |u|
+  u.name = 'Donato Dozzy'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+User.find_or_create_by(email: 'terence@mckenna.org') do |u|
+  u.name = 'Terence Mckenna'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+User.find_or_create_by(email: 'jordan@dj.net') do |u|
+  u.name = 'Jordan Heads'
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+end
+
+# Performers
+Performer.find_or_create_by(name: 'Ben Drayton') do |p|
+  p.bio = 'Electronic music producer and DJ specializing in progressive house and techno.'
+  p.genre = 'Progressive House, Techno'
+end
+
+Performer.find_or_create_by(name: 'Gemma') do |p|
+  p.bio = 'Chill house and ambient music curator for relaxing vibes.'
+  p.genre = 'Chill House, Ambient'
+end
+
+Performer.find_or_create_by(name: 'Matt Costain') do |p|
+  p.bio = 'Vinyl aficionado on the decks'
+  p.genre = 'Dub Techno'
+end
+
+Performer.find_or_create_by(name: 'Donato Dozzy') do |p|
+  p.genre = 'Italian Minimalism'
+end
+
+Performer.find_or_create_by(name: 'Jordan Heads') do |p|
+  p.bio = 'Young trans and techno'
+  p.genre = 'Driving Techno'
+end
+
+# Venues
+Venue.find_or_create_by(name: 'Oxford Art Factory') do |v|
+  v.venue_type = 'club'
+end
+
+Venue.find_or_create_by(name: 'Glastonbury') do |v|
+  v.venue_type = 'festival'
+end
+
+# Events
+event = Event.find_or_create_by(title: 'Bad Dog') do |e|
+  e.location = 'Sydney Olympic Park'
+  e.date = '2025-09-05T02:35:10+00:00'
+  e.description = 'An outdoor electronic music festival featuring top DJs from around the world.'
+end
+unless event.users.include?(User.find_by(email: 'admin@djtip.com'))
+  event.users << User.find_by(email: 'admin@djtip.com')
+end
+unless event.users.include?(User.find_by(email: 'betty@grumble.net'))
+  event.users << User.find_by(email: 'betty@grumble.net')
+end
+unless event.users.include?(User.find_by(email: 'emma@thompson.org'))
+  event.users << User.find_by(email: 'emma@thompson.org')
+end
+event.users << User.find_by(email: 'ben@djtip.com') unless event.users.include?(User.find_by(email: 'ben@djtip.com'))
+
+event = Event.find_or_create_by(title: 'Loose Ends') do |e|
+  e.location = 'Sky Terrace Bar'
+  e.date = '2025-08-22T02:35:10+00:00'
+  e.description = 'Chill house music with stunning city views.'
+end
+unless event.users.include?(User.find_by(email: 'admin@djtip.com'))
+  event.users << User.find_by(email: 'admin@djtip.com')
+end
+event.users << User.find_by(email: 'lis@javs.org') unless event.users.include?(User.find_by(email: 'lis@javs.org'))
+unless event.users.include?(User.find_by(email: 'manhattan@drag.net'))
+  event.users << User.find_by(email: 'manhattan@drag.net')
+end
+unless event.users.include?(User.find_by(email: 'betty@grumble.net'))
+  event.users << User.find_by(email: 'betty@grumble.net')
+end
+unless event.users.include?(User.find_by(email: 'kooky@droppings.org'))
+  event.users << User.find_by(email: 'kooky@droppings.org')
+end
+
+event = Event.find_or_create_by(title: 'Park Beats') do |e|
+  e.location = 'Metro Theatre'
+  e.date = '2025-08-19T02:35:10+00:00'
+  e.description = 'Heavy bass and dubstep for the hardcore electronic fans.'
+end
+unless event.users.include?(User.find_by(email: 'admin@djtip.com'))
+  event.users << User.find_by(email: 'admin@djtip.com')
+end
+event.users << User.find_by(email: 'lis@javs.org') unless event.users.include?(User.find_by(email: 'lis@javs.org'))
+unless event.users.include?(User.find_by(email: 'betty@grumble.net'))
+  event.users << User.find_by(email: 'betty@grumble.net')
+end
+event.users << User.find_by(email: 'sarah@chen.com') unless event.users.include?(User.find_by(email: 'sarah@chen.com'))
+unless event.users.include?(User.find_by(email: 'matt@costain.org'))
+  event.users << User.find_by(email: 'matt@costain.org')
+end
+
+event = Event.find_or_create_by(title: 'Strange Signals') do |e|
+  e.location = 'Sashimi Warehouse'
+  e.date = '2025-08-22T21:00:00+00:00'
+  e.description = 'Inner West Techno Realness'
+end
+unless event.users.include?(User.find_by(email: 'admin@djtip.com'))
+  event.users << User.find_by(email: 'admin@djtip.com')
+end
+unless event.users.include?(User.find_by(email: 'matt@costain.org'))
+  event.users << User.find_by(email: 'matt@costain.org')
+end
+unless event.users.include?(User.find_by(email: 'donato@dozzy.org'))
+  event.users << User.find_by(email: 'donato@dozzy.org')
+end
+unless event.users.include?(User.find_by(email: 'terence@mckenna.org'))
+  event.users << User.find_by(email: 'terence@mckenna.org')
+end
+
+event = Event.find_or_create_by(title: 'Matt\'s Personal Silo Kick On') do |e|
+  e.location = 'The Silos'
+  e.date = '2025-08-17T15:00:00+00:00'
+  e.description = 'Invite Only Kick On'
+end
+unless event.users.include?(User.find_by(email: 'matt@costain.org'))
+  event.users << User.find_by(email: 'matt@costain.org')
+end
+event.users << User.find_by(email: 'jordan@dj.net') unless event.users.include?(User.find_by(email: 'jordan@dj.net'))
+
+# Tips
+user = User.find_by(email: 'lis@javs.org')
+event = Event.find_by(title: 'Park Beats')
+if user && event
+  Tip.create(
+    amount: 20.0,
+    currency: 'USD',
+    message: 'Brilliant mixing skills! 🎧',
+    user: user,
+    event: event
+  )
+end
+
+user = User.find_by(email: 'manhattan@drag.net')
+event = Event.find_by(title: 'Loose Ends')
+if user && event
+  Tip.create(
+    amount: 5.0,
+    currency: 'USD',
+    message: 'Your energy was contagious! ⚡',
+    user: user,
+    event: event
+  )
+end
+
+user = User.find_by(email: 'betty@grumble.net')
+event = Event.find_by(title: 'Bad Dog')
+if user && event
+  Tip.create(
+    amount: 15.0,
+    currency: 'USD',
+    message: 'Best night ever! Thank you!',
+    user: user,
+    event: event
+  )
+end
+
+user = User.find_by(email: 'emma@thompson.org')
+event = Event.find_by(title: 'Bad Dog')
+if user && event
+  Tip.create(
+    amount: 20.0,
+    currency: 'USD',
+    message: 'Incredible music selection 🔥',
+    user: user,
+    event: event
+  )
+end
+
+user = User.find_by(email: 'admin@djtip.com')
+event = Event.find_by(title: 'Strange Signals')
+if user && event
+  Tip.create(
+    amount: 330.0,
+    currency: 'USD',
+    message: 'Simply the best Bumps I have had in this town !!',
+    user: user,
+    event: event
+  )
+end
+
+user = User.find_by(email: 'terence@mckenna.org')
+event = Event.find_by(title: 'Strange Signals')
+if user && event
+  Tip.create(
+    amount: 44.0,
+    currency: 'USD',
+    message: 'The Machine Elves were present',
+    user: user,
+    event: event
+  )
+end
+
+user = User.find_by(email: 'admin@djtip.com')
+event = Event.find_by(title: 'Matt\'s Personal Silo Kick On')
+if user && event
+  Tip.create(
+    amount: 399.0,
+    currency: 'USD',
+    message: 'Did someone mention Substituted Phenethylamines?',
+    user: user,
+    event: event
+  )
+end

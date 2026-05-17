@@ -242,6 +242,7 @@ djtip/
 
 ### Setup & Deployment
 
+- **[Vultr Kubernetes Deployment](docs/VULTR_DEPLOYMENT.md)** - Production deployment on Vultr with Traefik
 - **[Service Endpoints](docs/ENDPOINTS.md)** - URLs for all environments
 - **[cert-manager Setup](docs/CERT_MANAGER.md)** - Wildcard TLS with Cloudflare DNS-01
 - **[ArgoCD & Kubernetes](docs/ARGO.md)** - Complete deployment guide
