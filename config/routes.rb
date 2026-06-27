@@ -25,6 +25,10 @@ Rails.application.routes.draw do
     resources :tips, only: %i[index show edit update destroy]
   end
 
+  # Swagger / OpenAPI documentation
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
+
   # Sidekiq Web UI
   mount Sidekiq::Web => '/sidekiq'
 

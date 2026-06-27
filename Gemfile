@@ -68,6 +68,10 @@ gem 'geocoder'
 # Centralized configuration (reads from config/application.yml with ERB support)
 gem 'settingslogic'
 
+# API documentation with Swagger/OpenAPI
+gem 'rswag-api'
+gem 'rswag-ui'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

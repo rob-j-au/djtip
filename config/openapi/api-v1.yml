@@ -1,0 +1,872 @@
+---
+openapi: "3.0.3"
+info:
+  title: "DJTip API v1"
+  version: "1.0.0"
+  description: |
+    API for the DJTip application — manage events, performers, performances,
+    tips, users, and venues.
+servers:
+  - url: "http://localhost:3000"
+    description: "Development server"
+  - url: "https://djtip.app"
+    description: "Production server"
+
+paths:
+  /api/v1/events:
+    get:
+      summary: "List all events"
+      tags: ["Events"]
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Event"
+    post:
+      summary: "Create an event"
+      tags: ["Events"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    date:
+                      type: string
+                      format: date
+                    location:
+                      type: string
+                  required: ["title"]
+      responses:
+        "201":
+          description: "Event created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Event"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /api/v1/events/{id}:
+    get:
+      summary: "Get an event by ID"
+      tags: ["Events"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Event"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      summary: "Update an event"
+      tags: ["Events"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    date:
+                      type: string
+                      format: date
+                    location:
+                      type: string
+      responses:
+        "200":
+          description: "Event updated"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: "Delete an event"
+      tags: ["Events"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Event deleted"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/v1/events/{event_id}/tips:
+    get:
+      summary: "List tips for an event"
+      tags: ["Tips"]
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Tip"
+    post:
+      summary: "Create a tip for an event"
+      tags: ["Tips"]
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tip:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                    currency:
+                      type: string
+                      default: "AUD"
+                    message:
+                      type: string
+                    user_id:
+                      type: string
+                  required: ["amount"]
+      responses:
+        "201":
+          description: "Tip created"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /api/v1/tips/{id}:
+    get:
+      summary: "Get a tip by ID"
+      tags: ["Tips"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Tip"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      summary: "Update a tip"
+      tags: ["Tips"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tip:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                    currency:
+                      type: string
+                    message:
+                      type: string
+      responses:
+        "200":
+          description: "Tip updated"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: "Delete a tip"
+      tags: ["Tips"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Tip deleted"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/v1/events/{event_id}/performers:
+    get:
+      summary: "List performers for an event"
+      tags: ["Performers"]
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful response"
+
+  /api/v1/users:
+    get:
+      summary: "List all users"
+      tags: ["Users"]
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+    post:
+      summary: "Create a user"
+      tags: ["Users"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    email:
+                      type: string
+                      format: email
+                    phone:
+                      type: string
+                    password:
+                      type: string
+                      format: password
+                    password_confirmation:
+                      type: string
+                  required: ["name", "email", "password"]
+      responses:
+        "201":
+          description: "User created"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /api/v1/users/{id}:
+    get:
+      summary: "Get a user by ID"
+      tags: ["Users"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      summary: "Update a user"
+      tags: ["Users"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    phone:
+                      type: string
+      responses:
+        "200":
+          description: "User updated"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: "Delete a user"
+      tags: ["Users"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "User deleted"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/v1/performers:
+    get:
+      summary: "List all performers"
+      tags: ["Performers"]
+      responses:
+        "200":
+          description: "Successful response"
+    post:
+      summary: "Create a performer"
+      tags: ["Performers"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                performer:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    bio:
+                      type: string
+                    genre:
+                      type: string
+                    contact:
+                      type: string
+                  required: ["name"]
+      responses:
+        "201":
+          description: "Performer created"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /api/v1/performers/{id}:
+    get:
+      summary: "Get a performer by ID"
+      tags: ["Performers"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful response"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      summary: "Update a performer"
+      tags: ["Performers"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                performer:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    bio:
+                      type: string
+                    genre:
+                      type: string
+                    contact:
+                      type: string
+      responses:
+        "200":
+          description: "Performer updated"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: "Delete a performer"
+      tags: ["Performers"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Performer deleted"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/v1/venues:
+    get:
+      summary: "List all venues"
+      tags: ["Venues"]
+      responses:
+        "200":
+          description: "Successful response"
+    post:
+      summary: "Create a venue"
+      tags: ["Venues"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    venue_type:
+                      type: string
+                  required: ["name"]
+      responses:
+        "201":
+          description: "Venue created"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /api/v1/venues/{id}:
+    get:
+      summary: "Get a venue by ID"
+      tags: ["Venues"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful response"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      summary: "Update a venue"
+      tags: ["Venues"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    venue_type:
+                      type: string
+      responses:
+        "200":
+          description: "Venue updated"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: "Delete a venue"
+      tags: ["Venues"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Venue deleted"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/v1/performances:
+    get:
+      summary: "List all performances"
+      tags: ["Performances"]
+      responses:
+        "200":
+          description: "Successful response"
+    post:
+      summary: "Create a performance"
+      tags: ["Performances"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                performance:
+                  type: object
+                  properties:
+                    time:
+                      type: string
+                      format: date-time
+                    performer_id:
+                      type: string
+                    event_id:
+                      type: string
+                    latitude:
+                      type: number
+                      format: float
+                    longitude:
+                      type: number
+                      format: float
+                  required: ["time", "performer_id", "event_id"]
+      responses:
+        "201":
+          description: "Performance created"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /api/v1/performances/{id}:
+    get:
+      summary: "Get a performance by ID"
+      tags: ["Performances"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful response"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      summary: "Update a performance"
+      tags: ["Performances"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                performance:
+                  type: object
+                  properties:
+                    time:
+                      type: string
+                      format: date-time
+                    performer_id:
+                      type: string
+                    event_id:
+                      type: string
+                    latitude:
+                      type: number
+                    longitude:
+                      type: number
+      responses:
+        "200":
+          description: "Performance updated"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: "Delete a performance"
+      tags: ["Performances"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Performance deleted"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  responses:
+    NotFound:
+      description: "Resource not found"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Resource not found"
+    ValidationError:
+      description: "Validation failed"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Validation failed"
+              details:
+                type: array
+                items:
+                  type: string
+
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            date:
+              type: string
+              format: date
+            location:
+              type: string
+            description:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    Tip:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          properties:
+            id:
+              type: string
+            amount:
+              type: number
+            currency:
+              type: string
+            message:
+              type: string
+            formatted_amount:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    Performer:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            bio:
+              type: string
+            genre:
+              type: string
+            contact:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    Performance:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          properties:
+            id:
+              type: string
+            time:
+              type: string
+              format: date-time
+            latitude:
+              type: number
+              format: float
+            longitude:
+              type: number
+              format: float
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    Venue:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            venue_type:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
