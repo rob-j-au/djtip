@@ -12,18 +12,12 @@ class PerformancesController < ApplicationController
   def new
     @performance = Performance.new
     @performers = Performer.all
-    @events = Event.all
-    @default_location = get_user_location
+    @events = Event.all.includes(:venue)
   end
 
   def edit
     @performers = Performer.all
-    @events = Event.all
-    @default_location = if @performance.location.present?
-                          { lat: @performance.latitude, lng: @performance.longitude }
-                        else
-                          get_user_location
-                        end
+    @events = Event.all.includes(:venue)
   end
 
   def create
@@ -33,8 +27,7 @@ class PerformancesController < ApplicationController
       redirect_to @performance, notice: 'Performance was successfully created.'
     else
       @performers = Performer.all
-      @events = Event.all
-      @default_location = get_user_location
+      @events = Event.all.includes(:venue)
       render :new, status: :unprocessable_entity
     end
   end
@@ -44,12 +37,7 @@ class PerformancesController < ApplicationController
       redirect_to @performance, notice: 'Performance was successfully updated.'
     else
       @performers = Performer.all
-      @events = Event.all
-      @default_location = if @performance.location.present?
-                            { lat: @performance.latitude, lng: @performance.longitude }
-                          else
-                            get_user_location
-                          end
+      @events = Event.all.includes(:venue)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -66,16 +54,6 @@ class PerformancesController < ApplicationController
   end
 
   def performance_params
-    params.require(:performance).permit(:time, :performer_id, :event_id, :latitude, :longitude)
-  end
-
-  def get_user_location
-    result = Geocoder.search(request.remote_ip).first
-    if result && result.coordinates.present?
-      { lat: result.coordinates[0], lng: result.coordinates[1] }
-    else
-      # Default to Sydney, Australia if GeoIP fails
-      { lat: -33.8688, lng: 151.2093 }
-    end
+    params.require(:performance).permit(:time, :performer_id, :event_id)
   end
 end

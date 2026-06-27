@@ -46,7 +46,7 @@ module Api
       end
 
       def venue_params
-        params.require(:venue).permit(:name, :venue_type)
+        params.require(:venue).permit(:name, :venue_type, :latitude, :longitude)
       end
     end
   end

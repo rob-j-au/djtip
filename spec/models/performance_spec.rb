@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Performance, type: :model do
   let(:performer) { create(:performer) }
-  let(:event) { create(:event) }
+  let(:venue) { create(:venue, location: [151.2093, -33.8688]) }
+  let(:event) { create(:event, venue: venue) }
   let(:performance) { create(:performance, performer: performer, event: event) }
 
   describe 'validations' do
@@ -25,50 +26,6 @@ RSpec.describe Performance, type: :model do
       expect(performance).not_to be_valid
       expect(performance.errors[:event]).to include("can't be blank")
     end
-
-    describe 'location validation' do
-      it 'validates location format' do
-        performance.location = [1, 2, 3]
-        expect(performance).not_to be_valid
-        expect(performance.errors[:location]).to include('must be an array of [longitude, latitude]')
-      end
-
-      it 'validates coordinates are numeric' do
-        performance.location = %w[invalid invalid]
-        expect(performance).not_to be_valid
-        expect(performance.errors[:location]).to include('coordinates must be numeric')
-      end
-
-      it 'validates longitude range' do
-        performance.location = [181, 0]
-        expect(performance).not_to be_valid
-        expect(performance.errors[:location]).to include('coordinates out of valid range')
-
-        performance.location = [-181, 0]
-        expect(performance).not_to be_valid
-        expect(performance.errors[:location]).to include('coordinates out of valid range')
-      end
-
-      it 'validates latitude range' do
-        performance.location = [0, 91]
-        expect(performance).not_to be_valid
-        expect(performance.errors[:location]).to include('coordinates out of valid range')
-
-        performance.location = [0, -91]
-        expect(performance).not_to be_valid
-        expect(performance.errors[:location]).to include('coordinates out of valid range')
-      end
-
-      it 'allows valid coordinates' do
-        performance.location = [151.2093, -33.8688]
-        expect(performance).to be_valid
-      end
-
-      it 'allows blank location' do
-        performance.location = nil
-        expect(performance).to be_valid
-      end
-    end
   end
 
   describe 'associations' do
@@ -81,35 +38,13 @@ RSpec.describe Performance, type: :model do
     end
   end
 
-  describe 'location helpers' do
-    it 'returns latitude from location array' do
-      performance.location = [151.2093, -33.8688]
-      expect(performance.latitude).to eq(-33.8688)
+  describe 'venue location delegation' do
+    it 'delegates latitude to the venue via event' do
+      expect(performance.event.venue.latitude).to eq(-33.8688)
     end
 
-    it 'returns longitude from location array' do
-      performance.location = [151.2093, -33.8688]
-      expect(performance.longitude).to eq(151.2093)
-    end
-
-    it 'sets latitude' do
-      performance.latitude = -33.8688
-      expect(performance.location[1]).to eq(-33.8688)
-    end
-
-    it 'sets longitude' do
-      performance.longitude = 151.2093
-      expect(performance.location[0]).to eq(151.2093)
-    end
-
-    it 'returns nil for latitude when location is not set' do
-      performance.location = nil
-      expect(performance.latitude).to be_nil
-    end
-
-    it 'returns nil for longitude when location is not set' do
-      performance.location = nil
-      expect(performance.longitude).to be_nil
+    it 'delegates longitude to the venue via event' do
+      expect(performance.event.venue.longitude).to eq(151.2093)
     end
   end
 
@@ -117,7 +52,6 @@ RSpec.describe Performance, type: :model do
     it 'creates a valid performance' do
       expect(performance).to be_valid
       expect(performance.time).to be_present
-      expect(performance.location).to be_present
       expect(performance.performer).to be_present
       expect(performance.event).to be_present
     end

@@ -47,7 +47,7 @@ module Api
       end
 
       def performance_params
-        params.require(:performance).permit(:time, :performer_id, :event_id, :latitude, :longitude)
+        params.require(:performance).permit(:time, :performer_id, :event_id)
       end
     end
   end

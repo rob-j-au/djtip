@@ -835,12 +835,6 @@ components:
             time:
               type: string
               format: date-time
-            latitude:
-              type: number
-              format: float
-            longitude:
-              type: number
-              format: float
             created_at:
               type: string
               format: date-time
@@ -864,6 +858,12 @@ components:
               type: string
             venue_type:
               type: string
+            latitude:
+              type: number
+              format: float
+            longitude:
+              type: number
+              format: float
             created_at:
               type: string
               format: date-time

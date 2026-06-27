@@ -50,32 +50,40 @@
         </div>
 
         <div>
-          <p class="text-sm text-base-content/70 mb-1">Location</p>
-          <% if @performance.location.present? %>
-            <div class="space-y-2">
-              <p class="text-sm">
-                <span class="text-base-content/70">Lat:</span> <%= @performance.latitude %> |
-                <span class="text-base-content/70">Lng:</span> <%= @performance.longitude %>
-              </p>
-
-              <div class="w-full rounded-lg border border-base-300 overflow-hidden bg-base-200"
-                   style="height: 576px"
-                   data-controller="map-display"
-                   data-map-display-latitude-value="<%= @performance.latitude %>"
-                   data-map-display-longitude-value="<%= @performance.longitude %>">
-              </div>
-
-              <a href="https://www.google.com/maps?q=<%= @performance.latitude %>,<%= @performance.longitude %>"
-                 target="_blank"
-                 class="link link-primary text-sm">
-                Open in Google Maps &rarr;
-              </a>
-            </div>
+          <p class="text-sm text-base-content/70 mb-1">Venue</p>
+          <% if @performance.event&.venue %>
+            <p class="text-lg font-medium"><%= @performance.event.venue.name %></p>
+            <%= link_to "View Venue", @performance.event.venue, class: "link link-primary text-sm" %>
           <% else %>
-            <p class="text-base-content/50">No location set</p>
+            <p class="text-base-content/50">No venue assigned</p>
           <% end %>
         </div>
       </div>
+
+      <% if @performance.event&.venue&.location.present? %>
+        <div class="divider"></div>
+        <% venue = @performance.event.venue %>
+        <div>
+          <p class="text-sm text-base-content/70 mb-1">Location — <%= venue.name %></p>
+          <div class="space-y-2 mt-2">
+            <p class="text-sm">
+              <span class="text-base-content/70">Lat:</span> <%= venue.latitude %> |
+              <span class="text-base-content/70">Lng:</span> <%= venue.longitude %>
+            </p>
+            <div class="w-full rounded-lg border border-base-300 overflow-hidden bg-base-200"
+                 style="height: 576px"
+                 data-controller="map-display"
+                 data-map-display-latitude-value="<%= venue.latitude %>"
+                 data-map-display-longitude-value="<%= venue.longitude %>">
+            </div>
+            <a href="https://www.google.com/maps?q=<%= venue.latitude %>,<%= venue.longitude %>"
+               target="_blank"
+               class="link link-primary text-sm">
+              Open in Google Maps &rarr;
+            </a>
+          </div>
+        </div>
+      <% end %>
 
       <div class="card-actions justify-start mt-6">
         <%= link_to "Back to Performances", performances_path, class: "btn btn-ghost" %>

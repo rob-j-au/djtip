@@ -8,8 +8,9 @@ RSpec.describe 'Api::V1::Performances', type: :request do
   end
 
   describe 'GET /api/v1/performances' do
+    let!(:venue) { create(:venue, location: [151.2093, -33.8688]) }
     let!(:performer) { create(:performer) }
-    let!(:event) { create(:event) }
+    let!(:event) { create(:event, venue: venue) }
     let!(:performances) { create_list(:performance, 3, performer: performer, event: event) }
 
     it 'returns all performances with associated performers and events' do
@@ -23,9 +24,6 @@ RSpec.describe 'Api::V1::Performances', type: :request do
       performance = json_response[:data].first
       expect(performance[:type]).to eq('performance')
       expect(performance[:attributes][:time]).to be_present
-      expect(performance[:attributes][:location]).to be_an(Array)
-      expect(performance[:attributes][:latitude]).to be_present
-      expect(performance[:attributes][:longitude]).to be_present
 
       expect(performance[:relationships][:performer][:data][:id]).to eq(performer.id.to_s)
       expect(performance[:relationships][:event][:data][:id]).to eq(event.id.to_s)
@@ -35,8 +33,9 @@ RSpec.describe 'Api::V1::Performances', type: :request do
   end
 
   describe 'GET /api/v1/performances/:id' do
+    let!(:venue) { create(:venue, location: [151.2093, -33.8688]) }
     let!(:performer) { create(:performer) }
-    let!(:event) { create(:event) }
+    let!(:event) { create(:event, venue: venue) }
     let!(:performance) { create(:performance, performer: performer, event: event) }
 
     it 'returns the performance with associated performer and event' do
@@ -48,9 +47,6 @@ RSpec.describe 'Api::V1::Performances', type: :request do
       expect(performance_data[:type]).to eq('performance')
       expect(performance_data[:id]).to eq(performance.id.to_s)
       expect(performance_data[:attributes][:time]).to be_present
-      expect(performance_data[:attributes][:location]).to be_an(Array)
-      expect(performance_data[:attributes][:latitude]).to eq(performance.latitude)
-      expect(performance_data[:attributes][:longitude]).to eq(performance.longitude)
 
       expect(performance_data[:relationships][:performer][:data][:id]).to eq(performer.id.to_s)
       expect(performance_data[:relationships][:event][:data][:id]).to eq(event.id.to_s)
@@ -73,8 +69,6 @@ RSpec.describe 'Api::V1::Performances', type: :request do
     let(:valid_attributes) do
       {
         time: 1.week.from_now,
-        latitude: -33.8688,
-        longitude: 151.2093,
         performer_id: performer.id.to_s,
         event_id: event.id.to_s
       }
@@ -97,8 +91,6 @@ RSpec.describe 'Api::V1::Performances', type: :request do
 
       performance_data = json_response[:data]
       expect(performance_data[:type]).to eq('performance')
-      expect(performance_data[:attributes][:latitude]).to eq(-33.8688)
-      expect(performance_data[:attributes][:longitude]).to eq(151.2093)
     end
 
     it 'returns errors with invalid attributes' do
@@ -116,11 +108,7 @@ RSpec.describe 'Api::V1::Performances', type: :request do
     let!(:performance) { create(:performance, performer: performer, event: event) }
 
     let(:valid_attributes) do
-      {
-        time: 2.weeks.from_now,
-        latitude: -37.8136,
-        longitude: 144.9631
-      }
+      { time: 2.weeks.from_now }
     end
 
     let(:invalid_attributes) { { time: nil } }
@@ -132,8 +120,6 @@ RSpec.describe 'Api::V1::Performances', type: :request do
 
       performance_data = json_response[:data]
       expect(performance_data[:type]).to eq('performance')
-      expect(performance_data[:attributes][:latitude]).to eq(-37.8136)
-      expect(performance_data[:attributes][:longitude]).to eq(144.9631)
     end
 
     it 'returns errors with invalid attributes' do

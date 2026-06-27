@@ -3,6 +3,18 @@
 # Database seeds generated from production data
 # Generated at: 2026-05-17 10:33:44 UTC
 
+# Helper: random lat/lng within ~10km of Sydney CBD
+SYDNEY_CBD_LAT = -33.8688
+SYDNEY_CBD_LNG = 151.2093
+
+def sydney_location
+  # 1° lat ≈ 111km, 1° lng ≈ 92km at Sydney's latitude
+  # 10km ≈ 0.09° lat, 0.11° lng
+  lat_offset = rand(-0.09..0.09)
+  lng_offset = rand(-0.11..0.11)
+  [SYDNEY_CBD_LNG + lng_offset, SYDNEY_CBD_LAT + lat_offset]
+end
+
 # Users
 User.find_or_create_by(email: 'admin@djtip.com') do |u|
   u.name = 'Rob Jennings'
@@ -121,13 +133,35 @@ Performer.find_or_create_by(name: 'Jordan Heads') do |p|
   p.genre = 'Driving Techno'
 end
 
-# Venues
-Venue.find_or_create_by(name: 'Oxford Art Factory') do |v|
+# Venues with locations within ~10km of Sydney CBD
+venue_oaf = Venue.find_or_create_by(name: 'Oxford Art Factory') do |v|
   v.venue_type = 'club'
+  v.location = sydney_location
 end
 
 Venue.find_or_create_by(name: 'Glastonbury') do |v|
   v.venue_type = 'festival'
+  v.location = sydney_location
+end
+
+Venue.find_or_create_by(name: 'Sky Terrace Bar') do |v|
+  v.venue_type = 'bar'
+  v.location = sydney_location
+end
+
+Venue.find_or_create_by(name: 'Metro Theatre') do |v|
+  v.venue_type = 'club'
+  v.location = sydney_location
+end
+
+Venue.find_or_create_by(name: 'Sashimi Warehouse') do |v|
+  v.venue_type = 'club'
+  v.location = sydney_location
+end
+
+Venue.find_or_create_by(name: 'The Silos') do |v|
+  v.venue_type = 'festival'
+  v.location = sydney_location
 end
 
 # Events
@@ -135,6 +169,7 @@ event = Event.find_or_create_by(title: 'Bad Dog') do |e|
   e.location = 'Sydney Olympic Park'
   e.date = '2025-09-05T02:35:10+00:00'
   e.description = 'An outdoor electronic music festival featuring top DJs from around the world.'
+  e.venue = venue_oaf
 end
 unless event.users.include?(User.find_by(email: 'admin@djtip.com'))
   event.users << User.find_by(email: 'admin@djtip.com')
@@ -151,6 +186,7 @@ event = Event.find_or_create_by(title: 'Loose Ends') do |e|
   e.location = 'Sky Terrace Bar'
   e.date = '2025-08-22T02:35:10+00:00'
   e.description = 'Chill house music with stunning city views.'
+  e.venue = Venue.find_by(name: 'Sky Terrace Bar')
 end
 unless event.users.include?(User.find_by(email: 'admin@djtip.com'))
   event.users << User.find_by(email: 'admin@djtip.com')
@@ -170,6 +206,7 @@ event = Event.find_or_create_by(title: 'Park Beats') do |e|
   e.location = 'Metro Theatre'
   e.date = '2025-08-19T02:35:10+00:00'
   e.description = 'Heavy bass and dubstep for the hardcore electronic fans.'
+  e.venue = Venue.find_by(name: 'Metro Theatre')
 end
 unless event.users.include?(User.find_by(email: 'admin@djtip.com'))
   event.users << User.find_by(email: 'admin@djtip.com')
@@ -187,6 +224,7 @@ event = Event.find_or_create_by(title: 'Strange Signals') do |e|
   e.location = 'Sashimi Warehouse'
   e.date = '2025-08-22T21:00:00+00:00'
   e.description = 'Inner West Techno Realness'
+  e.venue = Venue.find_by(name: 'Sashimi Warehouse')
 end
 unless event.users.include?(User.find_by(email: 'admin@djtip.com'))
   event.users << User.find_by(email: 'admin@djtip.com')
@@ -205,6 +243,7 @@ event = Event.find_or_create_by(title: 'Matt\'s Personal Silo Kick On') do |e|
   e.location = 'The Silos'
   e.date = '2025-08-17T15:00:00+00:00'
   e.description = 'Invite Only Kick On'
+  e.venue = Venue.find_by(name: 'The Silos')
 end
 unless event.users.include?(User.find_by(email: 'matt@costain.org'))
   event.users << User.find_by(email: 'matt@costain.org')
