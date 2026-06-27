@@ -99,6 +99,9 @@ DJ Tip is a full-stack web application that allows event organizers to manage DJ
 6. **Visit the application:**
    Open `http://localhost:3000`
 
+7. **Explore the API:**
+   Open `http://localhost:3000/api-docs` for interactive Swagger UI documentation
+
 ### Docker Development
 
 ```bash
