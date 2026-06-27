@@ -115,6 +115,10 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.6.2)
+    dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
+      railties (>= 6.1)
     down (5.4.2)
       addressable (~> 2.8)
     drb (2.2.3)
@@ -546,6 +550,7 @@ GEM
       ffi (~> 1.12)
       logger
     securerandom (0.4.1)
+    settingslogic (2.0.9)
     shrine (3.6.0)
       content_disposition (~> 1.0)
       down (~> 5.1)
@@ -623,6 +628,7 @@ DEPENDENCIES
   database_cleaner-mongoid (~> 2.0)
   debug
   devise (~> 4.9)
+  dotenv-rails
   factory_bot_rails (~> 6.2)
   faker (~> 3.2)
   fastimage
@@ -645,6 +651,7 @@ DEPENDENCIES
   redis (~> 5.0)
   rspec-rails (~> 6.0)
   rubocop-rails-omakase
+  settingslogic
   shrine
   shrine-mongoid
   sidekiq (~> 8.0)

@@ -2,6 +2,7 @@
 
 require_relative 'boot'
 
+# dotenv-rails loads .env automatically in the :development and :test groups
 require 'rails'
 # Pick the frameworks you want:
 require 'active_model/railtie'

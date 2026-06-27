@@ -39,7 +39,7 @@
     <legend class="fieldset-legend">Location (Optional)</legend>
     
     <div data-controller="map-picker"
-         data-map-picker-api-key-value="<%= ENV['GOOGLE_MAPS_API_KEY'] || 'YOUR_API_KEY_HERE' %>"
+         data-map-picker-api-key-value="<%= Settings.google_maps_api_key %>"
          data-map-picker-default-lat-value="<%= @default_location[:lat] %>"
          data-map-picker-default-lng-value="<%= @default_location[:lng] %>">
       

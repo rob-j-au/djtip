@@ -65,6 +65,9 @@ gem 'devise', '~> 4.9'
 # Geocoding and GeoIP
 gem 'geocoder'
 
+# Centralized configuration (reads from config/application.yml with ERB support)
+gem 'settingslogic'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
@@ -81,6 +84,9 @@ gem 'bootsnap', require: false
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
+  # Load .env file in development/test (must be loaded before Rails boot)
+  gem 'dotenv-rails'
+
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mingw mswin x64_mingw], require: 'debug/prelude'
 

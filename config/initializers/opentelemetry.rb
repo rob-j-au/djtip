@@ -4,28 +4,34 @@
 # This provides NewRelic-style APM capabilities using open-source tools
 
 require 'opentelemetry/sdk'
-require 'opentelemetry/exporter/otlp'
 require 'opentelemetry/instrumentation/all'
 
-# Configure OTLP endpoint
-otlp_endpoint = ENV.fetch('OTEL_EXPORTER_OTLP_ENDPOINT') do
-  if Rails.env.production?
+# In development, use a console exporter unless OTEL_EXPORTER_OTLP_ENDPOINT is set
+# In production, require the OTLP exporter
+if Rails.env.production? || ENV['OTEL_EXPORTER_OTLP_ENDPOINT'].present?
+  require 'opentelemetry/exporter/otlp'
+
+  otlp_endpoint = ENV.fetch('OTEL_EXPORTER_OTLP_ENDPOINT') do
     'http://observability-tempo.observability.svc.cluster.local:4318'
-  else
-    'http://localhost:4318' # For local development
   end
+
+  ENV['OTEL_SERVICE_NAME'] ||= 'djtip'
+  ENV['OTEL_EXPORTER_OTLP_ENDPOINT'] ||= otlp_endpoint
+  ENV['OTEL_TRACES_EXPORTER'] ||= 'otlp'
+  ENV['OTEL_EXPORTER_OTLP_PROTOCOL'] ||= 'http/protobuf'
+
+  OpenTelemetry::SDK.configure(&:use_all)
+
+  Rails.logger.info "OpenTelemetry initialized: service=djtip, endpoint=#{otlp_endpoint}, exporter=otlp"
+else
+  # Development: export traces to console (Rails logger) instead of failing to connect
+  ENV['OTEL_SERVICE_NAME'] ||= 'djtip'
+  ENV['OTEL_TRACES_EXPORTER'] ||= 'console'
+
+  OpenTelemetry::SDK.configure(&:use_all)
+
+  Rails.logger.info 'OpenTelemetry initialized: service=djtip, exporter=console (development mode)'
 end
-
-# Set environment variables for OpenTelemetry SDK
-ENV['OTEL_SERVICE_NAME'] ||= 'djtip'
-ENV['OTEL_EXPORTER_OTLP_ENDPOINT'] ||= otlp_endpoint
-ENV['OTEL_TRACES_EXPORTER'] ||= 'otlp'
-ENV['OTEL_EXPORTER_OTLP_PROTOCOL'] ||= 'http/protobuf'
-
-# Configure OpenTelemetry SDK
-OpenTelemetry::SDK.configure(&:use_all)
-
-Rails.logger.info "OpenTelemetry initialized: service=djtip, endpoint=#{otlp_endpoint}"
 
 # Add custom instrumentation helpers
 module OpenTelemetryHelpers

@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+# Centralized application configuration using Settingslogic.
+# Values are loaded from environment variables (.env file) with ERB support.
+# Access anywhere in the app via: Settings.key_name
+
+development:
+  google_maps_api_key: <%= ENV['GOOGLE_MAPS_API_KEY'] %>
+
+test:
+  google_maps_api_key: <%= ENV['GOOGLE_MAPS_API_KEY'] %>
+
+production:
+  google_maps_api_key: <%= ENV['GOOGLE_MAPS_API_KEY'] %>
