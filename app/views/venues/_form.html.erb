@@ -50,6 +50,10 @@
       <div data-map-picker-target="map"
            class="w-full h-96 rounded-lg border border-base-300 mb-4">
       </div>
+
+      <!-- Hidden coordinate fields (required by map_picker_controller) -->
+      <%= form.hidden_field :latitude, data: { map_picker_target: "latitude" } %>
+      <%= form.hidden_field :longitude, data: { map_picker_target: "longitude" } %>
     </div>
   </fieldset>
 
