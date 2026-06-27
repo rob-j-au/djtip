@@ -6,6 +6,7 @@ class Venue
 
   field :name, type: String
   field :venue_type, type: String
+  field :address, type: String
   field :location, type: Array # [longitude, latitude]
 
   validates :name, presence: true

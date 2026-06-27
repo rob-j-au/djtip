@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["map", "latitude", "longitude", "search"]
+  static targets = ["map", "latitude", "longitude", "search", "address"]
   static values = {
     apiKey: String,
     defaultLat: Number,
@@ -83,17 +83,21 @@ export default class extends Controller {
 
       const lat = place.geometry.location.lat()
       const lng = place.geometry.location.lng()
+      const address = place.formatted_address || place.name || ''
 
       this.map.setCenter({ lat, lng })
       this.marker.setPosition({ lat, lng })
-      this.updateLocation(lat, lng)
+      this.updateLocation(lat, lng, address)
       this.map.setZoom(15)
     })
   }
 
-  updateLocation(lat, lng) {
+  updateLocation(lat, lng, address) {
     this.latitudeTarget.value = lat.toFixed(6)
     this.longitudeTarget.value = lng.toFixed(6)
+    if (address && this.hasAddressTarget) {
+      this.addressTarget.value = address
+    }
   }
 
   // Manual input handlers

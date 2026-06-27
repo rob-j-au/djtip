@@ -25,6 +25,14 @@
         </div>
       </div>
 
+      <% if @venue.address.present? %>
+        <div class="divider"></div>
+        <div>
+          <p class="text-sm text-base-content/70 mb-1">Address</p>
+          <p class="text-lg font-medium"><%= @venue.address %></p>
+        </div>
+      <% end %>
+
       <% if @venue.location.present? %>
         <div class="divider"></div>
         <div>
