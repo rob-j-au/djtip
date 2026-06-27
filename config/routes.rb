@@ -25,9 +25,12 @@ Rails.application.routes.draw do
     resources :tips, only: %i[index show edit update destroy]
   end
 
-  # Swagger / OpenAPI documentation
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  # OpenAPI / Swagger documentation
+  get '/api-docs' => 'api/docs#index', as: :api_docs
+  get '/api-docs/v1/openapi.json', to: proc {
+    yaml = YAML.safe_load_file(Rails.root.join('config/openapi/api-v1.yml'), permitted_classes: [Symbol])
+    [200, { 'Content-Type' => 'application/json' }, [yaml.to_json]]
+  }
 
   # Sidekiq Web UI
   mount Sidekiq::Web => '/sidekiq'
