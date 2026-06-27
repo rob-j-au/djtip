@@ -25,11 +25,20 @@
         </div>
       </div>
 
-      <% if @venue.address.present? %>
+      <% if [@venue.address_line1, @venue.city, @venue.country].any?(&:present?) %>
         <div class="divider"></div>
         <div>
           <p class="text-sm text-base-content/70 mb-1">Address</p>
-          <p class="text-lg font-medium"><%= @venue.address %></p>
+          <div class="text-lg font-medium leading-relaxed">
+            <% if @venue.address_line1.present? %><%= @venue.address_line1 %><br><% end %>
+            <% if @venue.address_line2.present? %><%= @venue.address_line2 %><br><% end %>
+            <% if @venue.city.present? || @venue.state.present? %>
+              <%= [@venue.city, @venue.state, @venue.postcode].select(&:presence).join(', ') %><br>
+            <% end %>
+            <% if @venue.country.present? %>
+              <%= Carmen::Country.coded(@venue.country)&.name || @venue.country %>
+            <% end %>
+          </div>
         </div>
       <% end %>
 

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["map", "latitude", "longitude", "search", "address"]
+  static targets = ["map", "latitude", "longitude", "search"]
   static values = {
     apiKey: String,
     defaultLat: Number,
@@ -70,7 +70,7 @@ export default class extends Controller {
 
   initializeAutocomplete() {
     const autocomplete = new google.maps.places.Autocomplete(this.searchTarget, {
-      fields: ['geometry', 'name', 'formatted_address']
+      fields: ['address_components', 'geometry', 'name', 'formatted_address']
     })
 
     autocomplete.addListener('place_changed', () => {
@@ -83,21 +83,23 @@ export default class extends Controller {
 
       const lat = place.geometry.location.lat()
       const lng = place.geometry.location.lng()
-      const address = place.formatted_address || place.name || ''
 
       this.map.setCenter({ lat, lng })
       this.marker.setPosition({ lat, lng })
-      this.updateLocation(lat, lng, address)
+      this.updateLocation(lat, lng)
       this.map.setZoom(15)
+
+      // Dispatch custom event for address_form_controller to parse components
+      this.searchTarget.dispatchEvent(new CustomEvent('address:selected', {
+        detail: { place },
+        bubbles: true
+      }))
     })
   }
 
-  updateLocation(lat, lng, address) {
+  updateLocation(lat, lng) {
     this.latitudeTarget.value = lat.toFixed(6)
     this.longitudeTarget.value = lng.toFixed(6)
-    if (address && this.hasAddressTarget) {
-      this.addressTarget.value = address
-    }
   }
 
   // Manual input handlers

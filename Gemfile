@@ -65,6 +65,9 @@ gem 'devise', '~> 4.9'
 # Geocoding and GeoIP
 gem 'geocoder'
 
+# Country and region (state/province) data for address forms
+gem 'carmen'
+
 # Centralized configuration (reads from config/application.yml with ERB support)
 gem 'settingslogic'
 

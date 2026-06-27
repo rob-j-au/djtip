@@ -58,7 +58,8 @@ class VenuesController < ApplicationController
   end
 
   def venue_params
-    params.require(:venue).permit(:name, :venue_type, :address, :latitude, :longitude)
+    params.require(:venue).permit(:name, :venue_type, :address_line1, :address_line2,
+                                  :city, :state, :country, :postcode, :latitude, :longitude)
   end
 
   def get_user_location

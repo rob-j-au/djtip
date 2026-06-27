@@ -30,6 +30,82 @@
   </fieldset>
 
   <fieldset class="fieldset">
+    <legend class="fieldset-legend">Address</legend>
+
+    <%# Build states-by-country data from Carmen for the Stimulus controller %>
+    <% states_json = Carmen::Country.all.each_with_object({}) do |country, hash|
+         subregions = country.subregions.map(&:name)
+         hash[country.alpha_2_code] = subregions if subregions.any?
+       end.to_json %>
+
+    <div data-controller="address-form"
+         data-address-form-states-value="<%= states_json %>">
+
+      <div class="form-control w-full">
+        <%= form.label :address_line1, "Address Line 1", class: "label" %>
+        <%= form.text_field :address_line1,
+            class: "input input-bordered w-full",
+            placeholder: "Street address, PO box",
+            data: { address_form_target: "line1" } %>
+      </div>
+
+      <div class="form-control w-full">
+        <%= form.label :address_line2, "Address Line 2", class: "label" %>
+        <%= form.text_field :address_line2,
+            class: "input input-bordered w-full",
+            placeholder: "Apartment, suite, unit, building (optional)",
+            data: { address_form_target: "line2" } %>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-control w-full">
+          <%= form.label :city, class: "label" %>
+          <%= form.text_field :city,
+              class: "input input-bordered w-full",
+              placeholder: "City / suburb",
+              data: { address_form_target: "city" } %>
+        </div>
+
+        <div class="form-control w-full">
+          <%= form.label :postcode, "Postcode / ZIP", class: "label" %>
+          <%= form.text_field :postcode,
+              class: "input input-bordered w-full",
+              placeholder: "Postcode",
+              data: { address_form_target: "postcode" } %>
+        </div>
+      </div>
+
+      <div class="form-control w-full">
+        <%= form.label :country, class: "label" %>
+        <%= form.select :country,
+            options_for_select(Carmen::Country.all.map { |c| [c.name, c.alpha_2_code] }, venue.country),
+            { prompt: 'Select country' },
+            class: "select select-bordered w-full",
+            data: {
+              address_form_target: "country",
+              action: "address-form#countryChanged"
+            } %>
+      </div>
+
+      <div class="form-control w-full">
+        <%= form.label :state, "State / Province", class: "label" %>
+        <% if venue.country.present? && Carmen::Country.coded(venue.country)&.subregions&.any? %>
+          <%= form.select :state,
+              options_for_select(Carmen::Country.coded(venue.country).subregions.map(&:name), venue.state),
+              { prompt: 'Select state / province' },
+              class: "select select-bordered w-full",
+              data: { address_form_target: "state" } %>
+        <% else %>
+          <%= form.text_field :state,
+              class: "input input-bordered w-full",
+              placeholder: "State / Province",
+              data: { address_form_target: "state" } %>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="fieldset">
     <legend class="fieldset-legend">Location (Optional)</legend>
 
     <div data-controller="map-picker"
@@ -45,7 +121,7 @@
                class="input input-bordered w-full"
                placeholder="Search for an address..." />
         <label class="label">
-          <span class="label-text-alt">Search and click on the map to set location</span>
+          <span class="label-text-alt">Search and click on the map to set location — address fields above will auto-populate</span>
         </label>
       </div>
 
@@ -53,9 +129,6 @@
       <div data-map-picker-target="map"
            class="w-full h-96 rounded-lg border border-base-300 mb-4">
       </div>
-
-      <!-- Hidden address field — populated by Google Places autocomplete -->
-      <%= form.hidden_field :address, data: { map_picker_target: "address" } %>
 
       <!-- Coordinate Inputs -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -69,9 +142,6 @@
                 map_picker_target: "latitude",
                 action: "change->map-picker#latitudeChanged"
               } %>
-          <label class="label">
-            <span class="label-text-alt">Range: -90 to 90</span>
-          </label>
         </div>
 
         <div class="form-control w-full">
@@ -84,9 +154,6 @@
                 map_picker_target: "longitude",
                 action: "change->map-picker#longitudeChanged"
               } %>
-          <label class="label">
-            <span class="label-text-alt">Range: -180 to 180</span>
-          </label>
         </div>
       </div>
     </div>

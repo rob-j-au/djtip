@@ -6,7 +6,12 @@ class Venue
 
   field :name, type: String
   field :venue_type, type: String
-  field :address, type: String
+  field :address_line1, type: String
+  field :address_line2, type: String
+  field :city, type: String
+  field :state, type: String
+  field :country, type: String
+  field :postcode, type: String
   field :location, type: Array # [longitude, latitude]
 
   validates :name, presence: true
