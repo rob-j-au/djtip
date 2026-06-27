@@ -11,13 +11,15 @@ export default class extends Controller {
 
   connect() {
     this.populateStateDropdown()
-    // Listen for Google Places autocomplete selections from map_picker_controller
-    this.element.addEventListener('address:selected', (e) => {
-      this.populateFromPlace(e.detail.place)
-    })
+    this._onAddressSelected = (e) => this.populateFromPlace(e.detail.place)
+    document.addEventListener('address:selected', this._onAddressSelected)
   }
 
-  // Called by map_picker_controller when a place is selected via Google Places
+  disconnect() {
+    document.removeEventListener('address:selected', this._onAddressSelected)
+  }
+
+  // Called when a place is selected via Google Places autocomplete
   populateFromPlace(place) {
     if (!place.address_components) return
 
@@ -49,20 +51,20 @@ export default class extends Controller {
         || ""
     }
 
-    // State / province
-    if (this.hasStateTarget && components.administrative_area_level_1) {
-      this.stateTarget.value = components.administrative_area_level_1.long_name
+    // Postcode / ZIP
+    if (this.hasPostcodeTarget) {
+      this.postcodeTarget.value = components.postal_code?.long_name || ""
     }
 
-    // Country
+    // Country — set and refresh state dropdown
     if (this.hasCountryTarget && components.country) {
       this.countryTarget.value = components.country.short_name
       this.populateStateDropdown()
     }
 
-    // Postcode / ZIP
-    if (this.hasPostcodeTarget) {
-      this.postcodeTarget.value = components.postal_code?.long_name || ""
+    // State / province — set after country so dropdown is populated
+    if (this.hasStateTarget && components.administrative_area_level_1) {
+      this.stateTarget.value = components.administrative_area_level_1.long_name
     }
   }
 
@@ -75,38 +77,17 @@ export default class extends Controller {
     if (!this.hasStateTarget || !this.hasCountryTarget) return
 
     const countryCode = this.countryTarget.value
-    const states = this.statesValue[countryCode]
-
-    if (!states || states.length === 0) {
-      // No states for this country — show a text input
-      this.stateTarget.outerHTML = `<input type="text"
-        name="${this.stateTarget.name}"
-        id="${this.stateTarget.id}"
-        value="${this.stateTarget.value}"
-        placeholder="State / Province"
-        class="input input-bordered w-full"
-        data-address-form-target="state" />`
-      return
-    }
-
+    const states = this.statesValue[countryCode] || []
     const currentValue = this.stateTarget.value
-    let options = '<option value="">Select state / province</option>'
+
+    // Rebuild the <select> options
+    this.stateTarget.innerHTML = '<option value="">Select state / province</option>'
     for (const state of states) {
-      const selected = state === currentValue ? " selected" : ""
-      options += `<option value="${state}"${selected}>${state}</option>`
+      const opt = document.createElement('option')
+      opt.value = state
+      opt.textContent = state
+      if (state === currentValue) opt.selected = true
+      this.stateTarget.appendChild(opt)
     }
-
-    this.stateTarget.outerHTML = `<select
-      name="${this.stateTarget.name}"
-      id="${this.stateTarget.id}"
-      class="select select-bordered w-full"
-      data-address-form-target="state"
-      data-action="address-form#stateChanged">
-      ${options}
-    </select>`
-  }
-
-  stateChanged() {
-    // Noop — placeholder for future state change handling
   }
 }

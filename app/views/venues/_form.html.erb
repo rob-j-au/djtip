@@ -89,18 +89,11 @@
 
       <div class="form-control w-full">
         <%= form.label :state, "State / Province", class: "label" %>
-        <% if venue.country.present? && Carmen::Country.coded(venue.country)&.subregions&.any? %>
-          <%= form.select :state,
-              options_for_select(Carmen::Country.coded(venue.country).subregions.map(&:name), venue.state),
-              { prompt: 'Select state / province' },
-              class: "select select-bordered w-full",
-              data: { address_form_target: "state" } %>
-        <% else %>
-          <%= form.text_field :state,
-              class: "input input-bordered w-full",
-              placeholder: "State / Province",
-              data: { address_form_target: "state" } %>
-        <% end %>
+        <%= form.select :state,
+            options_for_select([]),
+            { prompt: 'Select state / province' },
+            class: "select select-bordered w-full",
+            data: { address_form_target: "state" } %>
       </div>
     </div>
   </fieldset>

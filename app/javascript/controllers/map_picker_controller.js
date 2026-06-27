@@ -89,10 +89,9 @@ export default class extends Controller {
       this.updateLocation(lat, lng)
       this.map.setZoom(15)
 
-      // Dispatch custom event for address_form_controller to parse components
-      this.searchTarget.dispatchEvent(new CustomEvent('address:selected', {
-        detail: { place },
-        bubbles: true
+      // Dispatch custom event on document so address_form_controller can hear it
+      document.dispatchEvent(new CustomEvent('address:selected', {
+        detail: { place }
       }))
     })
   }
