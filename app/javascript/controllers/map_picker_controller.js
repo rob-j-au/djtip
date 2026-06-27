@@ -18,11 +18,16 @@ export default class extends Controller {
       return
     }
 
+    const callbackName = `_gmapsPickerCallback`
+    window[callbackName] = () => {
+      this.initializeMap()
+      delete window[callbackName]
+    }
+
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${this.apiKeyValue}&libraries=places`
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${this.apiKeyValue}&loading=async&libraries=places&callback=${callbackName}`
     script.async = true
     script.defer = true
-    script.onload = () => this.initializeMap()
     document.head.appendChild(script)
   }
 

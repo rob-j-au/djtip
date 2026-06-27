@@ -52,17 +52,23 @@
         <div>
           <p class="text-sm text-base-content/70 mb-1">Location</p>
           <% if @performance.location.present? %>
-            <div class="space-y-1">
-              <p class="text-lg font-medium">
-                <span class="text-sm text-base-content/70">Latitude:</span> <%= @performance.latitude %>
+            <div class="space-y-2">
+              <p class="text-sm">
+                <span class="text-base-content/70">Lat:</span> <%= @performance.latitude %> |
+                <span class="text-base-content/70">Lng:</span> <%= @performance.longitude %>
               </p>
-              <p class="text-lg font-medium">
-                <span class="text-sm text-base-content/70">Longitude:</span> <%= @performance.longitude %>
-              </p>
-              <a href="https://www.google.com/maps?q=<%= @performance.latitude %>,<%= @performance.longitude %>" 
-                 target="_blank" 
+
+              <div class="w-full rounded-lg border border-base-300 overflow-hidden bg-base-200"
+                   style="height: 576px"
+                   data-controller="map-display"
+                   data-map-display-latitude-value="<%= @performance.latitude %>"
+                   data-map-display-longitude-value="<%= @performance.longitude %>">
+              </div>
+
+              <a href="https://www.google.com/maps?q=<%= @performance.latitude %>,<%= @performance.longitude %>"
+                 target="_blank"
                  class="link link-primary text-sm">
-                View on Google Maps
+                Open in Google Maps &rarr;
               </a>
             </div>
           <% else %>
