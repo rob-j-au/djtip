@@ -51,6 +51,8 @@ paths:
                       format: date
                     location:
                       type: string
+                    venue_id:
+                      type: string
                   required: ["title"]
       responses:
         "201":
@@ -114,9 +116,18 @@ paths:
                       format: date
                     location:
                       type: string
+                    venue_id:
+                      type: string
       responses:
         "200":
           description: "Event updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Event"
         "422":
           $ref: "#/components/responses/ValidationError"
         "404":
@@ -181,7 +192,7 @@ paths:
                       type: number
                     currency:
                       type: string
-                      default: "AUD"
+                      default: "USD"
                     message:
                       type: string
                     user_id:
@@ -190,14 +201,26 @@ paths:
       responses:
         "201":
           description: "Tip created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Tip"
         "422":
           $ref: "#/components/responses/ValidationError"
 
-  /api/v1/tips/{id}:
+  /api/v1/events/{event_id}/tips/{id}:
     get:
       summary: "Get a tip by ID"
       tags: ["Tips"]
       parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -219,6 +242,11 @@ paths:
       summary: "Update a tip"
       tags: ["Tips"]
       parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -242,6 +270,13 @@ paths:
       responses:
         "200":
           description: "Tip updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Tip"
         "422":
           $ref: "#/components/responses/ValidationError"
         "404":
@@ -250,6 +285,11 @@ paths:
       summary: "Delete a tip"
       tags: ["Tips"]
       parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -316,10 +356,21 @@ paths:
                       format: password
                     password_confirmation:
                       type: string
+                    event_ids:
+                      type: array
+                      items:
+                        type: string
                   required: ["name", "email", "password"]
       responses:
         "201":
           description: "User created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
         "422":
           $ref: "#/components/responses/ValidationError"
 
@@ -372,6 +423,13 @@ paths:
       responses:
         "200":
           description: "User updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
         "422":
           $ref: "#/components/responses/ValidationError"
         "404":
@@ -398,6 +456,15 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Performer"
     post:
       summary: "Create a performer"
       tags: ["Performers"]
@@ -413,16 +480,35 @@ paths:
                   properties:
                     name:
                       type: string
+                    email:
+                      type: string
+                      format: email
+                    password:
+                      type: string
+                      format: password
+                    password_confirmation:
+                      type: string
                     bio:
                       type: string
                     genre:
                       type: string
                     contact:
                       type: string
-                  required: ["name"]
+                    event_ids:
+                      type: array
+                      items:
+                        type: string
+                  required: ["name", "genre"]
       responses:
         "201":
           description: "Performer created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Performer"
         "422":
           $ref: "#/components/responses/ValidationError"
 
@@ -439,6 +525,13 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Performer"
         "404":
           $ref: "#/components/responses/NotFound"
     patch:
@@ -461,15 +554,32 @@ paths:
                   properties:
                     name:
                       type: string
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
                     bio:
                       type: string
                     genre:
                       type: string
                     contact:
                       type: string
+                    event_ids:
+                      type: array
+                      items:
+                        type: string
       responses:
         "200":
           description: "Performer updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Performer"
         "422":
           $ref: "#/components/responses/ValidationError"
         "404":
@@ -496,6 +606,15 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Venue"
     post:
       summary: "Create a venue"
       tags: ["Venues"]
@@ -513,10 +632,35 @@ paths:
                       type: string
                     venue_type:
                       type: string
-                  required: ["name"]
+                    address_line1:
+                      type: string
+                    address_line2:
+                      type: string
+                    city:
+                      type: string
+                    state:
+                      type: string
+                    country:
+                      type: string
+                    postcode:
+                      type: string
+                    latitude:
+                      type: number
+                      format: float
+                    longitude:
+                      type: number
+                      format: float
+                  required: ["name", "venue_type"]
       responses:
         "201":
           description: "Venue created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Venue"
         "422":
           $ref: "#/components/responses/ValidationError"
 
@@ -533,6 +677,13 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Venue"
         "404":
           $ref: "#/components/responses/NotFound"
     patch:
@@ -557,9 +708,34 @@ paths:
                       type: string
                     venue_type:
                       type: string
+                    address_line1:
+                      type: string
+                    address_line2:
+                      type: string
+                    city:
+                      type: string
+                    state:
+                      type: string
+                    country:
+                      type: string
+                    postcode:
+                      type: string
+                    latitude:
+                      type: number
+                      format: float
+                    longitude:
+                      type: number
+                      format: float
       responses:
         "200":
           description: "Venue updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Venue"
         "422":
           $ref: "#/components/responses/ValidationError"
         "404":
@@ -586,6 +762,15 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Performance"
     post:
       summary: "Create a performance"
       tags: ["Performances"]
@@ -606,16 +791,17 @@ paths:
                       type: string
                     event_id:
                       type: string
-                    latitude:
-                      type: number
-                      format: float
-                    longitude:
-                      type: number
-                      format: float
                   required: ["time", "performer_id", "event_id"]
       responses:
         "201":
           description: "Performance created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Performance"
         "422":
           $ref: "#/components/responses/ValidationError"
 
@@ -632,6 +818,13 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Performance"
         "404":
           $ref: "#/components/responses/NotFound"
     patch:
@@ -659,13 +852,16 @@ paths:
                       type: string
                     event_id:
                       type: string
-                    latitude:
-                      type: number
-                    longitude:
-                      type: number
       responses:
         "200":
           description: "Performance updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Performance"
         "422":
           $ref: "#/components/responses/ValidationError"
         "404":
