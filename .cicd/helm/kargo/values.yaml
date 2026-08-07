@@ -116,6 +116,8 @@ kargo:
             steps:
               - uses: argocd-update
                 as: dev-update
+                retry:
+                  timeout: 30m
                 config:
                   apps:
                     - name: djtip-development
@@ -146,6 +148,8 @@ kargo:
             steps:
               - uses: argocd-update
                 as: staging-update
+                retry:
+                  timeout: 30m
                 config:
                   apps:
                     - name: djtip-staging
@@ -176,6 +180,8 @@ kargo:
             steps:
               - uses: argocd-update
                 as: production-update
+                retry:
+                  timeout: 30m
                 config:
                   apps:
                     - name: djtip-production
