@@ -15,5 +15,8 @@ ingress:
       hosts:
         - app.dev.djtip.jennings.au
 
-# Development uses default env values from values.yaml
-# No environment variable overrides needed
+# Development secrets (safe defaults for local dev)
+# Override these in production via values-staging.yaml / values-production.yaml
+secrets:
+  SECRET_KEY_BASE: "dummy-secret-key-for-development"
+  DEVISE_JWT_SECRET_KEY: "dummy-jwt-secret-for-development"

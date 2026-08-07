@@ -34,6 +34,11 @@ resources:
     memory: "512Mi"
     cpu: "500m"
 
+# Production secrets - MUST be set via CI/CD pipeline or external secrets manager
+secrets:
+  SECRET_KEY_BASE: "change-me-production"
+  DEVISE_JWT_SECRET_KEY: "change-me-production"
+
 # Autoscaling disabled due to Pi memory constraints
 autoscaling:
   enabled: false

@@ -39,6 +39,11 @@ ingress:
       hosts:
         - app.staging.djtip.jennings.au
 
+# Staging secrets - set these via CI/CD pipeline or external secrets manager
+secrets:
+  SECRET_KEY_BASE: "change-me-staging"
+  DEVISE_JWT_SECRET_KEY: "change-me-staging"
+
 # Enable persistence for staging
 mongodb:
   enabled: true
