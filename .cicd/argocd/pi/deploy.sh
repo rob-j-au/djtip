@@ -40,6 +40,9 @@ echo "✅ HAProxy Ingress application created"
 ssh pi "kubectl apply -f /tmp/observability.yaml"
 echo "✅ Observability application created"
 
+ssh pi "kubectl apply -f /tmp/kargo.yaml"
+echo "✅ Kargo application created"
+
 ssh pi "kubectl apply -f /tmp/djtip-staging.yaml"
 echo "✅ Staging application created"
 

@@ -1,0 +1,12 @@
+apiVersion: v2
+name: kargo
+description: Kargo - Progressive Delivery for the djtip application (GitOps promotion pipelines for ArgoCD)
+type: application
+version: 1.11.0
+appVersion: "1.11.0"
+
+# Kargo upstream Helm chart (OCI). Run `helm dependency update` to fetch.
+dependencies:
+  - name: kargo
+    version: 1.11.0
+    repository: oci://ghcr.io/akuity/kargo-charts

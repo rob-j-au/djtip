@@ -1,10 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: djtip-production
+  name: kargo
   namespace: argocd
-  annotations:
-    kargo.akuity.io/authorized-stage: djtip:production
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -13,34 +11,29 @@ spec:
   source:
     repoURL: https://github.com/rob-j-au/djtip.git
     targetRevision: main
-    path: .cicd/helm/djtip
+    path: .cicd/helm/kargo
     helm:
       valueFiles:
-        - values-production.yaml
-      skipCrds: false
+        - values.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: production
+    namespace: kargo
 
   syncPolicy:
-    # Manual sync for production - no automated changes
-    automated: null
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
 
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
-      - PruneLast=true
+      - ServerSideApply=true  # Required for CRDs
 
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
-        maxDuration: 3m
-
-  ignoreDifferences:
-    - group: apps
-      kind: Deployment
-      jsonPointers:
-        - /spec/replicas
+        maxDuration: 5m

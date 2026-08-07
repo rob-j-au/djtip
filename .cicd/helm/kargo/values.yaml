@@ -1,0 +1,178 @@
+# Kargo - Progressive Delivery Configuration for djtip
+# =====================================================
+# This deploys Kargo alongside ArgoCD to manage multi-stage promotion pipelines.
+# See: https://docs.kargo.io
+
+# -- Kargo API server
+api:
+  host: kargo.minikube.local
+  adminAccount:
+    # bcrypt hash of "admin" - same as default ArgoCD admin password
+    passwordHash: $2a$10$5vm8wXaSdbuff0m9l21JdevzXBzJFPCi8sy6OOnpZMAG.fOXL7jvO
+    tokenSigningKey: djtip-kargo-token-signing-key-change-me
+  service:
+    type: NodePort
+    nodePort: 31081
+  tls:
+    enabled: false
+  logLevel: info
+
+# -- Webhooks server (for external webhook integrations)
+externalWebhooksServer:
+  service:
+    type: NodePort
+    nodePort: 31082
+  tls:
+    enabled: false
+
+# -- ArgoCD integration
+argocd:
+  namespace: argocd
+
+# -- Kargo controller
+controller:
+  logLevel: info
+
+# -- Install Kargo CRDs
+crds:
+  install: true
+  keep: true
+
+# -- Kargo resources deployed via extraObjects
+# These define the promotion pipeline for the djtip application
+extraObjects:
+  # =============================================
+  # Project: djtip
+  # Creates a namespace named kargo-djtip
+  # =============================================
+  - apiVersion: kargo.akuity.io/v1alpha1
+    kind: Project
+    metadata:
+      name: djtip
+
+  # =============================================
+  # ProjectConfig: djtip
+  # Defines promotion policies for the project
+  # =============================================
+  - apiVersion: kargo.akuity.io/v1alpha1
+    kind: ProjectConfig
+    metadata:
+      name: djtip
+      namespace: kargo-djtip
+    spec:
+      promotionPolicies:
+        - stage: dev
+          autoPromotionEnabled: true
+        - stage: staging
+          autoPromotionEnabled: true
+        - stage: production
+          autoPromotionEnabled: false
+
+  # =============================================
+  # Warehouse: djtip
+  # Watches the Git repository for new commits
+  # =============================================
+  - apiVersion: kargo.akuity.io/v1alpha1
+    kind: Warehouse
+    metadata:
+      name: djtip
+      namespace: kargo-djtip
+    spec:
+      interval: 5m
+      freightCreationPolicy: Automatic
+      subscriptions:
+        - git:
+            repoURL: https://github.com/rob-j-au/djtip.git
+            branch: main
+            commitSelectionStrategy: NewestFromBranch
+
+  # =============================================
+  # Stage: dev
+  # Development stage - auto-promotes from Warehouse
+  # =============================================
+  - apiVersion: kargo.akuity.io/v1alpha1
+    kind: Stage
+    metadata:
+      name: dev
+      namespace: kargo-djtip
+    spec:
+      requestedFreight:
+        - origin:
+            kind: Warehouse
+            name: djtip
+          sources:
+            direct: true
+      promotionTemplate:
+        spec:
+          steps:
+            - task: argocd-update
+              as: dev-update
+              config:
+                apps:
+                  - name: djtip-development
+                    namespace: argocd
+                    sources:
+                      - repoURL: https://github.com/rob-j-au/djtip.git
+                        updateTargetRevision: true
+
+  # =============================================
+  # Stage: staging
+  # Staging stage - promotes from dev after 5m soak time
+  # =============================================
+  - apiVersion: kargo.akuity.io/v1alpha1
+    kind: Stage
+    metadata:
+      name: staging
+      namespace: kargo-djtip
+    spec:
+      requestedFreight:
+        - origin:
+            kind: Warehouse
+            name: djtip
+          sources:
+            stages:
+              - dev
+            requiredSoakTime: 5m
+      promotionTemplate:
+        spec:
+          steps:
+            - task: argocd-update
+              as: staging-update
+              config:
+                apps:
+                  - name: djtip-staging
+                    namespace: argocd
+                    sources:
+                      - repoURL: https://github.com/rob-j-au/djtip.git
+                        updateTargetRevision: true
+
+  # =============================================
+  # Stage: production
+  # Production stage - manual promotion from staging after 30m soak time
+  # =============================================
+  - apiVersion: kargo.akuity.io/v1alpha1
+    kind: Stage
+    metadata:
+      name: production
+      namespace: kargo-djtip
+    spec:
+      requestedFreight:
+        - origin:
+            kind: Warehouse
+            name: djtip
+          sources:
+            stages:
+              - staging
+            requiredSoakTime: 30m
+      promotionTemplate:
+        spec:
+          steps:
+            - task: argocd-update
+              as: production-update
+              config:
+                apps:
+                  - name: djtip-production
+                    namespace: argocd
+                    sources:
+                      - repoURL: https://github.com/rob-j-au/djtip.git
+                        updateTargetRevision: true

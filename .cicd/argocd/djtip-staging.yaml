@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: djtip-staging
   namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: djtip:staging
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

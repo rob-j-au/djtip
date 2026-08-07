@@ -8,12 +8,13 @@ This directory contains ArgoCD Application manifests for deploying the djtip app
 - `djtip-development.yaml` - Development environment (default namespace, main branch)
 - `djtip-staging.yaml` - Staging environment (staging namespace, staging branch)
 - `djtip-production.yaml` - Production environment (production namespace, release branch)
+- `kargo-app.yaml` - Kargo progressive delivery (promotion pipelines)
 - `observability-app.yaml` - Observability stack (Grafana, Prometheus, Loki, Tempo)
 - `haproxy-ingress-app.yaml` - HAProxy Ingress Controller
 - `cert-manager-app.yaml` - cert-manager for automated TLS certificates
 
 ### Pi Kubernetes Cluster
-- `pi/` - Separate manifests for Pi deployment (staging and production only)
+- `pi/` - Separate manifests for Pi deployment (staging, production, and Kargo)
 
 ## Quick Start
 
@@ -49,10 +50,13 @@ kubectl apply -f .cicd/argocd/haproxy-ingress-app.yaml
 # 2. cert-manager (for automated TLS)
 kubectl apply -f .cicd/argocd/cert-manager-app.yaml
 
-# 3. Observability Stack
+# 3. Kargo (progressive delivery - must be before apps that use it)
+kubectl apply -f .cicd/argocd/kargo-app.yaml
+
+# 4. Observability Stack
 kubectl apply -f .cicd/argocd/observability-app.yaml
 
-# 4. Development Application
+# 5. Development Application
 kubectl apply -f .cicd/argocd/djtip-development.yaml
 ```
 
@@ -74,6 +78,7 @@ kubectl get applications -n argocd
 kubectl get pods -n default              # Development
 kubectl get pods -n staging              # Staging
 kubectl get pods -n production           # Production
+kubectl get pods -n kargo                # Kargo progressive delivery
 kubectl get pods -n observability        # Monitoring
 kubectl get pods -n haproxy-controller   # Ingress
 kubectl get pods -n cert-manager         # TLS

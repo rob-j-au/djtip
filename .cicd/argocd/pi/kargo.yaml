@@ -1,10 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: djtip-staging
+  name: kargo
   namespace: argocd
-  annotations:
-    kargo.akuity.io/authorized-stage: djtip:staging
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -13,15 +11,25 @@ spec:
   source:
     repoURL: https://github.com/rob-j-au/djtip.git
     targetRevision: main
-    path: .cicd/helm/djtip
+    path: .cicd/helm/kargo
     helm:
       valueFiles:
-        - values-staging.yaml
-      skipCrds: false
+        - values.yaml
+      parameters:
+        - name: api.host
+          value: "kargo.k8s.pi.jennings.au"
+        - name: api.service.type
+          value: "ClusterIP"
+        - name: api.tls.enabled
+          value: "false"
+        - name: externalWebhooksServer.service.type
+          value: "ClusterIP"
+        - name: externalWebhooksServer.tls.enabled
+          value: "false"
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: staging
+    namespace: kargo
 
   syncPolicy:
     automated:
@@ -32,17 +40,11 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
-      - PruneLast=true
+      - ServerSideApply=true  # Required for CRDs
 
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
-        maxDuration: 3m
-
-  ignoreDifferences:
-    - group: apps
-      kind: Deployment
-      jsonPointers:
-        - /spec/replicas
+        maxDuration: 5m
