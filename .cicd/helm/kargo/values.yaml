@@ -37,6 +37,11 @@ kargo:
   controller:
     logLevel: info
 
+  # -- Internal Kubernetes webhooks server (disable self-signed cert to avoid cert-manager dependency)
+  webhooksServer:
+    tls:
+      selfSignedCert: false
+
   # -- Install Kargo CRDs
   crds:
     install: true
@@ -109,7 +114,7 @@ kargo:
         promotionTemplate:
           spec:
             steps:
-              - task: argocd-update
+              - uses: argocd-update
                 as: dev-update
                 config:
                   apps:
@@ -140,7 +145,7 @@ kargo:
         promotionTemplate:
           spec:
             steps:
-              - task: argocd-update
+              - uses: argocd-update
                 as: staging-update
                 config:
                   apps:
@@ -171,7 +176,7 @@ kargo:
         promotionTemplate:
           spec:
             steps:
-              - task: argocd-update
+              - uses: argocd-update
                 as: production-update
                 config:
                   apps:
