@@ -23,7 +23,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: staging
+    namespace: djtip-staging
 
   syncPolicy:
     # Automated sync - comment out for manual sync

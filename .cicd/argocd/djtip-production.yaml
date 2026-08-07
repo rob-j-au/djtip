@@ -23,7 +23,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: production
+    namespace: djtip-production
 
   syncPolicy:
     # Manual sync for production - no automated changes

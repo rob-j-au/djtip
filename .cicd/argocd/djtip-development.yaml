@@ -29,7 +29,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: development
+    namespace: djtip-development
 
   syncPolicy:
     # Automated sync - comment out for manual sync
