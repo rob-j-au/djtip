@@ -122,7 +122,6 @@ kargo:
                       namespace: argocd
                       sources:
                         - repoURL: https://github.com/rob-j-au/djtip.git
-                          updateTargetRevision: true
 
     # =============================================
     # Stage: staging
@@ -153,7 +152,6 @@ kargo:
                       namespace: argocd
                       sources:
                         - repoURL: https://github.com/rob-j-au/djtip.git
-                          updateTargetRevision: true
 
     # =============================================
     # Stage: production
@@ -184,4 +182,3 @@ kargo:
                       namespace: argocd
                       sources:
                         - repoURL: https://github.com/rob-j-au/djtip.git
-                          updateTargetRevision: true
