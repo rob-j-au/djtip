@@ -13,7 +13,7 @@ spec:
   source:
     # Update this to your actual Git repository URL
     repoURL: https://github.com/rob-j-au/djtip.git
-    targetRevision: staging
+    targetRevision: main
     path: .cicd/helm/djtip
     helm:
       valueFiles:
