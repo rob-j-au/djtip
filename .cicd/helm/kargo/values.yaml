@@ -52,7 +52,7 @@ kargo:
   extraObjects:
     # =============================================
     # Project: djtip
-    # Creates a namespace named kargo-djtip
+    # Creates a namespace named djtip
     # =============================================
     - apiVersion: kargo.akuity.io/v1alpha1
       kind: Project
@@ -67,7 +67,7 @@ kargo:
       kind: ProjectConfig
       metadata:
         name: djtip
-        namespace: kargo-djtip
+        namespace: djtip
       spec:
         promotionPolicies:
           - stage: dev
@@ -85,7 +85,7 @@ kargo:
       kind: Warehouse
       metadata:
         name: djtip
-        namespace: kargo-djtip
+        namespace: djtip
       spec:
         interval: 5m
         freightCreationPolicy: Automatic
@@ -103,7 +103,7 @@ kargo:
       kind: Stage
       metadata:
         name: dev
-        namespace: kargo-djtip
+        namespace: djtip
       spec:
         requestedFreight:
           - origin:
@@ -132,7 +132,7 @@ kargo:
       kind: Stage
       metadata:
         name: staging
-        namespace: kargo-djtip
+        namespace: djtip
       spec:
         requestedFreight:
           - origin:
@@ -163,7 +163,7 @@ kargo:
       kind: Stage
       metadata:
         name: production
-        namespace: kargo-djtip
+        namespace: djtip
       spec:
         requestedFreight:
           - origin:
