@@ -26,7 +26,7 @@ Kargo adds a **promotion-based** model on top of this:
                  │            Kargo (namespace: kargo)            │
                  │                                                │
                  │  ┌────────────────────────────────────────┐    │
-                 │  │  Project: djtip (ns: kargo-djtip)      │    │
+                 │  │  Project: djtip (ns: djtip)      │    │
                  │  │                                        │    │
                  │  │  ┌──────────┐     ┌───────────┐        │    │
    git push ────────▶│ Warehouse │────▶│ Stage dev │───────┐ │    │
@@ -88,7 +88,7 @@ kubectl wait --for=condition=available --timeout=300s deployment -l app.kubernet
 
 # 3. Verify Kargo resources were created
 kubectl get projects -n kargo
-kubectl get warehouses,stages -n kargo-djtip
+kubectl get warehouses,stages -n djtip
 
 # 4. Access the UI
 kubectl port-forward svc/kargo-api -n kargo 31081:8080
@@ -156,9 +156,9 @@ Applied to:
 | Symptom | Command |
 |---------|---------|
 | Kargo pods crash-looping | `kubectl get pods -n kargo && kubectl logs -n kargo deploy/kargo-controller` |
-| Warehouse not finding commits | `kubectl describe warehouse -n kargo-djtip djtip` |
-| Stage stuck `NotVerified` | `kubectl describe stage -n kargo-djtip <stage>` |
-| Promotion failed | `kubectl get promotions -n kargo-djtip && kubectl describe promotion -n kargo-djtip <name>` |
+| Warehouse not finding commits | `kubectl describe warehouse -n djtip djtip` |
+| Stage stuck `NotVerified` | `kubectl describe stage -n djtip <stage>` |
+| Promotion failed | `kubectl get promotions -n djtip && kubectl describe promotion -n djtip <name>` |
 | ArgoCD app "unauthorized" | Verify `kargo.akuity.io/authorized-stage` annotation is present |
 
 ## References

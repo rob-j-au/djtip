@@ -152,16 +152,16 @@ kubectl logs -n kargo <pod-name>
 ### Warehouse Not Discovering Commits
 
 ```bash
-kubectl get warehouses -n kargo-djtip
-kubectl describe warehouse -n kargo-djtip djtip
+kubectl get warehouses -n djtip
+kubectl describe warehouse -n djtip djtip
 ```
 
 ### Stage Not Promoting
 
 ```bash
-kubectl get stages -n kargo-djtip
-kubectl describe stage -n kargo-djtip <stage-name>
-kubectl get promotions -n kargo-djtip
+kubectl get stages -n djtip
+kubectl describe stage -n djtip <stage-name>
+kubectl get promotions -n djtip
 ```
 
 ### ArgoCD Application Not Authorized
