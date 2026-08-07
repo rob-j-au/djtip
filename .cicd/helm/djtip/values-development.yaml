@@ -11,7 +11,7 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
   tls:
-    - secretName: djtip-tls
+    - secretName: djtip-development-tls
       hosts:
         - app.dev.djtip.jennings.au
 
