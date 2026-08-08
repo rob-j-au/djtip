@@ -21,9 +21,6 @@ kube-prometheus-stack:
       datasources:
         enabled: false
 
-    # Force deploy datasources configmap even without sidecar
-    forceDeployDatasources: true
-
     # Anonymous authentication enabled
     grafana.ini:
       auth.anonymous:
@@ -32,23 +29,26 @@ kube-prometheus-stack:
       server:
         root_url: "http://grafana.minikube.local"
 
-    # Pre-configure datasources
-    additionalDataSources:
-      # Loki for logs
-      - name: Loki
-        type: loki
-        url: http://loki:3100
-        access: proxy
-        jsonData:
-          maxLines: 1000
+    # Pre-configure datasources via grafana subchart provisioning
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+          # Loki for logs
+          - name: Loki
+            type: loki
+            url: http://loki:3100
+            access: proxy
+            jsonData:
+              maxLines: 1000
 
-      # Tempo for traces
-      - name: Tempo
-        type: tempo
-        url: http://tempo:3100
-        access: proxy
-        jsonData:
-          httpMethod: GET
+          # Tempo for traces
+          - name: Tempo
+            type: tempo
+            url: http://tempo:3100
+            access: proxy
+            jsonData:
+              httpMethod: GET
 
     # Ingress for Grafana
     ingress:
