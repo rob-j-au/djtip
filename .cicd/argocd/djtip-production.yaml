@@ -10,16 +10,16 @@ metadata:
 spec:
   project: default
 
-  source:
+  sources:
     # Update this to your actual Git repository URL
-    repoURL: https://github.com/rob-j-au/djtip.git
-    targetRevision: main
-    path: .cicd/helm/djtip
-    helm:
-      valueFiles:
-        - values-production.yaml
-      # Build dependencies before deploying
-      skipCrds: false
+    - repoURL: https://github.com/rob-j-au/djtip.git
+      targetRevision: main
+      path: .cicd/helm/djtip
+      helm:
+        valueFiles:
+          - values-production.yaml
+        # Build dependencies before deploying
+        skipCrds: false
 
   destination:
     server: https://kubernetes.default.svc
