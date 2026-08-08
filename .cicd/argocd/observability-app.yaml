@@ -30,7 +30,7 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
-      - ServerSideApply=true  # Required for CRDs
+      - Replace=true  # Required for CRDs to avoid annotation overflow
 
     retry:
       limit: 5
