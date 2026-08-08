@@ -51,14 +51,8 @@ kube-prometheus-stack:
     ingress:
       enabled: true
       ingressClassName: traefik
-      annotations:
-        traefik.ingress.kubernetes.io/router.tls: "true"
       hosts:
         - grafana.minikube.local
-      tls:
-        - secretName: grafana-tls
-          hosts:
-            - grafana.minikube.local
 
     # Resource limits
     resources:
