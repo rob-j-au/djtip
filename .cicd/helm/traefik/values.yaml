@@ -1,0 +1,22 @@
+# Traefik Ingress Controller Configuration
+
+# Configure the traefik subchart
+traefik:
+  fullnameOverride: "traefik"
+
+  service:
+    type: NodePort
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+  providers:
+    kubernetesIngress:
+      enabled: true
+      publishedService:
+        enabled: true

@@ -12,9 +12,10 @@ image:
 # Production-specific ingress
 ingress:
   enabled: true
-  className: "haproxy"
+  className: "traefik"
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"  # Use DNS-01 for production
+    traefik.ingress.kubernetes.io/router.tls: "true"
   hosts:
     - host: app.djtip.jennings.au
       paths:

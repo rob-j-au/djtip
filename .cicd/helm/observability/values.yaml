@@ -50,9 +50,9 @@ kube-prometheus-stack:
     # Ingress for Grafana
     ingress:
       enabled: true
-      ingressClassName: haproxy
+      ingressClassName: traefik
       annotations:
-        ingress.class: haproxy
+        traefik.ingress.kubernetes.io/router.tls: "true"
       hosts:
         - grafana.minikube.local
       tls:
