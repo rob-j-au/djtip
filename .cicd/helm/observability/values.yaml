@@ -21,6 +21,9 @@ kube-prometheus-stack:
       datasources:
         enabled: false
 
+    # Force deploy datasources configmap even without sidecar
+    forceDeployDatasources: true
+
     # Anonymous authentication enabled
     grafana.ini:
       auth.anonymous:
