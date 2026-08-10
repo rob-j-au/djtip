@@ -11,3 +11,15 @@ data:
 {{ .Files.Get "dashboards/application-logs.json" | indent 4 }}
   traefik-official.json: |
 {{ .Files.Get "dashboards/traefik-official.json" | indent 4 }}
+  kubernetes-cluster.json: |
+{{ .Files.Get "dashboards/kubernetes-cluster.json" | indent 4 }}
+  node-exporter-full.json: |
+{{ .Files.Get "dashboards/node-exporter-full.json" | indent 4 }}
+  mongodb-overview.json: |
+{{ .Files.Get "dashboards/mongodb-overview.json" | indent 4 }}
+  redis-dashboard.json: |
+{{ .Files.Get "dashboards/redis-dashboard.json" | indent 4 }}
+  argocd.json: |
+{{ .Files.Get "dashboards/argocd.json" | indent 4 }}
+  prometheus-overview.json: |
+{{ .Files.Get "dashboards/prometheus-overview.json" | indent 4 }}
