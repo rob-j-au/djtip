@@ -329,6 +329,17 @@ tempo:
       zipkin:
         endpoint: 0.0.0.0:9411
 
+    metricsGenerator:
+      enabled: true
+      remoteWriteUrl: "http://obs-kube-prometheus-stack-prometheus:9090/api/v1/write"
+      processor:
+        service_graphs: {}
+        span_metrics: {}
+      registry:
+        collection_interval: 15s
+      storage:
+        path: /var/tempo/metrics
+
     storage:
       trace:
         backend: local
