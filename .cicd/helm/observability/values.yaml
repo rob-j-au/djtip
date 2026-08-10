@@ -110,6 +110,13 @@ kube-prometheus-stack:
           memory: "2Gi"
           cpu: "1000m"
 
+    # Ingress for Prometheus
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      hosts:
+        - prometheus.minikube.local
+
       # Service monitors - automatically discover services
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
@@ -135,6 +142,13 @@ kube-prometheus-stack:
         limits:
           memory: "256Mi"
           cpu: "200m"
+
+    # Ingress for Alertmanager
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      hosts:
+        - alertmanager.minikube.local
 
   # Prometheus Operator
   prometheusOperator:
