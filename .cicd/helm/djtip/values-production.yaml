@@ -13,17 +13,11 @@ image:
 ingress:
   enabled: true
   className: "traefik"
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"  # Use DNS-01 for production
   hosts:
     - host: app.djtip.jennings.au
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls:
-    - secretName: djtip-production-tls
-      hosts:
-        - app.djtip.jennings.au
 
 # Web pod resources - optimized for Pi
 resources:
@@ -33,22 +27,6 @@ resources:
   limits:
     memory: "512Mi"
     cpu: "500m"
-
-# Sidekiq Web UI ingress
-sidekiqIngress:
-  enabled: true
-  className: "traefik"
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"
-  hosts:
-    - host: sidekiq.djtip.jennings.au
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls:
-    - secretName: djtip-sidekiq-production-tls
-      hosts:
-        - sidekiq.djtip.jennings.au
 
 # mongo-express - MongoDB Web UI
 mongoExpress:
@@ -62,17 +40,11 @@ mongoExpress:
       memory: "256Mi"
       cpu: "200m"
   ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"
     hosts:
       - host: mongodb.djtip.jennings.au
         paths:
           - path: /
             pathType: ImplementationSpecific
-    tls:
-      - secretName: djtip-mongo-express-production-tls
-        hosts:
-          - mongodb.djtip.jennings.au
 
 # Production secrets - MUST be set via CI/CD pipeline or external secrets manager
 secrets:

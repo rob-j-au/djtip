@@ -21,16 +21,9 @@
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
 
-{{- if .Values.sidekiqIngress.enabled }}
-2. Access the Sidekiq Web UI:
-{{- range $host := .Values.sidekiqIngress.hosts }}
-  http{{ if $.Values.sidekiqIngress.tls }}s{{ end }}://{{ $host.host }}/sidekiq
-{{- end }}
-{{- end }}
-
 {{- if .Values.mongoExpress.ingress.enabled }}
-3. Access the mongo-express Web UI (MongoDB admin):
+2. Access the mongo-express Web UI (MongoDB admin):
 {{- range $host := .Values.mongoExpress.ingress.hosts }}
-  http{{ if $.Values.mongoExpress.ingress.tls }}s{{ end }}://{{ $host.host }}
+  http://{{ $host.host }}
 {{- end }}
 {{- end }}

@@ -3,17 +3,11 @@
 
 # Development-specific ingress
 ingress:
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging-dns01"
   hosts:
     - host: app.dev.djtip.jennings.au
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls:
-    - secretName: djtip-development-tls
-      hosts:
-        - app.dev.djtip.jennings.au
 
 # Development secrets (safe defaults for local dev)
 # Override these in production via values-staging.yaml / values-production.yaml
