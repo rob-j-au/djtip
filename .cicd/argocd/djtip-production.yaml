@@ -47,3 +47,4 @@ spec:
       kind: Deployment
       jsonPointers:
         - /spec/replicas
+        - /spec/strategy
