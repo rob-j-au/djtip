@@ -71,10 +71,10 @@ mongodb:
     size: 20Gi
   resources:
     requests:
-      memory: "350Mi"  # Based on staging actual usage: 318Mi
+      memory: "512Mi"
       cpu: "100m"
     limits:
-      memory: "512Mi"
+      memory: "1Gi"
       cpu: "500m"
 
 # Redis configuration - optimized for Pi
