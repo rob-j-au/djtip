@@ -306,7 +306,7 @@ tempo:
         memory: "256Mi"
         cpu: "100m"
       limits:
-        memory: "512Mi"
+        memory: "1Gi"
         cpu: "500m"
 
     # Receivers for different trace formats
