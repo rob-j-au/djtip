@@ -6,6 +6,13 @@ traefik:
 
   service:
     type: NodePort
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9100"
+    additionalPorts:
+      - name: metrics
+        containerPort: 9100
+        protocol: TCP
 
   resources:
     requests:
@@ -14,6 +21,13 @@ traefik:
     limits:
       cpu: 500m
       memory: 256Mi
+
+  metrics:
+    prometheus:
+      addEntryPointsLabels: true
+      addServicesLabels: true
+      addRoutersLabels: true
+      entryPoint: metrics
 
   providers:
     kubernetesIngress:
