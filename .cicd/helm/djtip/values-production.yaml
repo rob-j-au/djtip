@@ -34,6 +34,22 @@ resources:
     memory: "512Mi"
     cpu: "500m"
 
+# Sidekiq Web UI ingress
+sidekiqIngress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"
+  hosts:
+    - host: sidekiq.djtip.jennings.au
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: djtip-sidekiq-production-tls
+      hosts:
+        - sidekiq.djtip.jennings.au
+
 # Production secrets - MUST be set via CI/CD pipeline or external secrets manager
 secrets:
   SECRET_KEY_BASE: "change-me-production"

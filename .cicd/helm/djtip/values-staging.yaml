@@ -38,6 +38,22 @@ ingress:
       hosts:
         - app.staging.djtip.jennings.au
 
+# Sidekiq Web UI ingress
+sidekiqIngress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"
+  hosts:
+    - host: sidekiq.staging.djtip.jennings.au
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: djtip-sidekiq-staging-tls
+      hosts:
+        - sidekiq.staging.djtip.jennings.au
+
 # Staging secrets - set these via CI/CD pipeline or external secrets manager
 secrets:
   SECRET_KEY_BASE: "change-me-staging"

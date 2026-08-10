@@ -14,6 +14,10 @@ kube-prometheus-stack:
     fullnameOverride: "grafana"
     # adminPassword: ""  # Not needed - using anonymous auth
 
+    # Install additional plugins (redis-datasource for Redis dashboard)
+    plugins:
+      - redis-datasource
+
     # Disable sidecars - k8s-sidecar has Python 3.14 SSL cert issues
     sidecar:
       dashboards:
@@ -59,6 +63,18 @@ kube-prometheus-stack:
             access: proxy
             jsonData:
               httpMethod: GET
+
+          # Redis datasource for Redis dashboard (redis-datasource plugin)
+          - name: Redis
+            type: redis-datasource
+            url: redis://djtip-redis:6379
+            access: proxy
+            jsonData:
+              client: standalone
+              poolSize: 5
+              timeout: 10
+              pingInterval: 0
+              tlsAuth: false
 
     # Dashboard providers
     dashboardProviders:
