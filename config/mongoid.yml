@@ -1,7 +1,7 @@
 development:
   clients:
     default:
-      database: djtip_development
+      database: djtip
       hosts:
         - localhost:27017
       options:
@@ -10,7 +10,7 @@ development:
 test:
   clients:
     default:
-      database: djtip_test
+      database: djtip
       hosts:
         - localhost:27017
       options:
@@ -24,6 +24,6 @@ test:
 production:
   clients:
     default:
-      uri: <%= ENV['MONGODB_URI'] || 'mongodb://localhost:27017/djtip_production' %>
+      uri: <%= ENV['MONGODB_URI'] || 'mongodb://localhost:27017/djtip' %>
       options:
         server_selection_timeout: 5

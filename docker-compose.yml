@@ -6,7 +6,7 @@ services:
     container_name: djtip-mongodb
     restart: unless-stopped
     environment:
-      MONGO_INITDB_DATABASE: djtip_development
+      MONGO_INITDB_DATABASE: djtip
     ports:
       - "27017:27017"
     volumes:
@@ -38,7 +38,7 @@ services:
       - "3000:3000"
     environment:
       RAILS_ENV: development
-      MONGODB_URL: mongodb://mongodb:27017/djtip_development
+      MONGODB_URL: mongodb://mongodb:27017/djtip
       REDIS_URL: redis://redis:6379/0
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       IPINFO_API_KEY: ${IPINFO_API_KEY}
@@ -60,7 +60,7 @@ services:
     command: bundle exec sidekiq
     environment:
       RAILS_ENV: development
-      MONGODB_URL: mongodb://mongodb:27017/djtip_development
+      MONGODB_URL: mongodb://mongodb:27017/djtip
       REDIS_URL: redis://redis:6379/0
     volumes:
       - .:/rails

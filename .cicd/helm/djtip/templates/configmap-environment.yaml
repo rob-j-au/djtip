@@ -18,7 +18,7 @@ data:
   PORT: {{ .Values.env.port | quote }}
 
   # Database Configuration
-  MONGODB_URI: {{ .Values.env.mongodbUri | default (printf "mongodb://%s-mongodb:27017/djtip_%s" .Release.Name .Values.env.railsEnv) | quote }}
+  MONGODB_URI: {{ .Values.env.mongodbUri | default (printf "mongodb://%s-mongodb:27017/djtip" .Release.Name) | quote }}
 
   # Redis Configuration
   REDIS_URL: {{ .Values.env.redisUrl | default (printf "redis://%s-redis-master:6379/0" .Release.Name) | quote }}
