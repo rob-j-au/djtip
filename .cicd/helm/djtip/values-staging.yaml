@@ -54,6 +54,23 @@ sidekiqIngress:
       hosts:
         - sidekiq.staging.djtip.jennings.au
 
+# mongo-express - MongoDB Web UI
+mongoExpress:
+  enabled: true
+  mongodbServer: ""  # Defaults to <release-name>-mongodb
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"
+    hosts:
+      - host: mongodb.staging.djtip.jennings.au
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - secretName: djtip-mongo-express-staging-tls
+        hosts:
+          - mongodb.staging.djtip.jennings.au
+
 # Staging secrets - set these via CI/CD pipeline or external secrets manager
 secrets:
   SECRET_KEY_BASE: "change-me-staging"

@@ -27,3 +27,10 @@
   http{{ if $.Values.sidekiqIngress.tls }}s{{ end }}://{{ $host.host }}/sidekiq
 {{- end }}
 {{- end }}
+
+{{- if .Values.mongoExpress.ingress.enabled }}
+3. Access the mongo-express Web UI (MongoDB admin):
+{{- range $host := .Values.mongoExpress.ingress.hosts }}
+  http{{ if $.Values.mongoExpress.ingress.tls }}s{{ end }}://{{ $host.host }}
+{{- end }}
+{{- end }}

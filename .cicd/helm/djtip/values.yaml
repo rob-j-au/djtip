@@ -89,6 +89,44 @@ sidekiqIngress:
     - secretName: djtip-sidekiq-tls
       hosts:
         - sidekiq.dev.djtip.jennings.au
+
+# mongo-express - MongoDB Web UI
+mongoExpress:
+  enabled: true
+  image:
+    repository: mongo-express
+    tag: latest
+    pullPolicy: IfNotPresent
+  mongodbServer: ""  # Defaults to <release-name>-mongodb
+  mongodbPort: "27017"
+  authUsername: "admin"
+  authPassword: "admin"
+  siteBaseUrl: "/"
+  service:
+    type: ClusterIP
+    port: 8081
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+  ingress:
+    enabled: true
+    className: "traefik"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-staging-dns01"
+    hosts:
+      - host: mongodb.dev.djtip.jennings.au
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - secretName: djtip-mongo-express-tls
+        hosts:
+          - mongodb.dev.djtip.jennings.au
+
 resources: {}
 # We usually recommend not to specify default resources and to leave this as a conscious
 # choice for the user. This also increases chances charts run on environments with little

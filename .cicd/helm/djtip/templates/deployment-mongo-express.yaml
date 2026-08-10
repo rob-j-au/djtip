@@ -1,0 +1,65 @@
+{{- if .Values.mongoExpress.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "djtip.fullname" . }}-mongo-express
+  labels:
+    {{- include "djtip.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "djtip.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: mongo-express
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "djtip.labels" . | nindent 8 }}
+        app.kubernetes.io/component: mongo-express
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: mongo-express
+        image: "{{ .Values.mongoExpress.image.repository }}:{{ .Values.mongoExpress.image.tag }}"
+        imagePullPolicy: {{ .Values.mongoExpress.image.pullPolicy }}
+        env:
+        - name: ME_CONFIG_MONGODB_SERVER
+          value: {{ .Values.mongoExpress.mongodbServer | default (printf "%s-mongodb" .Release.Name) | quote }}
+        - name: ME_CONFIG_MONGODB_PORT
+          value: {{ .Values.mongoExpress.mongodbPort | default "27017" | quote }}
+        - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
+          value: "true"
+        - name: ME_CONFIG_BASICAUTH_USERNAME
+          value: {{ .Values.mongoExpress.authUsername | quote }}
+        - name: ME_CONFIG_BASICAUTH_PASSWORD
+          value: {{ .Values.mongoExpress.authPassword | quote }}
+        - name: ME_CONFIG_SITE_BASEURL
+          value: {{ .Values.mongoExpress.siteBaseUrl | default "/" | quote }}
+        ports:
+        - containerPort: 8081
+          name: http
+        resources:
+          {{- toYaml .Values.mongoExpress.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
