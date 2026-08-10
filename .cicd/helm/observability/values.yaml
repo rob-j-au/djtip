@@ -60,6 +60,26 @@ kube-prometheus-stack:
             jsonData:
               httpMethod: GET
 
+    # Dashboard providers
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: "default"
+            orgId: 1
+            folder: ""
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
+
+    # Pre-configure dashboards
+    dashboards:
+      default:
+        application-logs:
+          file: dashboards/application-logs.json
+
     # Ingress for Grafana
     ingress:
       enabled: true

@@ -1,0 +1,120 @@
+{
+  "title": "Application Logs (djtip)",
+  "tags": ["djtip", "logs", "kubernetes"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "namespace",
+        "type": "query",
+        "datasource": "Loki",
+        "query": "label_values(namespace)",
+        "refresh": 1,
+        "includeAll": true,
+        "multi": true,
+        "allValue": "djtip-.*",
+        "definition": "label_values(namespace)",
+        "regex": "/djtip-.*/"
+      },
+      {
+        "name": "pod",
+        "type": "query",
+        "datasource": "Loki",
+        "query": "label_values(pod, $namespace)",
+        "refresh": 2,
+        "includeAll": true,
+        "multi": true,
+        "definition": "label_values(pod, $namespace)"
+      },
+      {
+        "name": "container",
+        "type": "query",
+        "datasource": "Loki",
+        "query": "label_values(container, $namespace)",
+        "refresh": 2,
+        "includeAll": true,
+        "multi": true,
+        "definition": "label_values(container, $namespace)"
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  },
+  "panels": [
+    {
+      "title": "Log Volume by Namespace",
+      "type": "barchart",
+      "datasource": "Loki",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({namespace=~\"$namespace\"}[$__interval])) by (namespace)",
+          "legendFormat": "{{ namespace }}",
+          "queryType": "range"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Log Rate",
+      "type": "timeseries",
+      "datasource": "Loki",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(rate({namespace=~\"$namespace\"}[$__interval])) by (namespace)",
+          "legendFormat": "{{ namespace }}",
+          "queryType": "range"
+        }
+      ]
+    },
+    {
+      "title": "Logs by Namespace",
+      "type": "logs",
+      "datasource": "Loki",
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "{namespace=~\"$namespace\", container=~\"$container\", pod=~\"$pod\"} | json",
+          "legendFormat": "",
+          "queryType": "instant"
+        }
+      ],
+      "options": {
+        "showLabels": true,
+        "showTime": true,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true
+      }
+    }
+  ]
+}
