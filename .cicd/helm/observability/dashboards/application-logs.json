@@ -3,7 +3,7 @@
   "tags": ["djtip", "logs", "kubernetes"],
   "timezone": "browser",
   "schemaVersion": 39,
-  "version": 2,
+  "version": 3,
   "refresh": "30s",
   "templating": {
     "list": [
@@ -92,7 +92,7 @@
       ]
     },
     {
-      "title": "Logs by Namespace",
+      "title": "Logs by Service",
       "type": "logs",
       "datasource": "Loki",
       "gridPos": {
@@ -103,9 +103,9 @@
       },
       "targets": [
         {
-          "expr": "{namespace=~\"$namespace\"} |= \"\"",
+          "expr": "{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"} | json",
           "legendFormat": "",
-          "queryType": "instant"
+          "queryType": "range"
         }
       ],
       "options": {
@@ -113,7 +113,16 @@
         "showTime": true,
         "wrapLogMessage": true,
         "prettifyLogMessage": true,
-        "enableLogDetails": true
+        "enableLogDetails": true,
+        "dedupStrategy": "none",
+        "sortOrder": "Descending"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "displayMode": "list"
+          }
+        }
       }
     }
   ]
