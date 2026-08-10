@@ -185,6 +185,11 @@ mongodb:
     limits:
       memory: "1Gi"
       cpu: "500m"
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 30s
 
 # Redis configuration (Bitnami chart)
 redis:
@@ -202,3 +207,8 @@ redis:
       limits:
         memory: "256Mi"
         cpu: "200m"
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 30s
