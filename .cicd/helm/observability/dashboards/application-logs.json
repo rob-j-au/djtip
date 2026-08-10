@@ -3,7 +3,7 @@
   "tags": ["djtip", "logs", "kubernetes"],
   "timezone": "browser",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "refresh": "30s",
   "templating": {
     "list": [
@@ -23,21 +23,21 @@
         "name": "pod",
         "type": "query",
         "datasource": "Loki",
-        "query": "label_values(pod, $namespace)",
+        "query": "label_values(pod)",
         "refresh": 2,
         "includeAll": true,
         "multi": true,
-        "definition": "label_values(pod, $namespace)"
+        "definition": "label_values(pod)"
       },
       {
         "name": "container",
         "type": "query",
         "datasource": "Loki",
-        "query": "label_values(container, $namespace)",
+        "query": "label_values(container)",
         "refresh": 2,
         "includeAll": true,
         "multi": true,
-        "definition": "label_values(container, $namespace)"
+        "definition": "label_values(container)"
       }
     ]
   },
@@ -103,7 +103,7 @@
       },
       "targets": [
         {
-          "expr": "{namespace=~\"$namespace\", container=~\"$container\", pod=~\"$pod\"} | json",
+          "expr": "{namespace=~\"$namespace\"} |= \"\"",
           "legendFormat": "",
           "queryType": "instant"
         }
