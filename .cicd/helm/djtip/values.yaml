@@ -190,6 +190,8 @@ mongodb:
     serviceMonitor:
       enabled: true
       interval: 30s
+      labels:
+        release: obs
 
 # Redis configuration (Bitnami chart)
 redis:
@@ -212,3 +214,5 @@ redis:
     serviceMonitor:
       enabled: true
       interval: 30s
+      labels:
+        release: obs
