@@ -9,6 +9,8 @@ metadata:
 data:
   application-logs.json: |
 {{ .Files.Get "dashboards/application-logs.json" | indent 4 }}
+  application.json: |
+{{ .Files.Get "dashboards/application.json" | indent 4 }}
   traefik-official.json: |
 {{ .Files.Get "dashboards/traefik-official.json" | indent 4 }}
   kubernetes-cluster.json: |
