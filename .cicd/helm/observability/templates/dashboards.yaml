@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: djtip-dashboards
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: djtip
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  application-logs.json: |
+{{ .Files.Get "dashboards/application-logs.json" | indent 4 }}

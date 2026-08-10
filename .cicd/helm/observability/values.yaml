@@ -65,20 +65,21 @@ kube-prometheus-stack:
       dashboardproviders.yaml:
         apiVersion: 1
         providers:
-          - name: "default"
+          - name: "djtip"
             orgId: 1
             folder: ""
             type: file
             disableDeletion: false
             editable: true
             options:
-              path: /var/lib/grafana/dashboards/default
+              path: /var/lib/grafana/dashboards/djtip
 
-    # Pre-configure dashboards
-    dashboards:
-      default:
-        application-logs:
-          file: dashboards/application-logs.json
+    # Mount dashboard configmap via grafana subchart
+    extraConfigmapMounts:
+      - name: djtip-dashboards
+        mountPath: /var/lib/grafana/dashboards/djtip
+        configMap: djtip-dashboards
+        readOnly: true
 
     # Ingress for Grafana
     ingress:
