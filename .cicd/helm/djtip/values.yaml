@@ -195,6 +195,8 @@ env:
 # Metrics and observability
 metrics:
   enabled: true  # Enable Prometheus ServiceMonitor
+  serviceMonitorLabels:
+    release: obs  # Match Prometheus release selector
 
 # MongoDB configuration (Bitnami chart)
 mongodb:

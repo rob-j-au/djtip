@@ -71,6 +71,8 @@ worker:
 
 metrics:
   enabled: true
+  serviceMonitorLabels:
+    release: obs
 
 # MongoDB configuration - optimized for Pi
 mongodb:
