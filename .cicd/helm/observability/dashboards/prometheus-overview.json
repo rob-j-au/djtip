@@ -83,14 +83,14 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_THEMIS}",
+        "datasource": "PBFA97CFB590B2093",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "job",
         "options": [],
-        "query": "query_result(prometheus_tsdb_head_samples_appended_total)",
+        "query": "label_values(prometheus_build_info, job)",
         "refresh": 2,
         "regex": "/.*job=\"([^\"]+)/",
         "sort": 1,
@@ -98,19 +98,20 @@
         "tags": [],
         "tagsQuery": "",
         "type": "query",
-        "useTags": false
+        "useTags": false,
+        "definition": "label_values(prometheus_build_info, job)"
       },
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_THEMIS}",
+        "datasource": "PBFA97CFB590B2093",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "instance",
         "options": [],
-        "query": "query_result(up{job=~\"$job\"})",
+        "query": "label_values(prometheus_build_info{job=~\"$job\"}, instance)",
         "refresh": 2,
         "regex": "/.*instance=\"([^\"]+).*/",
         "sort": 0,
@@ -118,7 +119,8 @@
         "tags": [],
         "tagsQuery": "",
         "type": "query",
-        "useTags": false
+        "useTags": false,
+        "definition": "label_values(prometheus_build_info{job=~\"$job\"}, instance)"
       },
       {
         "allValue": null,
